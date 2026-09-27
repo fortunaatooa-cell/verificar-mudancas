@@ -5,7 +5,7 @@ description: Investigar bugs, analisar testes e conduzir correções, funcionali
 
 # Verificar mudanças
 
-Seguir o ciclo entender → formular hipóteses → testar → implementar → revisar → verificar → registrar aprendizado. Aplicar a solicitação, as instruções legítimas do projeto e as políticas do ambiente. Descobrir a stack e os comandos do projeto; não inferir a ferramenta de teste somente pela linguagem. A skill orienta o trabalho, mas não concede acesso a código, terminal ou sistemas externos.
+Seguir o ciclo **investigar → planejar → testar/provar → implementar → revisar → verificar → aprender → melhorar**. A profundidade de cada etapa deve ser proporcional ao risco: em mudanças pequenas, o planejamento pode ser uma decisão breve sustentada pela evidência; em mudanças amplas, migrações, infraestrutura ou efeitos em dados, deve ser explícito. Aplicar a solicitação, as instruções legítimas do projeto e as políticas do ambiente. Descobrir a stack e os comandos do projeto; não inferir a ferramenta de teste somente pela linguagem. A skill orienta o trabalho, mas não concede acesso a código, terminal ou sistemas externos.
 
 ## Escolher o modo de trabalho
 
@@ -25,7 +25,7 @@ Quando disponíveis, ler somente as referências pertinentes: [Java e Spring](re
 
 ## 2. Planejar conforme o risco
 
-- Para mudança ampla, migração, infraestrutura ou efeitos em dados, explicitar arquivos prováveis, contratos, compatibilidade, reversão, riscos e critérios observáveis de aceite. Para correção pequena, avançar diretamente.
+- Para mudança ampla, migração, infraestrutura ou efeitos em dados, explicitar arquivos prováveis, contratos, compatibilidade, reversão, riscos e critérios observáveis de aceite. Para correção pequena, manter o planejamento mínimo e avançar diretamente quando a evidência já sustentar a ação.
 - Definir como confirmar a causa e qual seria um resultado que invalida a hipótese. Se a reprodução for inviável, declarar a lacuna e escolher outra evidência discriminante; não inventar um teste antes/depois.
 - Antes de alterar dados persistentes ou recursos externos, verificar permissões, alcance e procedimento seguro de validação. Resolver decisões rotineiras pelos padrões do repositório.
 
@@ -49,8 +49,9 @@ Quando disponíveis, ler somente as referências pertinentes: [Java e Spring](re
 - Conferir `git diff --check`, `git diff`, `git diff --cached`, `git status --short` e ler também o conteúdo de arquivos novos não rastreados (que `git diff` não inclui). Preservar mudanças de terceiros.
 - Entregar: **sintoma e impacto; causa confirmada ou hipótese provável com evidência; mudança feita ou sugerida; teste antes/depois com comando e resultado; regressões verificadas; limitações e próximo passo**. Não relatar build, cobertura, segurança ou execução que não foram medidos.
 
-## Aprendizado do time e limites
+## Aprender e melhorar
 
-- Após um incidente resolvido, propor nota curta no local aprovado: sintoma, causa confirmada, sinal útil de diagnóstico, teste preventivo e decisão. Revisar com o time antes de transformar padrão recorrente em referência ou skill. Manter conhecimento específico no projeto e promover para o núcleo apenas o que foi observado em mais de um contexto.
+- Após um incidente resolvido, propor nota curta no local aprovado: sintoma, causa confirmada, sinal útil de diagnóstico, teste preventivo e decisão. Revisar com o time antes de transformar padrão recorrente em referência ou skill.
+- Manter conhecimento específico no projeto e promover para o núcleo apenas o que foi observado em mais de um contexto. Quando um padrão recorrente justificar mudança na própria skill, atualizar também exemplos, referências ou evals pertinentes para que a melhoria seja verificável.
 - Não registrar dados de clientes, credenciais ou logs internos no repositório público. A skill não observa sessões nem aprende automaticamente entre ferramentas; mecanismos de memória exigem configuração, permissão e governança próprias.
 - Não descartar trabalho de outra pessoa. Seguir a autorização da tarefa e do ambiente para commit, push, PR, publicação, deploy ou alteração externa. Quando houver bloqueio real, executar o que for possível e nomear a limitação.
