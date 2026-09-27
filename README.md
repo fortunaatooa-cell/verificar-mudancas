@@ -1,13 +1,13 @@
 # Verificar mudanças
 
-Skill portátil de engenharia inspirada no ciclo do [Everything Claude Code (ECC)](https://github.com/affaan-m/ECC). Ajuda agentes a investigar falhas, analisar testes, implementar mudanças e apresentar evidências da verificação. O núcleo não depende do ECC nem de uma linguagem específica; as referências opcionais tratam Java/Spring, Python, C#/Unity e dados.
+Skill portátil de engenharia inspirada no ciclo do [Everything Claude Code (ECC)](https://github.com/affaan-m/ECC). Ajuda agentes a investigar falhas, analisar testes, implementar mudanças e apresentar evidências da verificação. O núcleo não depende do ECC nem de uma linguagem específica; as referências opcionais tratam Java/Spring, Python, C#/Unity, dados e Terraform/IaC.
 
 O resultado depende do acesso permitido ao projeto, da qualidade da evidência e das ferramentas disponíveis. Esta versão contém casos de avaliação, mas **não há ainda comparação empírica publicada que demonstre ganho de precisão**. Nenhuma skill garante detectar todos os defeitos.
 
 ## Conteúdo
 
 - [SKILL.md](.agents/skills/verificar-mudancas/SKILL.md): procedimento universal e critérios de evidência.
-- [Referências](.agents/skills/verificar-mudancas/references/): perguntas e verificações por contexto; carregar somente a referência aplicável.
+- [Referências](.agents/skills/verificar-mudancas/references/): perguntas e verificações por contexto; carregar somente a referência aplicável, incluindo Terraform/IaC para mudanças de infraestrutura declarativa.
 - [Prompt para chat](prompt-chat-equipe.md): uso quando a ferramenta tem apenas conversa ou prints.
 - [Avaliações](evals/README.md): casos sem dados internos e critérios de comparação entre ferramentas e versões.
 
