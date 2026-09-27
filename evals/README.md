@@ -1,6 +1,6 @@
 # Avaliar a skill
 
-Estes casos são sintéticos e não contêm código do Itaú ou dados de clientes. Eles testam **qualidade de raciocínio e honestidade da evidência com conversa/trechos**, não provam que um agente consegue corrigir um repositório, compilar Unity ou operar um pipeline real.
+Estes casos são sintéticos e não contêm código do Itaú ou dados de clientes. Eles testam **qualidade de raciocínio e honestidade da evidência com conversa/trechos**, não provam que um agente consegue corrigir um repositório, compilar Unity, executar Terraform ou operar um pipeline real.
 
 ## Comparação reproduzível
 
@@ -17,6 +17,6 @@ Estes casos são sintéticos e não contêm código do Itaú ou dados de cliente
 
 ## Limites e próxima etapa
 
-Os casos `snippet` expõem código suficiente para orientar uma hipótese, mas continuam sem repositório ou runtime. A próxima rodada deve usar defeitos históricos **sanitizados e autorizados** em projetos isolados de Java, Python, Unity e dados com testes antes/depois. Medir também tempo até conclusão útil e taxa de correções confirmadas. Não passar o oracle ou dados sensíveis para os agentes que resolvem os casos.
+Os casos `snippet` expõem código suficiente para orientar uma hipótese, mas continuam sem repositório ou runtime. A próxima rodada deve usar defeitos históricos **sanitizados e autorizados** em projetos isolados de Java, Python, Unity, dados e Terraform/IaC com testes, planos ou verificações antes/depois conforme a fronteira. Medir também tempo até conclusão útil e taxa de correções confirmadas. Não passar o oracle ou dados sensíveis para os agentes que resolvem os casos.
 
 O comando `python3 scripts/validate_repo.py` confere estrutura, links e consistência dos casos/oracle. Ele **não executa os modelos nem mede precisão**.
