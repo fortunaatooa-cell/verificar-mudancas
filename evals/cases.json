@@ -126,6 +126,20 @@
       "mode": "snippet",
       "prompt": "Depois de uma atualização, saves antigos carregam o jogador no estágio 0. O time sugeriu apagar saves incompatíveis. Investigue e proponha uma verificação segura.",
       "evidence": "O save JSON antigo possui o campo `level`; a classe nova removeu `level` e adicionou `stage`, cujo valor padrão é 0. Não existe campo de versão do save nem migração conhecida. Saves novos funcionam."
+    },
+    {
+      "id": "libgdx-shared-asset-lifecycle",
+      "domain": "libgdx",
+      "mode": "snippet",
+      "prompt": "Em um jogo LibGDX, ao sair do menu e entrar no gameplay a UI às vezes quebra com erro de asset não carregado. Investigue o lifecycle e diga como provar a correção.",
+      "evidence": "A classe principal `Game` possui um único `AssetManager`. `MenuScreen.show()` usa `assets.get(\"ui.atlas\")`. `GameScreen.show()` também usa o mesmo `ui.atlas`. `MenuScreen.hide()` chama `assets.unload(\"ui.atlas\")`. A troca é feita com `game.setScreen(new GameScreen(game, assets))`. Não foi informado se há reference counting adicional nem outro owner do atlas."
+    },
+    {
+      "id": "libgdx-input-multiplexer-leak",
+      "domain": "libgdx",
+      "mode": "snippet",
+      "prompt": "No LibGDX, depois de abrir e fechar a tela de inventário algumas vezes, um clique começa a executar a ação duas ou três vezes. Analise a causa provável e a verificação correta.",
+      "evidence": "O `Game` mantém um `InputMultiplexer` global. Cada `InventoryScreen.show()` chama `multiplexer.addProcessor(stage)`. `hide()` não remove o `stage` do multiplexer. Ao reabrir, uma nova `InventoryScreen` e um novo `Stage` são criados."
     }
   ]
 }
