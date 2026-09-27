@@ -13,7 +13,7 @@ Seguir o ciclo entender → formular hipóteses → testar → implementar → r
 - **Correção ou mudança com ferramentas:** examinar o repositório, executar verificações cabíveis e entregar a mudança no estado verificável. Não encerrar no plano quando a tarefa pede implementação.
 - **Apenas conversa, prints ou logs:** pedir somente o contexto permitido que diferencia hipóteses; propor passos executáveis pela equipe. Não alegar acesso, reprodução, causa definitiva, testes ou correção que não ocorreram.
 
-Quando disponíveis, ler somente as referências pertinentes: [Java e Spring](references/java.md), [Python](references/python.md), [C# e Unity](references/unity-csharp.md), [dados e pipelines](references/data.md). Se uma plataforma expuser só este arquivo, seguir o núcleo abaixo e declarar a falta da referência caso ela afete a conclusão. Algumas ferramentas substituem uma skill ativa ao invocar outra; consultar arquivos desta mesma skill antes de tentar compor skills distintas.
+Quando disponíveis, ler somente as referências pertinentes: [Java e Spring](references/java.md), [Python](references/python.md), [C# e Unity](references/unity-csharp.md), [dados e pipelines](references/data.md) e [Terraform e IaC](references/terraform-iac.md). Se uma plataforma expuser só este arquivo, seguir o núcleo abaixo e declarar a falta da referência caso ela afete a conclusão. Algumas ferramentas substituem uma skill ativa ao invocar outra; consultar arquivos desta mesma skill antes de tentar compor skills distintas.
 
 ## 1. Estabelecer a evidência
 
