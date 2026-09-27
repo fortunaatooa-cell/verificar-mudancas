@@ -26,9 +26,21 @@ def validate(root: Path) -> list[str]:
         if not re.search(r"^description: \S.+$", header, re.MULTILINE):
             errors.append("SKILL.md: description ausente")
 
-    references = re.findall(r"\]\((references/[^)]+\.md)\)", skill)
-    if len(references) != 4 or len(set(references)) != 4:
-        errors.append("SKILL.md: esperado um link para cada uma das quatro referências")
+    references = set(re.findall(r"\]\((references/[^)]+\.md)\)", skill))
+    expected_references = {
+        "references/java.md",
+        "references/python.md",
+        "references/unity-csharp.md",
+        "references/data.md",
+        "references/terraform-iac.md",
+    }
+    if references != expected_references:
+        missing = sorted(expected_references - references)
+        unexpected = sorted(references - expected_references)
+        if missing:
+            errors.append(f"SKILL.md: referências esperadas ausentes: {', '.join(missing)}")
+        if unexpected:
+            errors.append(f"SKILL.md: referências inesperadas: {', '.join(unexpected)}")
     for relative in references:
         if not (skill_dir / relative).is_file():
             errors.append(f"referência ausente: {relative}")
@@ -81,8 +93,10 @@ def validate(root: Path) -> list[str]:
         if any(not isinstance(item.get(field), str) or not item[field].strip()
                for field in ("id", "domain", "prompt", "evidence")):
             errors.append(f"{item.get('id')}: dados de entrada incompletos")
-    if not {"java", "python", "unity", "data", "security", "workflow"}.issubset(domains):
-        errors.append("casos não cobrem as áreas mínimas")
+    required_domains = {"java", "python", "unity", "data", "terraform", "security", "workflow"}
+    if not required_domains.issubset(domains):
+        missing_domains = sorted(required_domains - domains)
+        errors.append(f"casos não cobrem as áreas mínimas: {', '.join(missing_domains)}")
 
     for item in oracle_items:
         if not isinstance(item, dict):
