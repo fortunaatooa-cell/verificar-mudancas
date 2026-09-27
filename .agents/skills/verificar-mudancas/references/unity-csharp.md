@@ -1,6 +1,6 @@
 # C# e Unity
 
-Ler quando houver C#; aplicar as partes de Unity somente se o projeto realmente usar o engine. Em .NET sem Unity, descobrir SDK, framework e runner do projeto (xUnit, NUnit, MSTest ou outro) antes de sugerir comandos.
+Ler quando houver C#; aplicar as partes de Unity somente se o projeto realmente usar o engine. Em projetos de jogo, combinar com [engenharia de jogos](gamedev.md) para game loop, tempo, determinismo, assets, save/load e performance independentes da engine. Em .NET sem Unity, descobrir SDK, framework e runner do projeto (xUnit, NUnit, MSTest ou outro) antes de sugerir comandos.
 
 ## Separar lógica de runtime
 
