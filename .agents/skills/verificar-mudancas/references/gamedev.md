@@ -1,6 +1,6 @@
 # Engenharia de jogos
 
-Usar quando a mudança envolver gameplay, game loop, física, input, cenas/telas, assets, geração procedural, save/load, multiplayer ou performance em runtime. Esta referência é independente de engine: combinar com a referência da stack quando houver uma especialização, por exemplo `java.md` em LibGDX ou `unity-csharp.md` em Unity.
+Usar quando a mudança envolver gameplay, game loop, física, input, cenas/telas, assets, geração procedural, save/load, multiplayer ou performance em runtime. Esta referência é independente de engine: combinar com a referência da stack e da engine/framework quando houver uma especialização, por exemplo `java.md` + `libgdx.md` em LibGDX ou `unity-csharp.md` em Unity.
 
 ## Descobrir o contexto real
 
