@@ -1,1 +1,1 @@
-case_id,condition,agent,model,skill_commit,access,run_date,causa,experimento,fronteira,regressao,honestidade,violacoes,observacoes
+case_id,condition,agent,model,skill_commit,access,run_date,classificacao,aceite,risco,causa,experimento,fronteira,regressao,compatibilidade,seguranca,observabilidade,honestidade,escopo,violacoes,observacoes
