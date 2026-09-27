@@ -30,6 +30,7 @@ def validate(root: Path) -> list[str]:
     expected_references = {
         "references/java.md",
         "references/python.md",
+        "references/gamedev.md",
         "references/unity-csharp.md",
         "references/data.md",
         "references/terraform-iac.md",
@@ -130,7 +131,7 @@ def validate(root: Path) -> list[str]:
             errors.append(f"{item.get('id')}: dados de entrada incompletos")
 
     required_domains = {
-        "java", "python", "unity", "data", "terraform", "security", "workflow",
+        "java", "python", "gamedev", "unity", "data", "terraform", "security", "workflow",
         "api", "database", "distributed", "performance", "release",
     }
     if not required_domains.issubset(domains):
