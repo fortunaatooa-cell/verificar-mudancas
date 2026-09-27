@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+"""Check skill packaging and evaluation fixtures without external dependencies."""
+
+import json
+import re
+import sys
+from pathlib import Path
+
+
+def validate(root: Path) -> list[str]:
+    errors: list[str] = []
+    skill_dir = root / ".agents/skills/verificar-mudancas"
+    skill_file = skill_dir / "SKILL.md"
+    try:
+        skill = skill_file.read_text(encoding="utf-8")
+    except OSError as exc:
+        return [f"SKILL.md indisponível: {exc}"]
+
+    match = re.match(r"\A---\n(.*?)\n---\n", skill, re.DOTALL)
+    if match is None:
+        errors.append("SKILL.md: frontmatter ausente")
+    else:
+        header = match.group(1)
+        if not re.search(r"^name: verificar-mudancas$", header, re.MULTILINE):
+            errors.append("SKILL.md: name inesperado")
+        if not re.search(r"^description: \S.+$", header, re.MULTILINE):
+            errors.append("SKILL.md: description ausente")
+
+    references = re.findall(r"\]\((references/[^)]+\.md)\)", skill)
+    if len(references) != 4 or len(set(references)) != 4:
+        errors.append("SKILL.md: esperado um link para cada uma das quatro referências")
+    for relative in references:
+        if not (skill_dir / relative).is_file():
+            errors.append(f"referência ausente: {relative}")
+
+    for document in (root / "README.md", root / "evals/README.md", skill_file):
+        try:
+            content = document.read_text(encoding="utf-8")
+        except OSError as exc:
+            errors.append(f"documento indisponível: {exc}")
+            continue
+        for target in re.findall(r"\]\(([^)]+)\)", content):
+            if target.startswith(("http://", "https://", "#", "mailto:")):
+                continue
+            path = target.split("#", 1)[0]
+            if not (document.parent / path).exists():
+                errors.append(f"{document.relative_to(root)}: link ausente: {target}")
+
+    try:
+        cases = json.loads((root / "evals/cases.json").read_text(encoding="utf-8"))
+        oracle = json.loads((root / "evals/oracle.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        return errors + [f"avaliação inválida: {exc}"]
+
+    if not isinstance(cases, dict) or not isinstance(oracle, dict):
+        return errors + ["cases/oracle devem ser objetos JSON"]
+    if cases.get("version") != 1 or oracle.get("version") != 1:
+        errors.append("versão do formato de avaliação diferente de 1")
+    case_items = cases.get("cases", [])
+    oracle_items = oracle.get("oracles", [])
+    if not isinstance(case_items, list) or not isinstance(oracle_items, list):
+        return errors + ["cases/oracles devem ser listas"]
+
+    case_ids = [item.get("id") for item in case_items if isinstance(item, dict)]
+    oracle_ids = [item.get("id") for item in oracle_items if isinstance(item, dict)]
+    if (len(case_ids) != len(case_items) or len(oracle_ids) != len(oracle_items)
+            or any(not isinstance(case_id, str) or not case_id for case_id in case_ids + oracle_ids)):
+        return errors + ["casos/oracles devem ser objetos com id textual"]
+    if len(set(case_ids)) != len(case_ids) or len(set(oracle_ids)) != len(oracle_ids):
+        errors.append("id duplicado")
+    if set(case_ids) != set(oracle_ids):
+        errors.append("cada caso precisa de exatamente um oracle correspondente")
+
+    domains = set()
+    for item in case_items:
+        if not isinstance(item, dict):
+            continue
+        domains.add(item.get("domain"))
+        if item.get("mode") not in {"conversation", "snippet"}:
+            errors.append(f"{item.get('id')}: modo inválido")
+        if any(not isinstance(item.get(field), str) or not item[field].strip()
+               for field in ("id", "domain", "prompt", "evidence")):
+            errors.append(f"{item.get('id')}: dados de entrada incompletos")
+    if not {"java", "python", "unity", "data", "security", "workflow"}.issubset(domains):
+        errors.append("casos não cobrem as áreas mínimas")
+
+    for item in oracle_items:
+        if not isinstance(item, dict):
+            continue
+        for field in ("expected", "forbidden"):
+            values = item.get(field)
+            if not isinstance(values, list) or not values or any(
+                not isinstance(value, str) or not value.strip() for value in values
+            ):
+                errors.append(f"{item.get('id')}: {field} inválido")
+
+    scorecard = root / "evals/scorecard.csv"
+    if not scorecard.is_file() or "case_id,condition,agent" not in scorecard.read_text(encoding="utf-8"):
+        errors.append("scorecard.csv ausente ou sem colunas básicas")
+    return errors
+
+
+if __name__ == "__main__":
+    repository_root = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path(__file__).resolve().parents[1]
+    problems = validate(repository_root)
+    if problems:
+        for problem in problems:
+            print(f"ERRO: {problem}", file=sys.stderr)
+        raise SystemExit(1)
+    print("Estrutura da skill e casos de avaliação válidos.")
