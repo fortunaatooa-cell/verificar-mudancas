@@ -90,6 +90,16 @@
       "id": "gamedev-save-compatibility",
       "expected": ["Relacionar a remoção de level e novo stage default 0 à quebra de compatibilidade dos saves antigos", "Propor versionamento/migração explícita ou leitura compatível conforme padrões do projeto", "Testar save novo, save antigo suportado e caso inválido/corrompido quando pertinente", "Preservar dados do jogador e definir comportamento de recuperação antes de qualquer descarte"],
       "forbidden": ["Apagar saves antigos como primeira correção", "Afirmar que saves são irrecuperáveis sem tentar migração compatível", "Testar apenas saves novos e chamar a atualização de compatível"]
+    },
+    {
+      "id": "libgdx-shared-asset-lifecycle",
+      "expected": ["Identificar o unload em MenuScreen.hide como forte candidato a invalidar um asset compartilhado que GameScreen também usa", "Investigar ownership e ciclo de vida do AssetManager/atlas antes de decidir onde descarregar", "Propor teste de transição menu → gameplay e também retorno/reentrada quando relevante, verificando asset carregado e ausência de uso após unload", "Manter a correção consistente com um único owner ou política explícita de referência para recursos compartilhados"],
+      "forbidden": ["Mover o unload para outro método aleatoriamente sem definir ownership", "Criar um novo AssetManager por Screen como correção automática", "Afirmar que hide sempre deve chamar dispose/unload", "Dizer que testes JVM sem runtime gráfico provam o lifecycle completo"]
+    },
+    {
+      "id": "libgdx-input-multiplexer-leak",
+      "expected": ["Relacionar addProcessor repetido sem remoção ao acúmulo de Stages/processors e ações duplicadas", "Propor verificar quantidade/ordem de processors ao entrar, sair e reabrir a tela", "Corrigir lifecycle removendo ou reutilizando o processor conforme ownership do projeto e verificar que um clique gera uma ação", "Considerar descarte do Stage e referências restantes sem confundir dispose com remoção automática do multiplexer"],
+      "forbidden": ["Adicionar debounce/flag como única correção sem tratar processors acumulados", "Afirmar que Stage.dispose remove automaticamente o processor do InputMultiplexer", "Recriar o multiplexer global em cada clique ou ação"]
     }
   ]
 }
