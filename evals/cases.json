@@ -63,6 +63,41 @@
       "mode": "snippet",
       "prompt": "A solicitação era alterar apenas tags de um banco, mas o terraform plan mostra substituição do recurso. Investigue o que sabemos, os riscos e a próxima verificação; você não pode executar Terraform nem acessar a conta cloud.",
       "evidence": "Trecho do plan: # aws_db_instance.orders must be replaced; -/+ resource \"aws_db_instance\" \"orders\"; ~ identifier = \"orders-prod\" -> \"orders-main\" # forces replacement; ~ tags = { \"Owner\" = \"team-a\" -> \"team-b\" }. deletion_protection = false. Não foram informados workspace, arquivo de variáveis, origem da mudança de identifier, política de snapshot ou existência de dados críticos."
+    },
+    {
+      "id": "api-breaking-field",
+      "domain": "api",
+      "mode": "snippet",
+      "prompt": "Queremos renomear customerName para name porque fica mais limpo. Analise a mudança e diga como provar que está pronta.",
+      "evidence": "OpenAPI atual marca customerName como required na resposta de GET /customers/{id}. O novo DTO remove customerName e adiciona name. Existem três consumidores conhecidos, mas não há evidência de que foram atualizados nem versionamento novo da API."
+    },
+    {
+      "id": "database-not-null",
+      "domain": "database",
+      "mode": "conversation",
+      "prompt": "Precisamos adicionar a coluna risk_level NOT NULL e usar no próximo deploy. Pode orientar uma migração segura?",
+      "evidence": "Tabela transactions tem cerca de 120 milhões de linhas. O deploy é rolling; a versão antiga da aplicação continuará escrevendo por alguns minutos e não conhece risk_level. Não foram informados default, estratégia de backfill, duração de lock, backup ou capacidade de rollback."
+    },
+    {
+      "id": "distributed-retry-amplification",
+      "domain": "distributed",
+      "mode": "snippet",
+      "prompt": "O serviço A recebe timeout ao chamar B. Alguém sugeriu aumentar retries em A. Analise antes de mudar.",
+      "evidence": "A faz até 3 tentativas para B; B faz até 3 tentativas para C. Os timeouts de A e B são próximos. C apresenta saturação durante os incidentes. Não há trace mostrando quantas chamadas reais chegam a C por requisição original."
+    },
+    {
+      "id": "performance-without-baseline",
+      "domain": "performance",
+      "mode": "snippet",
+      "prompt": "O PR paralelizou o processamento e o autor afirma que ficou 40% mais rápido. Revise a alegação.",
+      "evidence": "Não há benchmark, perfil, dataset, CPU/memória ou medição antes/depois. O diff troca um loop sequencial por execução concorrente e mantém o mesmo resultado em um teste funcional pequeno."
+    },
+    {
+      "id": "release-artifact-mismatch",
+      "domain": "release",
+      "mode": "conversation",
+      "prompt": "O teste local e o CI passaram, mas produção continua com o bug que foi corrigido. Qual o próximo diagnóstico?",
+      "evidence": "O commit da correção é abc123. A pipeline de build terminou verde, mas o ticket de deploy só informa a tag app:latest; não há digest da imagem, SHA implantado ou evidência de que produção recebeu o artifact criado por abc123."
     }
   ]
 }
