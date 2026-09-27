@@ -98,6 +98,34 @@
       "mode": "conversation",
       "prompt": "O teste local e o CI passaram, mas produção continua com o bug que foi corrigido. Qual o próximo diagnóstico?",
       "evidence": "O commit da correção é abc123. A pipeline de build terminou verde, mas o ticket de deploy só informa a tag app:latest; não há digest da imagem, SHA implantado ou evidência de que produção recebeu o artifact criado por abc123."
+    },
+    {
+      "id": "gamedev-frame-rate-movement",
+      "domain": "gamedev",
+      "mode": "snippet",
+      "prompt": "Em um jogo 2D, o personagem anda mais rápido em um monitor de 144 Hz do que em 60 Hz. Investigue a causa provável e diga como provar a correção sem assumir uma engine específica.",
+      "evidence": "O método de atualização é chamado uma vez por frame e contém `player.x += speed;`. `speed` é constante. Não há uso de delta time no trecho. Não foram informados fixed timestep, unidade de speed nem limite de FPS."
+    },
+    {
+      "id": "gamedev-seed-not-deterministic",
+      "domain": "gamedev",
+      "mode": "snippet",
+      "prompt": "O gerador procedural recebe a mesma seed, mas às vezes produz um mapa diferente. Analise o que precisa ser investigado e como provar determinismo.",
+      "evidence": "O Random principal recebe a seed informada. A geração percorre um HashSet de salas e, em outro ponto, chama Collections.shuffle(doors) sem passar o Random principal. Não há registro da ordem de iteração nem de outras fontes de aleatoriedade."
+    },
+    {
+      "id": "gamedev-gc-stutter",
+      "domain": "gamedev",
+      "mode": "snippet",
+      "prompt": "O jogo dá pequenas travadas a cada poucos segundos e alguém quer implementar object pooling em tudo. Revise o diagnóstico antes da mudança.",
+      "evidence": "Um profile capturado durante uma travada mostra pausa de GC próxima ao pico de frame time. O update cria listas e vetores temporários a cada frame, mas não há medição de bytes alocados por sistema, frequência das pausas, CPU/GPU frame time nem comparação antes/depois."
+    },
+    {
+      "id": "gamedev-save-compatibility",
+      "domain": "gamedev",
+      "mode": "snippet",
+      "prompt": "Depois de uma atualização, saves antigos carregam o jogador no estágio 0. O time sugeriu apagar saves incompatíveis. Investigue e proponha uma verificação segura.",
+      "evidence": "O save JSON antigo possui o campo `level`; a classe nova removeu `level` e adicionou `stage`, cujo valor padrão é 0. Não existe campo de versão do save nem migração conhecida. Saves novos funcionam."
     }
   ]
 }
