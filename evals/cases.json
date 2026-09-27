@@ -56,6 +56,13 @@
       "mode": "conversation",
       "prompt": "Analise este relato e diga o experimento seguinte. Não altere arquivos.",
       "evidence": "O cliente recebe HTTP 504 uma vez a cada 100 requisições. Não há traces, limites de timeout, timestamps, status de upstream nem acesso ao repositório."
+    },
+    {
+      "id": "terraform-replacement",
+      "domain": "terraform",
+      "mode": "snippet",
+      "prompt": "A solicitação era alterar apenas tags de um banco, mas o terraform plan mostra substituição do recurso. Investigue o que sabemos, os riscos e a próxima verificação; você não pode executar Terraform nem acessar a conta cloud.",
+      "evidence": "Trecho do plan: # aws_db_instance.orders must be replaced; -/+ resource \"aws_db_instance\" \"orders\"; ~ identifier = \"orders-prod\" -> \"orders-main\" # forces replacement; ~ tags = { \"Owner\" = \"team-a\" -> \"team-b\" }. deletion_protection = false. Não foram informados workspace, arquivo de variáveis, origem da mudança de identifier, política de snapshot ou existência de dados críticos."
     }
   ]
 }
