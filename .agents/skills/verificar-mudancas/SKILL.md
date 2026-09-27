@@ -17,9 +17,9 @@ Aplicar a solicitação, as instruções legítimas do projeto e as políticas d
 
 ## Carregar orientação somente quando pertinente
 
-Combinar o núcleo com **uma referência de stack quando necessária**, **zero ou mais referências transversais** e **um playbook de tarefa** quando ele ajudar. Não carregar tudo por padrão.
+Combinar o núcleo com **uma ou mais referências de stack/contexto quando necessárias**, **zero ou mais referências transversais** e **um playbook de tarefa** quando ele ajudar. Não carregar tudo por padrão.
 
-Referências de stack/contexto: [Java e Spring](references/java.md), [Python](references/python.md), [C# e Unity](references/unity-csharp.md), [dados e pipelines](references/data.md) e [Terraform e IaC](references/terraform-iac.md).
+Referências de stack/contexto: [Java e Spring](references/java.md), [Python](references/python.md), [engenharia de jogos independente de engine](references/gamedev.md), [C# e Unity](references/unity-csharp.md), [dados e pipelines](references/data.md) e [Terraform e IaC](references/terraform-iac.md). Em jogos, combinar `gamedev.md` com a stack/engine real quando houver referência específica; por exemplo, Java + gamedev para LibGDX ou gamedev + C#/Unity para Unity.
 
 Referências transversais: [segurança](references/security.md), [APIs e contratos](references/api-contracts.md), [bancos e migrações](references/databases-migrations.md), [sistemas distribuídos](references/distributed-systems.md), [observabilidade e SRE](references/observability-sre.md), [CI/CD e release](references/ci-cd-release.md), [performance](references/performance.md), [dependências e supply chain](references/dependencies-supply-chain.md), [arquitetura e refatoração](references/architecture-refactoring.md), [frontend/UI/E2E](references/frontend-ui-e2e.md) e [containers/cloud runtime](references/containers-cloud-runtime.md).
 

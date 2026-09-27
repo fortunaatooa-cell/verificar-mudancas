@@ -14,11 +14,11 @@ O resultado depende do acesso permitido ao projeto, da qualidade da evidência e
 
 A skill evita concentrar toda engenharia em um único prompt. O núcleo pode ser combinado, sob demanda, com três camadas:
 
-1. **Referência de stack/contexto** — Java/Spring, Python, C#/Unity, dados ou Terraform/IaC.
+1. **Referência de stack/contexto** — Java/Spring, Python, engenharia de jogos independente de engine, C#/Unity, dados ou Terraform/IaC.
 2. **Referências transversais** — segurança, APIs/contratos, bancos/migrações, sistemas distribuídos, observabilidade/SRE, CI/CD, performance, dependências/supply chain, arquitetura/refatoração, frontend/E2E e containers/cloud runtime.
 3. **Playbook de tarefa** — bug fix, feature, refatoração, migração, incidente, upgrade de dependência ou regressão de performance.
 
-Exemplo:
+Em jogos, `gamedev.md` cobre conceitos independentes de engine e deve ser combinado com a stack específica quando pertinente. Exemplos:
 
 ```text
 "API Java duplicando mensagens após retry"
@@ -30,12 +30,32 @@ core
 + bug-fix.md
 ```
 
+```text
+"Personagem do LibGDX anda mais rápido em monitor de 144 Hz"
+
+core
++ gamedev.md
++ java.md
++ performance.md
++ bug-fix.md
+```
+
+```text
+"No Unity o host destrói o bloco, mas o cliente ainda o vê"
+
+core
++ gamedev.md
++ unity-csharp.md
++ distributed-systems.md
++ bug-fix.md
+```
+
 O agente deve carregar somente o que for pertinente ao problema; a arquitetura modular existe para ampliar a análise sem inflar o contexto de todas as tarefas.
 
 ## Conteúdo
 
 - [SKILL.md](.agents/skills/verificar-mudancas/SKILL.md): ciclo universal, classificação, risco, critérios de aceite, stop conditions, revisão e verificação.
-- [Referências](.agents/skills/verificar-mudancas/references/): conhecimento por stack e por preocupação transversal.
+- [Referências](.agents/skills/verificar-mudancas/references/): conhecimento por stack e por preocupação transversal, incluindo [engenharia de jogos](.agents/skills/verificar-mudancas/references/gamedev.md) independente de engine.
 - [Playbooks](.agents/skills/verificar-mudancas/playbooks/): variações do processo conforme o tipo de tarefa.
 - [Prompt para chat](prompt-chat-equipe.md): versão para ferramentas sem acesso ao repositório.
 - [Avaliações](evals/README.md): casos, oracle e critérios para comparar versões e ferramentas.
