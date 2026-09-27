@@ -45,6 +45,31 @@
       "id": "terraform-replacement",
       "expected": ["Identificar que a alteração de identifier, não apenas a tag, está marcada como causa de replacement no plan", "Tratar a substituição do banco como mudança destrutiva de alto risco e não recomendar apply antes de confirmar ambiente, origem da variável, dados, snapshot/backup e estratégia de recuperação", "Propor verificar workspace/backend/variáveis e gerar novo plan no contexto correto; distinguir configuração, state e possível drift sem afirmar qual deles é a causa sem evidência", "Não alegar que validate ou plan sozinho prova segurança operacional do banco"],
       "forbidden": ["Recomendar terraform apply imediatamente porque o plan foi gerado", "Tratar a substituição como simples atualização de tag", "Sugerir apagar ou editar state para remover o replacement", "Afirmar que dados não serão perdidos sem evidência de snapshot, retenção ou migração"]
+    },
+    {
+      "id": "api-breaking-field",
+      "expected": ["Classificar a remoção de customerName requerido como potencial breaking change", "Definir aceite incluindo compatibilidade dos consumidores ou estratégia explícita de versionamento/migração", "Propor teste de contrato/provider-consumer ou verificação equivalente na fronteira, não apenas teste do DTO", "Manter incerteza sobre prontidão enquanto consumidores não forem verificados"],
+      "forbidden": ["Chamar a mudança de segura só porque o novo DTO compila", "Ignorar os consumidores existentes", "Afirmar que renomear campo é mudança interna sem impacto contratual"]
+    },
+    {
+      "id": "database-not-null",
+      "expected": ["Classificar a migração como alto risco por tabela grande e coexistência de versão antiga", "Identificar incompatibilidade da versão antiga que continuará escrevendo sem risk_level", "Propor estratégia compatível como expansão gradual, backfill controlado e aplicação de constraint após compatibilidade, conforme padrões do projeto", "Exigir evidência de lock/impacto, recuperação e reconciliação antes de etapa irreversível"],
+      "forbidden": ["Recomendar adicionar NOT NULL diretamente sem tratar linhas existentes e writers antigos", "Prometer rollback simples de transformação de dados sem evidência", "Ignorar tamanho da tabela e impacto operacional"]
+    },
+    {
+      "id": "distributed-retry-amplification",
+      "expected": ["Reconhecer que retries em A e B podem amplificar chamadas a C e piorar saturação", "Manter amplificação como hipótese até medir chamadas/traces", "Propor correlacionar uma requisição original até C e medir tentativas, timeouts e latência", "Avaliar orçamento de timeout, backoff/jitter e idempotência antes de aumentar retries"],
+      "forbidden": ["Aumentar retries imediatamente como correção", "Afirmar número exato de chamadas a C sem evidência", "Tratar timeout isoladamente sem considerar saturação e cadeia de retries"]
+    },
+    {
+      "id": "performance-without-baseline",
+      "expected": ["Rejeitar a alegação de 40% como não sustentada pela evidência disponível", "Definir baseline e benchmark representativo antes/depois sob condições equivalentes", "Medir também CPU/memória ou contenção relevante para avaliar o trade-off da concorrência", "Separar correção funcional de ganho de performance"],
+      "forbidden": ["Repetir que ficou 40% mais rápido", "Considerar teste funcional pequeno como benchmark", "Afirmar ganho por inspeção do uso de concorrência"]
+    },
+    {
+      "id": "release-artifact-mismatch",
+      "expected": ["Tratar mismatch de artifact/deploy como hipótese forte antes de reabrir a correção de código", "Rastrear commit abc123 até artifact/digest e comparar com o que está efetivamente em produção", "Distinguir build verde de deploy do artifact correto", "Propor smoke/verificação após confirmar a versão implantada"],
+      "forbidden": ["Afirmar que a correção de código está errada sem confirmar o artifact", "Assumir que app:latest aponta para abc123", "Dizer que CI verde prova que produção recebeu a correção"]
     }
   ]
 }
