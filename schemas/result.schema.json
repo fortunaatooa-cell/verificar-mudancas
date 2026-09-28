@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://verificar-mudancas.dev/schemas/result.schema.json",
+  "title": "Resultado Verificar Mudanças",
+  "type": "object",
+  "required": ["estado", "claims", "quality_gate"],
+  "properties": {
+    "estado": {"type": "string", "enum": ["CONCLUIDO", "PARCIAL", "BLOQUEADO", "FALHOU"]},
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim", "estado", "evidencias"],
+        "properties": {
+          "claim": {"type": "string", "minLength": 1},
+          "estado": {"type": "string", "enum": ["VERIFICADO", "PARCIALMENTE_VERIFICADO", "NAO_VERIFICADO", "BLOQUEADO"]},
+          "evidencias": {"type": "array", "items": {"type": "string"}},
+          "lacuna": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": {"type": "string", "enum": ["PASS", "FAIL", "PARTIAL", "BLOCKED", "N/A"]}
+    },
+    "riscos_residuais": {"type": "array", "items": {"type": "string"}},
+    "proximos_passos": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

@@ -19,10 +19,12 @@ jobs:
           cache-dependency-path: requirements-dev.txt
       - name: Instalar dependências de validação
         run: python3 -m pip install -r requirements-dev.txt
-      - name: Testar regressões do validador
+      - name: Testar regressões dos validadores
         run: python3 -B -m unittest discover -s tests -v
       - name: Verificar estrutura, orçamento e casos de avaliação
         run: python3 scripts/validate_repo.py
+      - name: Verificar fundação agentic v1.5
+        run: python3 scripts/validate_agentic.py
       - name: Verificar harness A/B inicial
         run: |
           python3 scripts/prepare_ab_eval.py --out "$RUNNER_TEMP/verificar-ab"
