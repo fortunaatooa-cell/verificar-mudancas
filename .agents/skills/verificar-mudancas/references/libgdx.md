@@ -47,6 +47,16 @@ Usar quando o projeto for um jogo em LibGDX. Combinar com [engenharia de jogos](
 - Ao usar threads, executors ou callbacks assíncronos, verificar sincronização com o estado do jogo e descarte durante troca de tela/shutdown.
 - Não considerar um teste headless como prova de renderização, OpenGL, input real ou comportamento do backend desktop/mobile.
 
+## Semântica verificada em fixture
+
+Confirmar novamente na versão do projeto antes de generalizar. Os pontos abaixo foram confrontados com o código e fixture na revisão LibGDX `e1d69884015ca19061647505f9509db34df5cc82` (1.14.3):
+
+- `Game.setScreen(novo)` chama `hide()` da tela antiga antes de `show()` da nova e não chama `dispose()` da antiga. Um `unload` em `hide()` já ocorreu quando a próxima tela chama `get()`.
+- Para um asset **já carregado**, `AssetManager.unload(nome)` decrementa a contagem de referências e descarta/remove quando ela chega a zero. Assets ainda na fila e dependências seguem caminhos adicionais. Reference count maior que 1 pode atrasar a falha por ciclos; registrar `isLoaded` e `getReferenceCount` quando isso puder explicar intermitência.
+- `InputMultiplexer` interrompe a delegação no primeiro processor que retorna `true`. Processors/Stages acumulados podem duplicar ação quando handlers não consomem o evento ou capturar o clique em um Stage antigo quando o primeiro processor o consome. Não afirmar o sintoma exato sem observar ordem, quantidade e quem tratou o evento.
+- `Stage.dispose()` não remove automaticamente o Stage de um `InputMultiplexer`; remover o processor e descartar o Stage são responsabilidades separadas.
+- Recarregar asset em todo `show()` com `load` + `finishLoading()` pode mascarar ownership incorreto e introduzir churn de carga/descarte; provar ownership antes de aceitar esse remendo.
+
 ## Testes e prova
 
 - Manter regras determinísticas de gameplay separadas do framework quando isso facilitar testes unitários sem contexto gráfico.
