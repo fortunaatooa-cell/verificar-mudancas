@@ -80,6 +80,16 @@ def validate(root: Path) -> list[str]:
         if not (skill_dir / relative).is_file():
             errors.append(f"playbook ausente: {relative}")
 
+    expected_runtime_fixture = {
+        "evals/fixtures/runtime-port-binding/README.md",
+        "evals/fixtures/runtime-port-binding/Dockerfile",
+        "evals/fixtures/runtime-port-binding/app.py",
+        "evals/fixtures/runtime-port-binding/run.sh",
+    }
+    for relative in expected_runtime_fixture:
+        if not (root / relative).is_file():
+            errors.append(f"fixture runtime ausente: {relative}")
+
     documents = [root / "README.md", root / "evals/README.md", skill_file]
     documents.extend(skill_dir / relative for relative in expected_references | expected_playbooks)
     for document in documents:
@@ -133,7 +143,7 @@ def validate(root: Path) -> list[str]:
 
     required_domains = {
         "java", "python", "gamedev", "libgdx", "unity", "data", "terraform", "security", "workflow",
-        "api", "database", "distributed", "performance", "release",
+        "api", "database", "distributed", "performance", "release", "runtime",
     }
     if not required_domains.issubset(domains):
         missing_domains = sorted(required_domains - domains)
