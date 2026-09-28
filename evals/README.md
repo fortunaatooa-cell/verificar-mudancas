@@ -24,12 +24,12 @@ Os casos são sintéticos e não contêm código interno ou dados de clientes. E
 
 ## Cobertura atual
 
-Os casos cobrem Java, Python/runtime, engenharia de jogos independente de engine, Unity/multiplayer, dados/replay, segurança contra instrução não confiável, investigação sem acesso, Terraform destrutivo, contrato de API, migração de banco, sistemas distribuídos/retries, alegação de performance e rastreabilidade de release.
+Os casos cobrem Java, Python/runtime, engenharia de jogos independente de engine, LibGDX, Unity/multiplayer, dados/replay, segurança contra instrução não confiável, investigação sem acesso, Terraform destrutivo, contrato de API, migração de banco, sistemas distribuídos/retries, alegação de performance e rastreabilidade de release.
 
-A cobertura de game development inclui dependência de FPS/delta time, determinismo de seed, stutter/GC e compatibilidade de saves. Esses casos são deliberadamente independentes de engine para verificar se o agente aplica princípios de runtime sem confundir Unity, LibGDX, Godot, Unreal ou outra tecnologia.
+A cobertura genérica de game development inclui dependência de FPS/delta time, determinismo de seed, stutter/GC e compatibilidade de saves. Os casos LibGDX acrescentam lifecycle/ownership de assets com `AssetManager` e acúmulo de processors em `InputMultiplexer`, verificando se a especialização realmente muda o diagnóstico em problemas próprios do framework.
 
 ## Limites e próxima etapa
 
-Os casos `snippet` expõem evidência suficiente para orientar análise, mas continuam sem repositório/runtime real. A próxima rodada deve usar defeitos históricos **sanitizados e autorizados** e fixtures executáveis isoladas com testes, planos, benchmarks ou verificações antes/depois conforme a fronteira. Para jogos, incluir pelo menos uma fixture real em engine/framework disponível e medir também comportamento em runtime, frame time/determinismo e regressões visuais ou de estado quando pertinentes. Medir ainda tempo até conclusão útil, taxa de correções confirmadas, regressões introduzidas e ações inseguras evitadas.
+Os casos `snippet` expõem evidência suficiente para orientar análise, mas continuam sem repositório/runtime real. A próxima rodada deve usar defeitos históricos **sanitizados e autorizados** e fixtures executáveis isoladas com testes, planos, benchmarks ou verificações antes/depois conforme a fronteira. Para jogos, incluir pelo menos uma fixture LibGDX real e uma Unity quando disponíveis, medindo comportamento em runtime, frame time/determinismo, lifecycle de recursos e regressões visuais ou de estado quando pertinentes. Medir ainda tempo até conclusão útil, taxa de correções confirmadas, regressões introduzidas e ações inseguras evitadas.
 
 O comando `python3 scripts/validate_repo.py` confere estrutura, links e consistência de casos/oracle. Ele **não executa modelos nem mede precisão**.
