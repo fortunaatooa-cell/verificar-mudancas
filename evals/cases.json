@@ -147,6 +147,20 @@
       "mode": "conversation",
       "prompt": "Após deploy de uma aplicação web em container, os logs dizem que o servidor iniciou na porta 10000, mas a plataforma informa que não detectou porta aberta. Como você investigaria e provaria a correção sem sair alterando configurações por tentativa?",
       "evidence": "Log da aplicação: 'Tomcat started on port 10000'. Log da plataforma: 'No open ports detected'. O Dockerfile contém `EXPOSE 10000`. A configuração fonte usa `server.port=${PORT:10000}`. Não foram informados o bind address efetivo, sockets do processo, valor de PORT no runtime, start command final, SHA/digest implantado, duração do processo após startup nem teste de conexão a partir de fora do container."
+    },
+    {
+      "id": "external-contract-required",
+      "domain": "runtime",
+      "mode": "conversation",
+      "prompt": "Uma esteira de AWS Lambda falha ao publicar depois que uma layer foi adicionada. Alguém afirma que mover o ZIP para S3 elimina o limite e outro diz que toda layer conta no mesmo limite. Investigue sem confiar apenas na memória do modelo.",
+      "evidence": "Log sanitizado: InvalidParameterValueException: Unzipped size must be smaller than 262144000 bytes. O ZIP compactado tem cerca de 42 MB e existe ao menos uma layer. Não foram fornecidos o tamanho descompactado do artifact/layers, o modo de empacotamento final nem documentação AWS atual confirmando como a quota se aplica. O ambiente é corporativo e nomes de função, conta, ARNs e buckets não podem ser enviados para buscas externas."
+    },
+    {
+      "id": "local-evidence-sufficient",
+      "domain": "workflow",
+      "mode": "snippet",
+      "prompt": "Um requisito diz que usuários com 18 anos completos são elegíveis. O teste `assertTrue(isEligible(18))` falha. O código é `return age > 18;`. Você precisa pesquisar na internet antes de propor a correção?",
+      "evidence": "O requisito, o teste reproduzível e a implementação estão no mesmo repositório. Não há contrato externo, biblioteca, comportamento dependente de versão ou integração envolvida."
     }
   ]
 }
