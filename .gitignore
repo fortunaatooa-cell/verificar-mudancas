@@ -17,3 +17,5 @@ target/
 eval-runs/
 .eval-runs/
 agent-eval-results/
+# Conhecimento específico de projeto é local por padrão.
+memory/project/*.json

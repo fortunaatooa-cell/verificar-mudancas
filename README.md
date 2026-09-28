@@ -13,14 +13,15 @@ O resultado depende do acesso permitido ao projeto, da qualidade da evidência e
 O núcleo é `.agents/skills/verificar-mudancas/` e continua utilizável sozinho. A instalação completa adiciona:
 
 1. **Referências e playbooks sob demanda** — stack, runtime, dados, segurança, IaC, contratos e tipos de tarefa.
-2. **Orquestração** — [AGENTS.md](AGENTS.md) e oito papéis especializados.
-3. **Comandos em português** — `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade` e `/aprender`.
-4. **Regras compartilhadas** — evidência, testes, mudança segura, HIGH/CRITICAL e ambiente regulado.
-5. **Hooks portáteis** — `pre-edit`, `post-edit` e `pre-finish`, com runner executável.
+2. **Skills auxiliares** — `investigar`, `estrategia-testes`, `revisar-mudanca` e `diagnosticar-runtime` para composição em harnesses que suportem skills.
+3. **Orquestração** — [AGENTS.md](AGENTS.md) e oito papéis especializados.
+4. **Comandos em português** — `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade` e `/aprender`.
+5. **Regras e hooks** — evidência, testes, mudança segura, HIGH/CRITICAL, ambiente regulado, `pre-edit`, `post-edit` e `pre-finish`.
 6. **Quality gate** — plano conservador e execução explícita de checks.
-7. **Memória controlada** — lessons, patterns e incidents sanitizados; memória é pista, não verdade.
-8. **Adapters** — generic, Codex, Claude, Devin e Copilot com capability detection/fallback.
-9. **Instalador** — modo `skill` ou `full`, dry-run e preservação de arquivos existentes.
+7. **Memória controlada** — lessons, patterns, incidents e project knowledge sanitizados; memória é pista, não verdade.
+8. **Continuous learning seguro** — aprendizado explícito e geração revisável de eval de regressão, sem promoção automática ao core.
+9. **Adapters** — generic, Codex, Claude, Devin e Copilot com capability detection/fallback, incluindo ferramentas externas.
+10. **Instalador** — modo `skill` ou `full`, dry-run e preservação de arquivos existentes.
 
 A especificação implementada está em [docs/agentic-system.md](docs/agentic-system.md) e a instalação em [docs/installation.md](docs/installation.md).
 
@@ -29,7 +30,7 @@ A especificação implementada está em [docs/agentic-system.md](docs/agentic-sy
 - [SKILL.md](.agents/skills/verificar-mudancas/SKILL.md): ciclo universal, classificação, risco, critérios de aceite, stop conditions, revisão e verificação.
 - [Referências](.agents/skills/verificar-mudancas/references/) e [playbooks](.agents/skills/verificar-mudancas/playbooks/).
 - [Agentes](.agents/agents/README.md), [comandos](.agents/commands/README.md), [regras](.agents/rules/README.md) e [hooks](.agents/hooks/README.md).
-- [Memória](memory/README.md), [adapters](adapters/README.md) e schemas portáteis em `schemas/`.
+- [Memória](memory/README.md), [adapters](adapters/README.md), schemas portáteis em `schemas/` e [regressões geradas](evals/regression/README.md).
 - [Avaliações](evals/README.md), [evals agentic](evals/agentic/README.md) e [A/B controlado](evals/ab/README.md).
 - [Prompt para chat](prompt-chat-equipe.md) para superfícies sem acesso ao repositório.
 
@@ -63,7 +64,9 @@ Sem `--execute`, o runner não executa os checks. Em projeto instalado, use `.ve
 
 ## Memória e aprendizado
 
-`/aprender` propõe aprendizado após uma execução. Conteúdo persistido deve estar sanitizado e pode ser validado/pesquisado com `scripts/memory_store.py`. Uma ocorrência não vira regra universal automaticamente; promoção exige revisão e regressão.
+`/aprender` propõe aprendizado após uma execução. Conteúdo persistido deve estar sanitizado e pode ser validado/pesquisado com `scripts/memory_store.py`. Conhecimento específico do projeto usa `project_knowledge` e fica ignorado pelo Git por padrão no repositório público. Uma ocorrência não vira regra universal automaticamente.
+
+Falhas que não devem retornar podem virar bundles de regressão com `scripts/create_regression_eval.py`; expectativas e proibições são explícitas e o bundle nasce como `REVIEW_REQUIRED`.
 
 ## Uso em diferentes ferramentas
 

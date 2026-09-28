@@ -11,16 +11,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class CapabilityTests(unittest.TestCase):
     def test_generic_resolves_and_keeps_fallback(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            result = detect(Path(tmp), ROOT / "adapters/generic")
-        self.assertEqual(result["adapter"], "generic")
-        self.assertIn("fallback", result)
+        with tempfile.TemporaryDirectory() as tmp: result = detect(Path(tmp), ROOT / "adapters/generic")
+        self.assertEqual(result["adapter"], "generic"); self.assertIn("fallback", result); self.assertIn("external_tools", result["resolved"])
 
-    def test_runtime_env_can_confirm_subagents(self):
-        with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, {"VM_CAP_SUBAGENTS": "true"}):
-            result = detect(Path(tmp), ROOT / "adapters/codex")
-        self.assertEqual(result["resolved"]["subagents"], "available")
+    def test_runtime_env_can_confirm_subagents_and_external_tools(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, {"VM_CAP_SUBAGENTS":"true","VM_CAP_EXTERNAL_TOOLS":"true"}): result = detect(Path(tmp), ROOT / "adapters/codex")
+        self.assertEqual(result["resolved"]["subagents"], "available"); self.assertEqual(result["resolved"]["external_tools"], "available")
 
 
-if __name__ == "__main__":
-    unittest.main()
+if __name__ == "__main__": unittest.main()

@@ -8,9 +8,9 @@ Ciclo: **investigar → classificar → planejar → provar → implementar → 
 
 ## Componentes
 
-### Núcleo
+### Núcleo e skills auxiliares
 
-`.agents/skills/verificar-mudancas/` continua sendo a fonte metodológica principal, com referências e playbooks carregados sob demanda.
+`.agents/skills/verificar-mudancas/` continua sendo a fonte metodológica principal, com referências e playbooks carregados sob demanda. A instalação completa também fornece skills focadas: `investigar`, `estrategia-testes`, `revisar-mudanca` e `diagnosticar-runtime`.
 
 ### Orquestração e especialistas
 
@@ -28,15 +28,21 @@ Ciclo: **investigar → classificar → planejar → provar → implementar → 
 
 `scripts/quality_gate.py` aceita configuração explícita ou detecta candidatos comuns. Sem `--execute`, apenas mostra o plano. Com execução autorizada produz `PASS`, `FAIL`, `PARTIAL`, `BLOCKED` ou `N/A` com evidência dos checks.
 
+### Evidência estruturada
+
+`schemas/evidence.schema.json` representa claim, status, evidências e limitações. Resultado anterior à última edição não é suficiente para uma conclusão final sem ligação causal.
+
 ### Memória e continuous learning
 
-`memory/` guarda `lesson`, `pattern` e `incident` sanitizados. `scripts/memory_store.py` valida privacidade, indexa e faz busca local. `agente-aprendizado` decide se uma conclusão merece proposta de memória, referência/playbook, regra ou eval. Nenhuma promoção para o core é automática.
+`memory/` guarda `lesson`, `pattern`, `incident` e `project_knowledge` sanitizados. Conhecimento específico de projeto fica em `memory/project/` e JSON é ignorado pelo Git por padrão neste repositório público. `scripts/memory_store.py` valida privacidade, indexa e busca localmente.
+
+`agente-aprendizado` decide se uma conclusão merece proposta de memória, referência/playbook, regra ou eval. `scripts/create_regression_eval.py` gera um bundle de regressão revisável e exige `expected` e `forbidden` explícitos; o sistema não inventa oracle.
 
 Memória é sempre evidência histórica: nunca substitui investigação do caso atual.
 
 ### Adapters
 
-`adapters/` contém `generic`, `codex`, `claude`, `devin` e `copilot`. Manifests usam `runtime-detect` quando a capacidade pode variar. `scripts/detect_capabilities.py` resolve apenas o que pode ser observado ou explicitamente informado e preserva fallback sequencial.
+`adapters/` contém `generic`, `codex`, `claude`, `devin` e `copilot`. As capabilities canônicas são `repository_read`, `repository_write`, `shell`, `web`, `subagents`, `hooks`, `persistent_memory` e `external_tools`. Manifests usam `runtime-detect` quando a capacidade pode variar. `scripts/detect_capabilities.py` resolve apenas o observável ou explicitamente informado e preserva fallback sequencial.
 
 ### Instalador
 
@@ -58,9 +64,7 @@ Memória é sempre evidência histórica: nunca substitui investigação do caso
 
 ## Segurança e stop conditions
 
-O sistema bloqueia ou interrompe automação quando faltam elementos materiais, especialmente em HIGH/CRITICAL: ambiente/alvo, recuperação, aprovação humana quando requerida, blast radius, stop conditions ou evidência após a última mudança.
-
-Nunca automatizar ação externa destrutiva apenas por inferência. Políticas locais mais restritivas prevalecem.
+O sistema bloqueia ou interrompe automação quando faltam elementos materiais, especialmente em HIGH/CRITICAL: ambiente/alvo, recuperação, aprovação humana quando requerida, blast radius, stop conditions ou evidência após a última mudança. Políticas locais mais restritivas prevalecem.
 
 ## Compatibilidade e degradação
 
@@ -68,7 +72,7 @@ Se subagentes não existirem, os papéis rodam sequencialmente. Se hooks não ex
 
 ## Evals e regressão
 
-`evals/agentic/` cobre bug, memória/runtime, segurança, investigação-only, HIGH risk, memória como pista, sanitização de aprendizado, quality gate e degradação de adapter. Unit tests cobrem validadores, hooks, memória, quality gate, capabilities e instalador.
+`evals/agentic/` cobre bug, memória/runtime, segurança, investigação-only, HIGH risk, memória como pista, sanitização de aprendizado, quality gate e degradação de adapter. `evals/regression/` recebe propostas geradas e revisadas. Unit tests cobrem validadores, hooks, memória, quality gate, capabilities, instalador e geração de regressão.
 
 A/B continua sendo a forma de medir se o sistema melhora o mesmo modelo contra baseline sem a skill. Resultado negativo deve ser preservado.
 
@@ -78,7 +82,7 @@ A/B continua sendo a forma de medir se o sistema melhora o mesmo modelo contra b
 - v1.5 — orquestrador e especialistas: implementado.
 - v1.8 — regras, comandos e quality gate: implementado.
 - v2.0 — hooks e capability detection: implementado com fallback portátil.
-- v2.5 — memória e aprendizado controlado: implementado sem promoção automática.
+- v2.5 — memória, project knowledge, retrieval e aprendizado/regressão controlados: implementado sem promoção automática.
 - v3.0 — adapters e instalador: implementado.
 
 A branch de desenvolvimento continua separada da `main`; merge/tag dependem de revisão e CI verde.

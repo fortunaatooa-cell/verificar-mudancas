@@ -16,9 +16,7 @@ python3 scripts/install.py --target /caminho/do/projeto --adapter codex --mode f
 python3 scripts/install.py --target /caminho/do/projeto --adapter codex --mode full
 ```
 
-Por padrão, arquivos existentes são preservados. Use `--force` somente após revisar o dry-run.
-
-A instalação completa coloca skill/agentes/comandos/regras/hooks em `.agents/`, schemas/adapter/scripts portáteis em `.verificar-mudancas/` e a estrutura local de `memory/`.
+Por padrão, arquivos existentes são preservados. Use `--force` somente após revisar o dry-run. A instalação completa inclui núcleo, skills auxiliares, agentes/comandos/regras/hooks, schemas, adapter, scripts portáteis e estrutura de memória.
 
 ## Detectar capabilities
 
@@ -32,28 +30,34 @@ Após instalação completa:
 python3 .verificar-mudancas/scripts/detect_capabilities.py --adapter codex --root .
 ```
 
-Capabilities não observáveis podem ser declaradas pelo ambiente (`VM_CAP_WEB`, `VM_CAP_SUBAGENTS`, `VM_CAP_HOOKS`, `VM_CAP_MEMORY`). Ausência de confirmação resulta em `unknown`.
+Capabilities não observáveis podem ser declaradas por `VM_CAP_WEB`, `VM_CAP_SUBAGENTS`, `VM_CAP_HOOKS`, `VM_CAP_MEMORY` e `VM_CAP_EXTERNAL_TOOLS`. Ausência de confirmação resulta em `unknown`.
 
 ## Quality gate
 
-Primeiro planeje:
+Primeiro planeje e depois, somente após revisar comandos, use `--execute`:
 
 ```bash
 python3 .verificar-mudancas/scripts/quality_gate.py --root .
-```
-
-Depois de revisar os comandos:
-
-```bash
 python3 .verificar-mudancas/scripts/quality_gate.py --root . --execute
 ```
 
 Para uso corporativo, prefira configuração explícita `.verificar-mudancas/quality-gate.json` aprovada pelo time.
 
-## Memória
+## Memória e regressão
 
 ```bash
 python3 .verificar-mudancas/scripts/memory_store.py --root . search "OOM container"
 ```
 
-Adicionar memória é ação explícita e exige conteúdo sanitizado.
+Conhecimento específico do projeto pode usar `kind: project_knowledge`; mantenha-o somente no workspace autorizado. Para transformar uma memória sanitizada em proposta de regressão:
+
+```bash
+python3 .verificar-mudancas/scripts/create_regression_eval.py \
+  --source memory/lessons/exemplo.json \
+  --id regression-exemplo \
+  --prompt "Investigue o caso" \
+  --expected "verificar a fronteira correta" \
+  --forbidden "assumir causa sem evidência"
+```
+
+O bundle sai como `REVIEW_REQUIRED`; revise antes de promovê-lo para um pack oficial.

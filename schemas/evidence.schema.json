@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://verificar-mudancas.local/schemas/evidence.schema.json",
+  "type":"object",
+  "required":["claim","status","evidence"],
+  "properties":{
+    "claim":{"type":"string","minLength":1},
+    "status":{"enum":["VERIFIED","PARTIALLY_VERIFIED","UNVERIFIED","BLOCKED"]},
+    "evidence":{"type":"array","items":{"type":"object","required":["kind","description"],"properties":{"kind":{"type":"string","minLength":1},"description":{"type":"string","minLength":1},"source":{"type":"string"},"executed_at":{"type":"string"}},"additionalProperties":true}},
+    "limitations":{"type":"array","items":{"type":"string"}}
+  },
+  "additionalProperties":false
+}

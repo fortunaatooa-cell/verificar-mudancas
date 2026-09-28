@@ -5,12 +5,13 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 ## Unreleased
 
 ### Added
-- Arquitetura agentic completa em branch isolada: orquestração, oito papéis, comandos em português, regras e hooks portáteis.
+- Arquitetura agentic completa em branch isolada: orquestração, oito papéis, comandos em português, regras, hooks e quatro skills auxiliares.
 - Quality gate conservador com modo plano por padrão e execução explícita, além de config para validar o próprio repositório.
-- Memória local sanitizada para lessons/patterns/incidents, índice reconstruível, busca e agente de aprendizado sem promoção automática.
-- Adapters `generic`, `codex`, `claude`, `devin` e `copilot` com capabilities declarativas, detecção conservadora e fallback sequencial.
+- Memória local sanitizada para lessons/patterns/incidents/project knowledge, índice reconstruível, busca e agente de aprendizado sem promoção automática.
+- Gerador de eval de regressão revisável a partir de memória sanitizada, com oracle explícito obrigatório.
+- Adapters `generic`, `codex`, `claude`, `devin` e `copilot` com capabilities declarativas, incluindo ferramentas externas, detecção conservadora e fallback sequencial.
 - Instalador portátil com modos `skill`/`full`, `--dry-run`, seleção de adapter e preservação de arquivos existentes.
-- Schemas para memória, capabilities, hooks, quality gate e observabilidade de runs.
+- Schemas para tarefa, investigação, evidência, resultado, memória, conhecimento de projeto, capabilities, hooks, quality gate e observabilidade de runs.
 - Evals agentic para memória como pista, sanitização, quality gate e degradação de adapter, além de unit tests dos runners.
 - Casos `obsolete-test-production-change` e `extracted-selector-unused` para revisão de teste obsoleto, severidade, ligação com o chamador e descoberta de ferramentas locais.
 - Doze testes de regressão do validador, dependência de manutenção PyYAML e execução dos testes no CI.
@@ -27,7 +28,7 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 - Runner Python passa a trabalhar em diretório temporário, sem sujar a fixture.
 - Validação do repositório passa a proteger o orçamento do núcleo e arquivos de higiene.
 - Helper de preparação A/B passa a expor funções reutilizáveis pelo runner executável.
-- Validação agentic passa a cobrir agentes, comandos, regras, hooks, memória, adapters, schemas, scripts e casos de regressão.
+- Validação agentic passa a cobrir núcleo auxiliar, agentes, comandos, regras, hooks, memória, adapters, schemas, scripts e casos de regressão.
 
 ### Fixed
 - O validador agora interpreta YAML com carregador seguro e rejeita campos duplicados ou inválidos; tipos incorretos em IDs, modos e domínios dos casos produzem erros de validação em vez de traceback.

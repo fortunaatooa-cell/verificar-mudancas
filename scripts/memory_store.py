@@ -7,7 +7,7 @@ import re
 import shutil
 from pathlib import Path
 
-KINDS = {"lesson": "lessons", "pattern": "patterns", "incident": "incidents"}
+KINDS = {"lesson": "lessons", "pattern": "patterns", "incident": "incidents", "project_knowledge": "project"}
 SECRET_VALUE_PATTERNS = [re.compile(r"AKIA[0-9A-Z]{16}"), re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")]
 SENSITIVE_KEYS = {"password", "passwd", "token", "secret", "api_key", "apikey", "access_key", "private_key"}
 
@@ -31,7 +31,7 @@ def privacy_errors(doc):
         errors.append("id textual obrigatório")
     kind = doc.get("kind")
     if kind not in KINDS:
-        errors.append("kind deve ser lesson, pattern ou incident")
+        errors.append("kind deve ser lesson, pattern, incident ou project_knowledge")
     privacy = doc.get("privacy")
     if not isinstance(privacy, dict) or privacy.get("sanitized") is not True:
         errors.append("privacy.sanitized=true é obrigatório")
@@ -101,7 +101,7 @@ def search(root, query, limit=10):
         if score:
             scored.append((score, doc, path))
     scored.sort(key=lambda item: (-item[0], str(item[2])))
-    return [{"score": score, "id": doc.get("id"), "kind": doc.get("kind"), "path": str(path.relative_to(root)).replace("\\", "/"), "summary": doc.get("title") or doc.get("symptom") or doc.get("generalizable_learning")} for score, doc, path in scored[:limit]]
+    return [{"score": score, "id": doc.get("id"), "kind": doc.get("kind"), "path": str(path.relative_to(root)).replace("\\", "/"), "summary": doc.get("title") or doc.get("symptom") or doc.get("generalizable_learning") or doc.get("id")} for score, doc, path in scored[:limit]]
 
 
 def validate(root):
@@ -126,23 +126,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
     sub = parser.add_subparsers(dest="command", required=True)
-    add_p = sub.add_parser("add")
-    add_p.add_argument("file")
-    add_p.add_argument("--force", action="store_true")
-    search_p = sub.add_parser("search")
-    search_p.add_argument("query")
-    search_p.add_argument("--limit", type=int, default=10)
-    sub.add_parser("reindex")
-    sub.add_parser("validate")
-    args = parser.parse_args()
-    root = Path(args.root).resolve()
+    add_p = sub.add_parser("add"); add_p.add_argument("file"); add_p.add_argument("--force", action="store_true")
+    search_p = sub.add_parser("search"); search_p.add_argument("query"); search_p.add_argument("--limit", type=int, default=10)
+    sub.add_parser("reindex"); sub.add_parser("validate")
+    args = parser.parse_args(); root = Path(args.root).resolve()
     if args.command == "add":
         try:
-            path = add(root, args.file, args.force)
-            print(path)
+            print(add(root, args.file, args.force))
         except (OSError, ValueError) as exc:
-            print(f"ERRO: {exc}")
-            raise SystemExit(1)
+            print(f"ERRO: {exc}"); raise SystemExit(1)
     elif args.command == "search":
         print(json.dumps(search(root, args.query, args.limit), ensure_ascii=False, indent=2))
     elif args.command == "reindex":
@@ -150,8 +142,7 @@ def main():
     else:
         errors = validate(root)
         if errors:
-            for error in errors:
-                print(f"ERRO: {error}")
+            for error in errors: print(f"ERRO: {error}")
             raise SystemExit(1)
         print("Memória válida e sanitizada.")
 

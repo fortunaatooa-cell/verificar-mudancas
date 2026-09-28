@@ -1,6 +1,1 @@
-{
-  "adapter":"copilot",
-  "version":1,
-  "capabilities":{"repository_read":"runtime-detect","repository_write":"runtime-detect","shell":"runtime-detect","web":"runtime-detect","subagents":"runtime-detect","hooks":"runtime-detect","persistent_memory":"emulated"},
-  "command_strategy":"staged-prompts"
-}
+{"adapter":"copilot","version":1,"capabilities":{"repository_read":"runtime-detect","repository_write":"runtime-detect","shell":"runtime-detect","web":"runtime-detect","subagents":"runtime-detect","hooks":"runtime-detect","persistent_memory":"emulated","external_tools":"runtime-detect"},"command_strategy":"staged-prompts"}
