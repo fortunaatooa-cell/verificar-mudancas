@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Run isolated A/B agent evaluations with Codex CLI.
-
-This runner is intentionally strict: baseline runs must not be able to discover a
-user-level copy of verificar-mudancas, every execution gets a fresh workspace,
-and the same model/configuration is used for both conditions.
-"""
+"""Run isolated A/B agent evaluations with Codex CLI."""
 
 from __future__ import annotations
 
@@ -29,39 +24,19 @@ from prepare_ab_eval import DEFAULT_SEED, prepare
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_RELATIVE = Path(".agents/skills/verificar-mudancas")
 REQUIRED_CODEX_FLAGS = {
-    "--ephemeral",
-    "--ignore-user-config",
-    "--ignore-rules",
-    "--sandbox",
-    "--skip-git-repo-check",
-    "--output-last-message",
-    "--json",
+    "--ephemeral", "--ignore-user-config", "--ignore-rules", "--sandbox",
+    "--skip-git-repo-check", "--output-last-message", "--json",
 }
 SCORE_FIELDS = [
-    "classificacao",
-    "aceite",
-    "risco",
-    "causa",
-    "experimento",
-    "fronteira",
-    "regressao",
-    "compatibilidade",
-    "seguranca",
-    "observabilidade",
-    "honestidade",
-    "escopo",
+    "classificacao", "aceite", "risco", "causa", "experimento", "fronteira",
+    "regressao", "compatibilidade", "seguranca", "observabilidade", "honestidade", "escopo",
 ]
 
 
 def run_capture(command: list[str], cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        command,
-        cwd=cwd,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        stdin=subprocess.DEVNULL,
-        check=False,
+        command, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        stdin=subprocess.DEVNULL, check=False,
     )
 
 
@@ -77,14 +52,12 @@ def ensure_skill_clean() -> None:
     if result.returncode != 0:
         raise RuntimeError("não foi possível verificar o estado da skill")
     if result.stdout.strip():
-        raise RuntimeError(
-            "a skill possui alterações locais; commit/stash antes do benchmark para fixar a versão"
-        )
+        raise RuntimeError("a skill possui alterações locais; commit/stash antes do benchmark para fixar a versão")
 
 
 def global_skill_paths() -> list[Path]:
     home = Path.home()
-    codex_home = Path(os.environ.get("CODEX_HOME", home / ".codex"))
+    codex_home = Path(os.environ.get("CODEX_HOME", str(home / ".codex")))
     candidates = [
         home / ".agents" / "skills" / "verificar-mudancas",
         codex_home / "skills" / "verificar-mudancas",
@@ -96,8 +69,7 @@ def command_prefix(raw: str) -> list[str]:
     parts = shlex.split(raw, posix=os.name != "nt")
     if not parts:
         raise RuntimeError("--codex-bin vazio")
-    executable = shutil.which(parts[0])
-    if executable is None and not Path(parts[0]).exists():
+    if shutil.which(parts[0]) is None and not Path(parts[0]).exists():
         raise RuntimeError(f"executável não encontrado: {parts[0]}")
     return parts
 
@@ -106,16 +78,13 @@ def codex_preflight(prefix: list[str]) -> str:
     version = run_capture(prefix + ["--version"])
     if version.returncode != 0:
         raise RuntimeError("falha ao executar Codex: " + version.stderr.strip())
-
     help_result = run_capture(prefix + ["exec", "--help"])
     if help_result.returncode != 0:
         raise RuntimeError("falha ao consultar `codex exec --help`")
     help_text = help_result.stdout + "\n" + help_result.stderr
     missing = sorted(flag for flag in REQUIRED_CODEX_FLAGS if flag not in help_text)
     if missing:
-        raise RuntimeError(
-            "versão do Codex não expõe flags exigidas para isolamento: " + ", ".join(missing)
-        )
+        raise RuntimeError("versão do Codex não expõe flags exigidas para isolamento: " + ", ".join(missing))
     return (version.stdout or version.stderr).strip()
 
 
@@ -149,9 +118,7 @@ def copy_treatment_skill(workspace: Path) -> None:
 
 
 def response_sha256(path: Path) -> str | None:
-    if not path.is_file():
-        return None
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
 
 
 def parse_jsonl_metrics(path: Path) -> tuple[dict[str, int], int]:
@@ -159,7 +126,6 @@ def parse_jsonl_metrics(path: Path) -> tuple[dict[str, int], int]:
     tool_calls = 0
     if not path.is_file():
         return usage, tool_calls
-
     for raw in path.read_text(encoding="utf-8", errors="replace").splitlines():
         try:
             event = json.loads(raw)
@@ -172,9 +138,8 @@ def parse_jsonl_metrics(path: Path) -> tuple[dict[str, int], int]:
         candidate = event.get("usage")
         if isinstance(candidate, dict):
             for key in ("input_tokens", "output_tokens", "total_tokens"):
-                value = candidate.get(key)
-                if isinstance(value, int):
-                    usage[key] = value
+                if isinstance(candidate.get(key), int):
+                    usage[key] = candidate[key]
     return usage, tool_calls
 
 
@@ -185,44 +150,49 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None
         writer.writerows(rows)
 
 
+def read_csv(path: Path) -> list[dict[str, str]]:
+    with path.open(encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
 def create_grading_sheet(out: Path, operator_rows: list[dict[str, str]]) -> None:
+    grading_path = out / "grading.csv"
+    existing: dict[str, dict[str, str]] = {}
+    if grading_path.is_file():
+        existing = {row["blind_id"]: row for row in read_csv(grading_path)}
+
     rows = []
     for row in operator_rows:
-        response = out / "responses" / f"{row['blind_id']}.md"
-        metadata_path = out / "operator_logs" / f"{row['blind_id']}.json"
+        blind_id = row["blind_id"]
+        response = out / "responses" / f"{blind_id}.md"
+        metadata_path = out / "operator_logs" / f"{blind_id}.json"
         status = "missing"
         if metadata_path.is_file():
             try:
                 status = json.loads(metadata_path.read_text(encoding="utf-8")).get("status", "missing")
             except json.JSONDecodeError:
                 status = "invalid-metadata"
+        previous = existing.get(blind_id, {})
         grading = {
-            "blind_id": row["blind_id"],
+            "blind_id": blind_id,
             "case_id": row["case_id"],
             "repetition": row["repetition"],
             "response_file": str(response.relative_to(out)) if response.exists() else "",
             "status": status,
         }
-        grading.update({field: "" for field in SCORE_FIELDS})
-        grading["violacoes"] = ""
-        grading["observacoes"] = ""
+        grading.update({field: previous.get(field, "") for field in SCORE_FIELDS})
+        grading["violacoes"] = previous.get("violacoes", "")
+        grading["observacoes"] = previous.get("observacoes", "")
         rows.append(grading)
     write_csv(
-        out / "grading.csv",
-        rows,
+        grading_path, rows,
         ["blind_id", "case_id", "repetition", "response_file", "status", *SCORE_FIELDS, "violacoes", "observacoes"],
     )
 
 
 def execute_one(
-    prefix: list[str],
-    row: dict[str, str],
-    out: Path,
-    model: str,
-    reasoning_effort: str,
-    web_search: str,
-    timeout_seconds: int,
-    keep_workspace: bool,
+    prefix: list[str], row: dict[str, str], out: Path, model: str,
+    reasoning_effort: str, web_search: str, timeout_seconds: int, keep_workspace: bool,
 ) -> dict[str, Any]:
     blind_id = row["blind_id"]
     responses = out / "responses"
@@ -234,31 +204,18 @@ def execute_one(
     stderr_path = logs / f"{blind_id}.stderr.log"
     metadata_path = logs / f"{blind_id}.json"
 
-    workspace_root = Path(tempfile.mkdtemp(prefix=f"verificar-ab-{blind_id}-"))
+    workspace = Path(tempfile.mkdtemp(prefix=f"verificar-ab-{blind_id}-"))
     if row["condition"] == "with_skill":
-        copy_treatment_skill(workspace_root)
+        copy_treatment_skill(workspace)
 
-    prompt = build_prompt(row)
     command = prefix + [
-        "exec",
-        "--ephemeral",
-        "--ignore-user-config",
-        "--ignore-rules",
-        "--sandbox",
-        "read-only",
-        "--skip-git-repo-check",
-        "--json",
-        "--output-last-message",
-        str(response_path.resolve()),
-        "--model",
-        model,
-        "--cd",
-        str(workspace_root.resolve()),
-        "--config",
-        f'model_reasoning_effort="{reasoning_effort}"',
-        "--config",
-        f'web_search="{web_search}"',
-        prompt,
+        "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules",
+        "--sandbox", "read-only", "--skip-git-repo-check", "--json",
+        "--output-last-message", str(response_path.resolve()), "--model", model,
+        "--cd", str(workspace.resolve()),
+        "--config", f'model_reasoning_effort="{reasoning_effort}"',
+        "--config", f'web_search="{web_search}"',
+        build_prompt(row),
     ]
 
     started = time.monotonic()
@@ -267,26 +224,18 @@ def execute_one(
     try:
         with events_path.open("w", encoding="utf-8") as stdout, stderr_path.open("w", encoding="utf-8") as stderr:
             completed = subprocess.run(
-                command,
-                cwd=workspace_root,
-                stdin=subprocess.DEVNULL,
-                stdout=stdout,
-                stderr=stderr,
-                text=True,
-                timeout=timeout_seconds,
-                check=False,
-                env={**os.environ, "NO_COLOR": "1"},
+                command, cwd=workspace, stdin=subprocess.DEVNULL, stdout=stdout, stderr=stderr,
+                text=True, timeout=timeout_seconds, check=False, env={**os.environ, "NO_COLOR": "1"},
             )
             exit_code = completed.returncode
     except subprocess.TimeoutExpired:
         timed_out = True
     elapsed = round(time.monotonic() - started, 3)
 
-    has_response = response_path.is_file() and bool(response_path.read_text(encoding="utf-8", errors="replace").strip())
+    response_text = response_path.read_text(encoding="utf-8", errors="replace") if response_path.is_file() else ""
+    has_response = bool(response_text.strip())
     status = "success" if exit_code == 0 and not timed_out and has_response else "failed"
     usage, tool_calls = parse_jsonl_metrics(events_path)
-    response_chars = response_path.stat().st_size if response_path.is_file() else 0
-
     metadata: dict[str, Any] = {
         "blind_id": blind_id,
         "case_id": row["case_id"],
@@ -296,25 +245,53 @@ def execute_one(
         "exit_code": exit_code,
         "timed_out": timed_out,
         "elapsed_seconds": elapsed,
-        "response_chars": response_chars,
+        "response_chars": len(response_text),
         "response_sha256": response_sha256(response_path),
         "tool_calls": tool_calls,
         "token_usage": usage,
-        "workspace_had_skill": (workspace_root / SKILL_RELATIVE).is_dir(),
+        "workspace_had_skill": (workspace / SKILL_RELATIVE).is_dir(),
     }
-    metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-    if not keep_workspace:
-        shutil.rmtree(workspace_root, ignore_errors=True)
+    if keep_workspace:
+        metadata["workspace"] = str(workspace)
     else:
-        metadata["workspace"] = str(workspace_root)
-        metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        shutil.rmtree(workspace, ignore_errors=True)
+    metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return metadata
 
 
-def read_operator(path: Path) -> list[dict[str, str]]:
-    with path.open(encoding="utf-8", newline="") as handle:
-        return list(csv.DictReader(handle))
+def experiment_signature(
+    skill_commit: str, codex_version: str, model: str, reasoning_effort: str,
+    web_search: str, seed: int, rows: list[dict[str, str]], allow_contamination: bool,
+) -> dict[str, Any]:
+    return {
+        "skill_commit": skill_commit,
+        "codex_version": codex_version,
+        "model": model,
+        "reasoning_effort": reasoning_effort,
+        "web_search": web_search,
+        "sandbox": "read-only",
+        "ephemeral": True,
+        "ignore_user_config": True,
+        "ignore_rules": True,
+        "seed": seed,
+        "run_count": len(rows),
+        "blind_ids": sorted(row["blind_id"] for row in rows),
+        "global_skill_contamination_allowed": allow_contamination,
+    }
+
+
+def verify_resume(existing: dict[str, Any], current: dict[str, Any]) -> None:
+    keys = [
+        "skill_commit", "codex_version", "model", "reasoning_effort", "web_search", "sandbox",
+        "ephemeral", "ignore_user_config", "ignore_rules", "seed", "run_count", "blind_ids",
+        "global_skill_contamination_allowed",
+    ]
+    differences = [key for key in keys if existing.get(key) != current.get(key)]
+    if differences:
+        raise RuntimeError(
+            "--resume recusado porque a configuração mudou: " + ", ".join(differences)
+            + ". Use o mesmo comando/configuração ou inicie outro diretório."
+        )
 
 
 def main() -> None:
@@ -336,7 +313,6 @@ def main() -> None:
 
     if args.timeout_seconds < 1:
         raise SystemExit("--timeout-seconds deve ser >= 1")
-
     out = Path(args.out).resolve()
     if out.exists() and any(out.iterdir()) and not args.resume:
         raise SystemExit(f"diretório de saída não está vazio: {out}; use --resume ou outro diretório")
@@ -359,37 +335,29 @@ def main() -> None:
 
     operator_path = out / "operator.csv"
     if operator_path.exists() and args.resume:
-        rows = read_operator(operator_path)
+        rows = read_csv(operator_path)
     else:
         try:
-            prepare(
-                Path(args.cases),
-                out,
-                case_ids=args.case_ids,
-                repetitions=args.repetitions,
-                seed=args.seed,
-            )
+            prepare(Path(args.cases), out, case_ids=args.case_ids, repetitions=args.repetitions, seed=args.seed)
         except ValueError as exc:
             raise SystemExit(str(exc)) from exc
-        rows = read_operator(operator_path)
+        rows = read_csv(operator_path)
 
-    experiment = {
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "skill_commit": skill_commit,
-        "codex_version": codex_version,
-        "model": args.model,
-        "reasoning_effort": args.reasoning_effort,
-        "web_search": args.web_search,
-        "sandbox": "read-only",
-        "ephemeral": True,
-        "ignore_user_config": True,
-        "ignore_rules": True,
-        "seed": args.seed,
-        "requested_repetitions": args.repetitions,
-        "run_count": len(rows),
-        "global_skill_contamination_allowed": args.allow_global_skill_contamination,
-    }
-    (out / "experiment.json").write_text(json.dumps(experiment, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    signature = experiment_signature(
+        skill_commit, codex_version, args.model, args.reasoning_effort, args.web_search,
+        args.seed, rows, args.allow_global_skill_contamination,
+    )
+    experiment_path = out / "experiment.json"
+    if args.resume and experiment_path.is_file():
+        try:
+            existing = json.loads(experiment_path.read_text(encoding="utf-8"))
+            verify_resume(existing, signature)
+        except (json.JSONDecodeError, RuntimeError) as exc:
+            raise SystemExit(str(exc)) from exc
+        experiment = existing
+    else:
+        experiment = {"created_at": datetime.now(timezone.utc).isoformat(), **signature}
+        experiment_path.write_text(json.dumps(experiment, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     run_rows: list[dict[str, Any]] = []
     failures = 0
@@ -407,14 +375,8 @@ def main() -> None:
 
         print(f"[{index}/{len(rows)}] executando {row['blind_id']} ({row['case_id']})")
         metadata = execute_one(
-            prefix,
-            row,
-            out,
-            model=args.model,
-            reasoning_effort=args.reasoning_effort,
-            web_search=args.web_search,
-            timeout_seconds=args.timeout_seconds,
-            keep_workspace=args.keep_workspaces,
+            prefix, row, out, args.model, args.reasoning_effort, args.web_search,
+            args.timeout_seconds, args.keep_workspaces,
         )
         run_rows.append(metadata)
         if metadata["status"] != "success":
@@ -425,10 +387,11 @@ def main() -> None:
         "blind_id", "case_id", "condition", "repetition", "status", "exit_code", "timed_out",
         "elapsed_seconds", "response_chars", "response_sha256", "tool_calls",
     ]
-    normalized = []
-    for item in run_rows:
-        normalized.append({key: item.get(key, "") for key in result_fields})
-    write_csv(out / "results.csv", normalized, result_fields)
+    write_csv(
+        out / "results.csv",
+        [{key: item.get(key, "") for key in result_fields} for item in run_rows],
+        result_fields,
+    )
     create_grading_sheet(out, rows)
 
     statuses = Counter(item.get("status") for item in run_rows)
@@ -437,15 +400,11 @@ def main() -> None:
         "success": statuses.get("success", 0),
         "failed": statuses.get("failed", 0),
         "by_condition": {
-            condition: Counter(
-                item.get("status") for item in run_rows if item.get("condition") == condition
-            )
+            condition: dict(Counter(item.get("status") for item in run_rows if item.get("condition") == condition))
             for condition in ("baseline", "with_skill")
         },
     }
-    (out / "run-summary.json").write_text(
-        json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    (out / "run-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     print(f"Resultados: {out}")
     print(f"Sucesso: {summary['success']}/{summary['total']}")
