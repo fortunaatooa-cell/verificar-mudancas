@@ -14,3 +14,4 @@ Fixtures atuais:
 - `java-spring/`: fronteira HTTP, serialização/validação, transações, N+1, optimistic locking e concorrência usando Spring Boot + H2.
 - `terraform-replacement/`: diferencia update e replacement por plano JSON usando Terraform pinado e state local descartável.
 - `python-runtime/`: reproduz `read_parquet` sem engine, depois prova recuperação com PyArrow pinado e verifica fronteira de timezone.
+- `runtime-port-binding/`: prova que startup + `EXPOSE` + resposta em loopback dentro do container não implicam alcançabilidade pela porta publicada, e contrasta com bind em `0.0.0.0`.

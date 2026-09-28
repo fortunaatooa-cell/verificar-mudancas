@@ -31,21 +31,24 @@ Executar individualmente:
 ```bash
 bash evals/fixtures/libgdx/run.sh
 bash evals/fixtures/java-spring/run.sh
+bash evals/fixtures/terraform-replacement/run.sh
+bash evals/fixtures/python-runtime/run.sh
+bash evals/fixtures/runtime-port-binding/run.sh
 ```
 
-O workflow `Executar fixtures de avaliação` roda ambas no GitHub Actions. Os runners registram/pinam as versões necessárias para reduzir drift do experimento.
+O workflow `Executar fixtures de avaliação` roda as fixtures no GitHub Actions. Os runners registram/pinam as versões necessárias quando viável para reduzir drift do experimento.
 
-A fixture LibGDX confronta lifecycle de `Game`, `AssetManager`, `InputMultiplexer` e `Stage` com código real do framework. A fixture Java/Spring exercita o caso `java-404` na fronteira MVC e verifica semântica real de `flush` versus commit/rollback, checked exception e self-invocation transacional.
+A fixture LibGDX confronta lifecycle de `Game`, `AssetManager`, `InputMultiplexer` e `Stage` com código real do framework. A fixture Java/Spring exercita a fronteira MVC, serialização/validation, semântica transacional, queries/locking e concorrência. Terraform verifica semanticamente update versus replacement em plan JSON. Python verifica engine de parquet/runtime e timezone. A fixture de port binding confronta startup/`EXPOSE` com alcançabilidade real entre container e host.
 
 ## Cobertura atual
 
-Os casos cobrem Java, Python/runtime, engenharia de jogos independente de engine, LibGDX, Unity/multiplayer, dados/replay, segurança contra instrução não confiável, investigação sem acesso, Terraform destrutivo, contrato de API, migração de banco, sistemas distribuídos/retries, alegação de performance e rastreabilidade de release.
+Os casos cobrem Java, Python/runtime, engenharia de jogos independente de engine, LibGDX, Unity/multiplayer, dados/replay, segurança contra instrução não confiável, investigação sem acesso, Terraform destrutivo, contrato de API, migração de banco, sistemas distribuídos/retries, alegação de performance, rastreabilidade de release e diagnóstico de porta/bind após deploy.
 
 A cobertura genérica de game development inclui dependência de FPS/delta time, determinismo de seed, stutter/GC e compatibilidade de saves. Os casos LibGDX acrescentam lifecycle/ownership de assets com `AssetManager` e acúmulo de processors em `InputMultiplexer`.
 
 ## Limites e próxima etapa
 
-As fixtures atuais cobrem somente partes de Java/Spring e LibGDX. Elas não representam automaticamente PostgreSQL/MySQL/Oracle, servidores/proxies reais, Android, OpenGL, filas, cloud ou produção. Terraform, banco/migrações e sistemas distribuídos ainda precisam de fixtures próprias.
+As fixtures validam propriedades específicas em ambientes controlados. Elas não representam automaticamente PostgreSQL/MySQL/Oracle, proxies/PaaS reais, Android, OpenGL, filas, cloud ou produção. A fixture de port binding prova a fronteira Docker/host, mas não afirma que todo erro de detecção de porta em uma plataforma tem a mesma causa.
 
 A próxima etapa de evidência continua sendo executar os casos em sessões independentes **com e sem a skill**, mantendo modelo, acesso e contexto equivalentes. Medir tempo até conclusão útil, taxa de correções confirmadas, regressões introduzidas, falsa certeza e ações inseguras evitadas.
 

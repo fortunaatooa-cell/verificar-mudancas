@@ -55,3 +55,13 @@ jobs:
           python-version: '3.12'
       - name: Rodar fixture Python
         run: bash evals/fixtures/python-runtime/run.sh
+
+  runtime-port-binding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Confirmar Docker disponível
+        run: docker version
+      - name: Rodar fixture de bind e alcançabilidade
+        run: bash evals/fixtures/runtime-port-binding/run.sh
