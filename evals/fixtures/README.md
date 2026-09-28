@@ -11,4 +11,6 @@ Há três níveis de evidência distintos:
 Fixtures atuais:
 
 - `libgdx/`: lifecycle de assets e input usando classes reais do LibGDX em revisão fixa.
-- `java-spring/`: fronteira HTTP, transações JPA e proxy transacional usando Spring Boot + H2.
+- `java-spring/`: fronteira HTTP, serialização/validação, transações, N+1, optimistic locking e concorrência usando Spring Boot + H2.
+- `terraform-replacement/`: diferencia update e replacement por plano JSON usando Terraform pinado e state local descartável.
+- `python-runtime/`: reproduz `read_parquet` sem engine, depois prova recuperação com PyArrow pinado e verifica fronteira de timezone.

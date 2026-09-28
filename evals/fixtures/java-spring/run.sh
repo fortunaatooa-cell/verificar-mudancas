@@ -13,5 +13,11 @@ else
 fi
 printf '%s\n' '=== Java/Spring fixture: comportamento corrigido ==='
 "$MVN" -q -Dfixture.synthetic-fallback=false -Dtest=OrderDesiredContractTest test
+printf '%s\n' '=== Java/Spring fixture: contrato HTTP/Jackson/validation ==='
+"$MVN" -q -Dtest=HttpSerializationContractTest test
 printf '%s\n' '=== Java/Spring fixture: semântica transacional ==='
 "$MVN" -q -Dtest=SpringTransactionSemanticsTest test
+printf '%s\n' '=== Java/Spring fixture: JPA queries + optimistic locking ==='
+"$MVN" -q -Dtest=JpaBehaviorTest test
+printf '%s\n' '=== Java fixture: concorrência controlada ==='
+"$MVN" -q -Dtest=ConcurrencySemanticsTest test

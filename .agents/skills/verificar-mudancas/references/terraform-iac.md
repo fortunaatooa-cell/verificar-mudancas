@@ -12,7 +12,9 @@ Usar esta referência quando a mudança envolver Terraform, OpenTofu ou infraest
 ## Produzir evidência segura
 
 - Preferir os comandos e wrappers definidos pelo projeto. Quando aplicável e autorizado, verificar formatação e sintaxe com `terraform fmt -check` e `terraform validate` após inicialização compatível com o ambiente.
+- `terraform validate` verifica configuração, não compara a configuração com state/variáveis/recursos reais. Um `validate` verde não exclui replacement, destroy, drift ou blast radius que só aparecem no `plan` contextualizado.
 - Para mudança de comportamento, obter um `terraform plan` no ambiente correto e revisar o diff por endereço de recurso. Distinguir explicitamente **create**, **update in-place**, **destroy** e **replace** (`-/+` ou `+/-`).
+- Quando automatizar revisão, um plano salvo seguido de `terraform show -json` permite inspecionar `resource_changes[*].change.actions`. Replacement aparece como combinação `delete/create` ou `create/delete`; não inferir segurança apenas do resumo textual.
 - Investigar qualquer `forces replacement`, destruição inesperada, mudança de endereço, alteração de `count`/`for_each`, chave renomeada, provider trocado ou mudança de módulo antes de aceitar o plano. Uma alteração descrita como "só tag" não prova que o restante do plano é seguro.
 - Quando útil, salvar o plano (`-out`) e usar uma representação legível ou JSON para revisão automatizada, sem publicar conteúdo sensível. Não tratar `terraform validate` como prova de que a infraestrutura resultante é segura ou funcional.
 - Em suspeita de drift, comparar configuração, state e recurso remoto pelos meios autorizados. Um `plan` normal pode detectar diferenças, e um fluxo `-refresh-only` pode ajudar a isolar drift quando suportado e apropriado; não atualizar state apenas para fazer o diff desaparecer.

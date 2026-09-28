@@ -32,3 +32,26 @@ jobs:
           java-version: '17'
       - name: Rodar fixture LibGDX
         run: bash evals/fixtures/libgdx/run.sh
+
+  terraform:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4.0.1
+        with:
+          terraform_version: 1.16.4
+          terraform_wrapper: false
+      - name: Rodar fixture Terraform
+        run: bash evals/fixtures/terraform-replacement/run.sh
+
+  python-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Rodar fixture Python
+        run: bash evals/fixtures/python-runtime/run.sh
