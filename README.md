@@ -1,79 +1,83 @@
 # Verificar mudanças
 
-Skill portátil de engenharia inspirada no ciclo do [Everything Claude Code (ECC)](https://github.com/affaan-m/ECC). Ajuda agentes a investigar falhas, implementar mudanças e apresentar evidências verificáveis sem depender de uma linguagem, ferramenta ou ecossistema específico.
+Skill e sistema portátil de engenharia inspirado no ciclo do [Everything Claude Code (ECC)](https://github.com/affaan-m/ECC). Ajuda agentes a investigar falhas, implementar mudanças e apresentar evidências verificáveis sem depender de uma linguagem, ferramenta ou ecossistema específico.
 
 **investigar → classificar → planejar → testar/provar → implementar → revisar → verificar → aprender → melhorar**
 
-Antes de implementar, a skill classifica a tarefa, transforma a solicitação em critérios observáveis de aceite e ajusta a profundidade conforme o risco. Mudanças locais podem ter processo curto; contratos, segurança, dados, infraestrutura e ações difíceis de reverter exigem blast radius, recuperação, stop conditions e verificação mais ampla.
+Antes de implementar, o sistema classifica a tarefa, transforma a solicitação em critérios observáveis de aceite e ajusta a profundidade conforme o risco. Mudanças locais podem ter processo curto; contratos, segurança, dados, infraestrutura e ações difíceis de reverter exigem controles adicionais.
 
 O resultado depende do acesso permitido ao projeto, da qualidade da evidência e das ferramentas disponíveis. Existem casos e fixtures, mas **não há ainda comparação empírica publicada que demonstre ganho de precisão**. Nenhuma skill garante detectar todos os defeitos.
 
 ## Arquitetura
 
-O núcleo é combinado sob demanda com:
+O núcleo é `.agents/skills/verificar-mudancas/` e continua utilizável sozinho. A instalação completa adiciona:
 
-1. **Referência de stack/contexto** — Java/Spring, Python, game development, LibGDX, C#/Unity, dados ou Terraform/IaC.
-2. **Referências transversais** — segurança, APIs/contratos, bancos/migrações, distribuídos, observabilidade, CI/CD, performance, supply chain, arquitetura, frontend/E2E, containers/cloud runtime, evidência de mudança e perfil regulado.
-3. **Playbook de tarefa** — bug fix, feature, refatoração, migração, incidente, upgrade de dependência ou regressão de performance.
+1. **Referências e playbooks sob demanda** — stack, runtime, dados, segurança, IaC, contratos e tipos de tarefa.
+2. **Orquestração** — [AGENTS.md](AGENTS.md) e oito papéis especializados.
+3. **Comandos em português** — `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade` e `/aprender`.
+4. **Regras compartilhadas** — evidência, testes, mudança segura, HIGH/CRITICAL e ambiente regulado.
+5. **Hooks portáteis** — `pre-edit`, `post-edit` e `pre-finish`, com runner executável.
+6. **Quality gate** — plano conservador e execução explícita de checks.
+7. **Memória controlada** — lessons, patterns e incidents sanitizados; memória é pista, não verdade.
+8. **Adapters** — generic, Codex, Claude, Devin e Copilot com capability detection/fallback.
+9. **Instalador** — modo `skill` ou `full`, dry-run e preservação de arquivos existentes.
 
-O agente deve carregar somente o que for pertinente. A arquitetura modular existe para ampliar a análise sem inflar o contexto de todas as tarefas.
-
-### Fundação agentic v1.5
-
-A evolução agentic mantém a skill como núcleo e adiciona orquestração e papéis especializados. A entrada portátil está em [AGENTS.md](AGENTS.md), a especificação em [docs/agentic-v1.5.md](docs/agentic-v1.5.md), os [agentes](.agents/agents/README.md) e os [comandos canônicos em português](.agents/commands/README.md).
-
-A interface definida nesta fase é `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade` e `/aprender`. Em ferramentas sem subagentes, os mesmos papéis são executados sequencialmente no agente atual; adapters específicos ficam fora da v1.5.
+A especificação implementada está em [docs/agentic-system.md](docs/agentic-system.md) e a instalação em [docs/installation.md](docs/installation.md).
 
 ## Conteúdo
 
 - [SKILL.md](.agents/skills/verificar-mudancas/SKILL.md): ciclo universal, classificação, risco, critérios de aceite, stop conditions, revisão e verificação.
-- [Referências](.agents/skills/verificar-mudancas/references/): conhecimento por stack e por preocupação transversal.
-- [Evidência de mudança](.agents/skills/verificar-mudancas/references/change-evidence.md): pacote genérico para PR/change record/auditoria.
-- [Perfil regulado](.agents/skills/verificar-mudancas/references/regulated-profile.md): baseline conservador para ambientes controlados; políticas locais mais restritivas prevalecem.
-- [Playbooks](.agents/skills/verificar-mudancas/playbooks/): variações conforme o tipo de tarefa.
-- [Agentes especializados](.agents/agents/README.md): investigação, runtime, testes, implementação, revisão, segurança e verificação de evidências.
-- [Comandos em português](.agents/commands/README.md): interface canônica independente do harness.
-- [Prompt para chat](prompt-chat-equipe.md): versão para ferramentas sem acesso ao repositório.
-- [Avaliações](evals/README.md): casos, oracle, fixtures e protocolo A/B.
-- [Evals agentic](evals/agentic/README.md): regressões da fundação v1.5.
-- [Contribuição](CONTRIBUTING.md) e [changelog](CHANGELOG.md): regras de evolução e versionamento.
+- [Referências](.agents/skills/verificar-mudancas/references/) e [playbooks](.agents/skills/verificar-mudancas/playbooks/).
+- [Agentes](.agents/agents/README.md), [comandos](.agents/commands/README.md), [regras](.agents/rules/README.md) e [hooks](.agents/hooks/README.md).
+- [Memória](memory/README.md), [adapters](adapters/README.md) e schemas portáteis em `schemas/`.
+- [Avaliações](evals/README.md), [evals agentic](evals/agentic/README.md) e [A/B controlado](evals/ab/README.md).
+- [Prompt para chat](prompt-chat-equipe.md) para superfícies sem acesso ao repositório.
+
+## Instalação
+
+Somente a skill:
+
+```bash
+python3 scripts/install.py --target /caminho/do/projeto --adapter generic --mode skill --dry-run
+```
+
+Sistema completo:
+
+```bash
+python3 scripts/install.py --target /caminho/do/projeto --adapter codex --mode full --dry-run
+python3 scripts/install.py --target /caminho/do/projeto --adapter codex --mode full
+```
+
+Em uso corporativo, fixe uma **tag ou commit aprovado**; não dependa de `main`.
+
+## Portão de qualidade
+
+No próprio repositório:
+
+```bash
+python3 scripts/quality_gate.py --config quality-gate.repo.json
+python3 scripts/quality_gate.py --config quality-gate.repo.json --execute
+```
+
+Sem `--execute`, o runner não executa os checks. Em projeto instalado, use `.verificar-mudancas/scripts/quality_gate.py`.
+
+## Memória e aprendizado
+
+`/aprender` propõe aprendizado após uma execução. Conteúdo persistido deve estar sanitizado e pode ser validado/pesquisado com `scripts/memory_store.py`. Uma ocorrência não vira regra universal automaticamente; promoção exige revisão e regressão.
 
 ## Uso em diferentes ferramentas
 
-| Superfície | Como disponibilizar | Limite a verificar |
-| --- | --- | --- |
-| Devin | Conectar o repositório e carregar `.agents/skills/verificar-mudancas/`. | Skills/referências precisam estar acessíveis na sessão. |
-| GitHub Copilot | Instalar a pasta da skill no projeto/local suportado. | Confirmar descoberta e acesso real a código/testes. |
-| Claude Code, Codex ou outro agente | Instalar a pasta completa no local aceito pela ferramenta. | Ferramentas, composição de skills e web variam por harness. |
-| Chat/Teams sem acesso ao projeto | Fornecer [o prompt](prompt-chat-equipe.md) e contexto permitido. | Receber diagnóstico/roteiro, não alegar execução inexistente. |
-
-Para uso corporativo, fixe uma **tag ou commit aprovado**; não dependa de `main`. Copiar somente `SKILL.md` remove referências, playbooks, agentes e comandos.
+Os manifests em `adapters/` evitam assumir capacidades que podem variar por versão/sessão. `scripts/detect_capabilities.py` resolve o observável e mantém `unknown` quando não há prova. Sem subagentes, o sistema executa os mesmos papéis sequencialmente; sem hook nativo, pode usar `scripts/run_hook.py`.
 
 ## Avaliação
 
-As fixtures executáveis provam propriedades concretas de frameworks/runtimes. Elas **não** provam que a skill melhora um agente. Para isso existe o protocolo [A/B controlado](evals/ab/README.md).
+Fixtures executáveis provam propriedades concretas de frameworks/runtimes. Elas **não** provam que a skill melhora um agente. Para isso existe o protocolo A/B controlado com o mesmo modelo/acesso/contexto nos dois braços e avaliação cega quando possível.
 
-Piloto inicial: quatro casos (`runtime-port-binding`, `external-contract-required`, `local-evidence-sufficient`, `java-404`), três repetições por braço e o mesmo modelo/acesso/contexto. Com Codex CLI autenticado, o benchmark pode ser executado em sessões isoladas com:
-
-```bash
-python3 scripts/run_agent_eval.py \
-  --out eval-runs/pilot-001 \
-  --model <modelo-fixado> \
-  --reasoning-effort medium \
-  --web-search live
-```
-
-O runner produz respostas cegadas, metadata operacional e `grading.csv`. Depois da pontuação cega:
-
-```bash
-python3 scripts/analyze_ab_results.py --run-dir eval-runs/pilot-001
-```
-
-Também é possível apenas gerar manifests com `scripts/prepare_ab_eval.py`. O `scorecard.csv` registra pontuação, violações, tempo até conclusão útil e tamanho da resposta. Resultados negativos também devem ser preservados.
+Resultados negativos devem ser preservados. `evals/agentic/` protege também memória como pista, sanitização de aprendizado, quality gate sem falso PASS e degradação de adapter.
 
 ## Uso regulado
 
-A skill pública **não contém política específica de banco, sistema interno ou dados reais**. O perfil regulado parte de defaults conservadores: sem dados de clientes, sem segredo, sem ação em produção por inferência, busca externa desabilitada até política local permitir e aprovação humana para HIGH/CRITICAL. O processo local autorizado deve adaptar os campos de mudança e controles específicos sem publicá-los aqui.
+A skill pública não contém política específica de banco, sistema interno ou dados reais. O perfil regulado parte de defaults conservadores: sem dados de clientes no repositório público, sem ação em produção por inferência, ferramentas externas sujeitas à política local e aprovação humana para ações HIGH/CRITICAL quando aplicável.
 
 ## Manutenção
 
@@ -84,10 +88,9 @@ python3 -m pip install -r requirements-dev.txt
 python3 -B -m unittest discover -s tests -v
 python3 scripts/validate_repo.py
 python3 scripts/validate_agentic.py
+python3 scripts/quality_gate.py --config quality-gate.repo.json --execute
 ```
 
-As dependências acima servem à manutenção do repositório; não são necessárias para usar a pasta da skill em outro projeto. Os testes dos validadores cobrem estrutura, YAML/JSON e entradas inválidas; não substituem a avaliação do raciocínio do agente.
+`SKILL.md` mantém orçamento máximo de **14.420 bytes**; detalhe adicional deve ir para referências ou componentes agentic. Toda nova regra de engenharia deve vir acompanhada de caso/fixture quando aplicável.
 
-O CI também executa as fixtures. `SKILL.md` possui orçamento máximo de **14.420 bytes**; detalhe adicional deve ir para referências ou componentes agentic. Toda nova regra precisa de caso/fixture correspondente, conforme [CONTRIBUTING.md](CONTRIBUTING.md).
-
-Registre aprendizados sem dados de clientes ou código interno. Conhecimento específico deve permanecer no projeto autorizado; promova para o núcleo somente padrões recorrentes e verificáveis. A licença está em [LICENSE](LICENSE).
+Registre aprendizados sem dados corporativos ou código proprietário. Conhecimento específico permanece no projeto autorizado; promova ao núcleo somente padrões recorrentes e verificáveis. A licença está em [LICENSE](LICENSE).

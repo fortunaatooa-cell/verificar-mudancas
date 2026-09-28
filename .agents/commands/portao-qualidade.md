@@ -1,21 +1,10 @@
 # /portao-qualidade
 
-Executar um quality gate proporcional ao risco e ao tipo de mudança.
+Objetivo: produzir decisão estruturada sobre a qualidade da mudança sem fingir execução.
 
-## Dimensões
-
-1. critérios de aceite;
-2. testes pertinentes;
-3. build;
-4. lint/análise estática;
-5. revisão do diff;
-6. contratos/compatibilidade;
-7. segurança, se aplicável;
-8. runtime/performance/dados, se aplicável;
-9. evidências finais.
-
-Estados por dimensão:
-
-`PASS`, `FAIL`, `PARTIAL`, `BLOCKED`, `N/A`.
-
-Não executar verificações irrelevantes apenas para preencher checklist. O resultado deve informar o que foi realmente executado e o que permaneceu sem prova.
+1. Determine critérios/risco e checks aplicáveis.
+2. Gere o plano com `python3 scripts/quality_gate.py --config <config>` (ou `.verificar-mudancas/scripts/quality_gate.py` após instalação completa).
+3. Revise os comandos detectados/configurados antes de executar.
+4. Somente com autorização, execute com `--execute`.
+5. Interprete `PASS`, `FAIL`, `PARTIAL`, `BLOCKED` ou `N/A`; nunca converta plano não executado em PASS.
+6. Para HIGH/CRITICAL, combine com controles de risco e `pre-finish`.

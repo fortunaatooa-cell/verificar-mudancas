@@ -1,0 +1,6 @@
+{
+  "adapter":"devin",
+  "version":1,
+  "capabilities":{"repository_read":"runtime-detect","repository_write":"runtime-detect","shell":"runtime-detect","web":"runtime-detect","subagents":"runtime-detect","hooks":"runtime-detect","persistent_memory":"runtime-detect"},
+  "command_strategy":"portable-files"
+}

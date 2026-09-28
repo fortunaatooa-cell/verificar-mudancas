@@ -1,25 +1,16 @@
 # /verificar
 
-Executar o fluxo completo de engenharia da `verificar-mudancas`.
+Workflow principal.
 
-## Fluxo
+1. Detecte capacidades do harness; use adapter e fallback quando necessário.
+2. Classifique tarefa, risco, critérios de aceite e stop conditions.
+3. Carregue somente referências, playbook, regras e especialistas pertinentes.
+4. Consulte memória somente quando puder ajudar; trate resultados como pistas.
+5. Investigue e procure evidência contrária antes de corrigir.
+6. Em edição material, aplique `pre-edit`; depois `post-edit` quando suportado.
+7. Implemente a menor mudança correta.
+8. Execute prova na fronteira afetada, revisão adversarial e busca de contraexemplo.
+9. Use `pre-finish`, `/validar` e `/portao-qualidade` conforme risco.
+10. Após conclusão, `/aprender` pode propor memória/eval sem promoção automática.
 
-1. classificar tarefa e risco;
-2. transformar objetivo em critérios observáveis de aceite;
-3. selecionar referências/playbook pertinentes;
-4. selecionar somente os agentes necessários;
-5. investigar antes de editar quando a causa não estiver sustentada;
-6. definir a prova correta;
-7. implementar a menor mudança correta;
-8. revisar criticamente;
-9. validar evidências e estado final;
-10. registrar lacunas e eventual aprendizado.
-
-## Roteamento padrão
-
-- bug comum: investigador → estrategista de testes → implementador → revisor → verificador;
-- runtime/memória/deploy: adicionar diagnosticador de runtime;
-- segurança: adicionar revisor de segurança;
-- apenas análise: usar `/investigar`.
-
-Não exigir todas as etapas para LOW quando a evidência tornar alguma delas desnecessária; justificar omissões relevantes.
+Sem subagentes, execute os mesmos papéis sequencialmente no agente atual.

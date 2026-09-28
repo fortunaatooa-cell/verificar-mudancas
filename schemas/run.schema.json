@@ -1,0 +1,19 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://verificar-mudancas.local/schemas/run.schema.json",
+  "type":"object",
+  "required":["run_id","task_type","risk","selected_agents","selected_references","selected_playbooks","tools_used","verification","final_status","privacy"],
+  "properties":{
+    "run_id":{"type":"string","minLength":1},
+    "task_type":{"type":"string","minLength":1},
+    "risk":{"enum":["LOW","MEDIUM","HIGH","CRITICAL"]},
+    "selected_agents":{"type":"array","items":{"type":"string"}},
+    "selected_references":{"type":"array","items":{"type":"string"}},
+    "selected_playbooks":{"type":"array","items":{"type":"string"}},
+    "tools_used":{"type":"array","items":{"type":"string"}},
+    "verification":{"type":"object"},
+    "final_status":{"enum":["PASS","FAIL","PARTIAL","BLOCKED","UNVERIFIED"]},
+    "privacy":{"type":"object","required":["sanitized"],"properties":{"sanitized":{"const":true}}}
+  },
+  "additionalProperties":true
+}

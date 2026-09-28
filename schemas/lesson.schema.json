@@ -1,0 +1,22 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://verificar-mudancas.local/schemas/lesson.schema.json",
+  "type":"object",
+  "required":["id","date","kind","context","symptom","useful_evidence","root_cause","solution","verification","generalizable_learning","privacy"],
+  "properties":{
+    "id":{"type":"string","minLength":1},
+    "date":{"type":"string","minLength":1},
+    "kind":{"const":"lesson"},
+    "context":{"type":"object"},
+    "symptom":{"type":"string","minLength":1},
+    "useful_evidence":{"type":"array","items":{"type":"string"}},
+    "root_cause":{"type":"string","minLength":1},
+    "wrong_paths":{"type":"array","items":{"type":"string"}},
+    "solution":{"type":"string","minLength":1},
+    "verification":{"type":"array","items":{"type":"string"}},
+    "generalizable_learning":{"type":"string","minLength":1},
+    "scope":{"type":"object"},
+    "privacy":{"type":"object","required":["sanitized"],"properties":{"sanitized":{"const":true}}}
+  },
+  "additionalProperties":true
+}

@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://verificar-mudancas.local/schemas/quality-gate-result.schema.json",
+  "type":"object",
+  "required":["overall","executed","checks"],
+  "properties":{
+    "overall":{"enum":["PASS","FAIL","PARTIAL","BLOCKED","N/A"]},
+    "executed":{"type":"boolean"},
+    "checks":{"type":"array"},
+    "source":{"type":"string"},
+    "message":{"type":"string"},
+    "error":{"type":"string"}
+  },
+  "additionalProperties":true
+}

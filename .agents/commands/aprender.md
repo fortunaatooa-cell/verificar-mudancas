@@ -1,26 +1,10 @@
 # /aprender
 
-Analisar uma tarefa concluída e propor aprendizado reutilizável sem alterar automaticamente o núcleo.
+Objetivo: transformar uma execução concluída em aprendizado revisável e sanitizado.
 
-## Classificação
-
-- específico do projeto → conhecimento local;
-- ocorrência útil, ainda não recorrente → lesson;
-- padrão observado em múltiplos contextos → pattern/reference;
-- processo recorrente → playbook;
-- princípio universal sustentado → rule/core;
-- erro que não deve retornar → regression eval.
-
-## Saída
-
-```yaml
-aprendizado:
-  novidade: true
-  categoria: lesson|pattern|reference|playbook|rule|eval
-  proposta: null
-  evidencias: []
-  generalizacao: null
-  riscos_de_overfit: []
-```
-
-Nunca promover dados de clientes, secrets, código proprietário ou identificadores internos para o repositório público.
+1. Use `agente-aprendizado.md` para separar ocorrência específica de padrão generalizável.
+2. Remova nomes internos, dados de cliente, secrets, IDs e código proprietário.
+3. Escolha `lesson`, `pattern`, `incident`, atualização de referência/playbook, regra ou eval.
+4. Persistência em `memory/` é explícita: valide/adicone com `scripts/memory_store.py` (ou `.verificar-mudancas/scripts/memory_store.py` após instalação).
+5. Memória recuperada é hipótese histórica, nunca verdade do novo caso.
+6. Não promova automaticamente para `SKILL.md` ou regras; exija revisão e regressão antes.

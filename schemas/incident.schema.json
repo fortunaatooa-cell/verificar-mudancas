@@ -1,0 +1,16 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://verificar-mudancas.local/schemas/incident.schema.json",
+  "type":"object",
+  "required":["id","kind","symptom","evidence","resolution","verification","privacy"],
+  "properties":{
+    "id":{"type":"string","minLength":1},
+    "kind":{"const":"incident"},
+    "symptom":{"type":"string","minLength":1},
+    "evidence":{"type":"array","items":{"type":"string"}},
+    "resolution":{"type":"string","minLength":1},
+    "verification":{"type":"array","items":{"type":"string"}},
+    "privacy":{"type":"object","required":["sanitized"],"properties":{"sanitized":{"const":true}}}
+  },
+  "additionalProperties":true
+}

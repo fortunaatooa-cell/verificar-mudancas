@@ -1,0 +1,8 @@
+{
+  "version":1,
+  "checks":[
+    {"name":"validar-repositorio","command":["python3","scripts/validate_repo.py"],"required":true,"timeout_seconds":120},
+    {"name":"validar-arquitetura-agentic","command":["python3","scripts/validate_agentic.py"],"required":true,"timeout_seconds":120},
+    {"name":"validar-memoria","command":["python3","scripts/memory_store.py","validate"],"required":true,"timeout_seconds":60}
+  ]
+}
