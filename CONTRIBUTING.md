@@ -2,7 +2,7 @@
 
 ## Regra principal
 
-Toda regra nova no `SKILL.md` ou em uma referência deve ter pelo menos um caso em `evals/cases.json` ou uma fixture executável que justifique sua existência. Não adicionar regra apenas porque parece plausível.
+Toda regra nova no `SKILL.md` ou em uma referência deve ter pelo menos um caso de avaliação em `evals/` ou uma fixture executável que justifique sua existência. Case packs de perfis podem viver em subpastas próprias, desde que sejam validados pelo CI. Não adicionar regra apenas porque parece plausível.
 
 ## Orçamento do núcleo
 
