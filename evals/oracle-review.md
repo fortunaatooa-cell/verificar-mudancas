@@ -29,6 +29,8 @@ Este arquivo separa **gabarito sustentado por fixture executável** de **gabarit
 | runtime-port-binding | fixture Docker/container→host | fixture-backed |
 | external-contract-required | erro sintético + política de evidência externa | revisão com fonte oficial em cada execução |
 | local-evidence-sufficient | requisito+código+teste autocontidos | revisão independente pendente |
+| obsolete-test-production-change | evidência sintética + critérios de mudança em produção e severidade | revisão independente pendente |
+| extracted-selector-unused | evidência sintética + rastreio do chamador e descoberta de ferramentas | revisão independente pendente |
 
 ## Regra de maturidade
 

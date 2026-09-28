@@ -5,6 +5,8 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 ## Unreleased
 
 ### Added
+- Casos `obsolete-test-production-change` e `extracted-selector-unused` para revisão de teste obsoleto, severidade, ligação com o chamador e descoberta de ferramentas locais.
+- Doze testes de regressão do validador, dependência de manutenção PyYAML e execução dos testes no CI.
 - Política version-aware de evidência externa e sanitização de consultas.
 - Fixture de runtime/port binding e evals que distinguem pesquisa necessária de pesquisa desnecessária.
 - Base de adoção regulada: pacote de evidência de mudança, perfil regulado genérico e harness para A/B controlado.
@@ -13,9 +15,14 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 - Smoke test com fake Codex para provar no CI que baseline não recebe a skill e o treatment recebe.
 
 ### Changed
+- O núcleo passa a exigir descoberta de wrappers/toolchains locais antes de declarar ferramenta ausente, distinguir risco de severidade e justificar mudanças em produção ao adaptar testes obsoletos.
+- Extração de lógica passa a pedir evidência na entrada/chamador afetados, com falha pelo defeito antes e sucesso depois quando viável; testes apenas do componente novo são evidência parcial.
 - Runner Python passa a trabalhar em diretório temporário, sem sujar a fixture.
 - Validação do repositório passa a proteger o orçamento do núcleo e arquivos de higiene.
 - Helper de preparação A/B passa a expor funções reutilizáveis pelo runner executável.
+
+### Fixed
+- O validador agora interpreta YAML com carregador seguro e rejeita campos duplicados ou inválidos; tipos incorretos em IDs, modos e domínios dos casos produzem erros de validação em vez de traceback.
 
 ## Política de versão
 

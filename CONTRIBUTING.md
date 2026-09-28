@@ -20,7 +20,11 @@ Toda regra nova no `SKILL.md` ou em uma referência deve ter pelo menos um caso 
 Execute:
 
 ```bash
+python3 -m pip install -r requirements-dev.txt
+python3 -B -m unittest discover -s tests -v
 python3 scripts/validate_repo.py
 ```
+
+Os testes de `tests/` verificam regressões do validador com cópias temporárias: YAML malformado, tipos inválidos nos casos e inconsistências entre casos e gabaritos devem produzir erro legível, sem aprovação silenciosa nem traceback.
 
 Quando houver mudança em referências cobertas por fixtures, execute também as fixtures pertinentes ou deixe o GitHub Actions fazê-lo antes do merge. Mudanças em comportamento do agente devem ser comparadas com a versão anterior usando o protocolo de `evals/ab/` quando aplicável.

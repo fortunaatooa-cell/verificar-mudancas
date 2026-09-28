@@ -161,6 +161,20 @@
       "mode": "snippet",
       "prompt": "Um requisito diz que usuários com 18 anos completos são elegíveis. O teste `assertTrue(isEligible(18))` falha. O código é `return age > 18;`. Você precisa pesquisar na internet antes de propor a correção?",
       "evidence": "O requisito, o teste reproduzível e a implementação estão no mesmo repositório. Não há contrato externo, biblioteca, comportamento dependente de versão ou integração envolvida."
+    },
+    {
+      "id": "obsolete-test-production-change",
+      "domain": "workflow",
+      "mode": "snippet",
+      "prompt": "Revise a proposta para recuperar os testes de histórico e diga se está pronta. Você recebeu somente os trechos e resultados relatados abaixo; não pode executar o projeto nem editar arquivos.",
+      "evidence": "O teste Kotlin referencia LegacyHistoryState, removido quando HistoryScreen passou a manter loading, entries e error em variáveis locais. O requisito vigente continua prevendo loading, sucesso, erro e filtro por título. O patch recria HistoryUiState e faz a tela consumi-lo; o teste passa a verificar essa classe. O autor relata seis testes verdes e assembleDebug aprovado, mas não forneceu diff completo ou teste de UI. Classificou a falha como P0 porque o job Android Test não compilava. Não existe escala de severidade documentada nem impacto em produção observado. A justificativa do patch é somente: 'o teste antigo precisava desse tipo'."
+    },
+    {
+      "id": "extracted-selector-unused",
+      "domain": "api",
+      "mode": "snippet",
+      "prompt": "Revise a correção da seleção ponderada e diga se o endpoint pode ser considerado verificado. Você só tem os trechos e o inventário fornecidos; indique as próximas verificações, sem executar comandos nem editar arquivos.",
+      "evidence": "A SPEC exige seleção proporcional aos pesos positivos. O PR adiciona WeightedSelector.select(candidates, weights, random), com testes verdes para pesos 90/10 e RNG controlado. O controller POST /recommendations ainda ordena por score e executa return candidates.getFirst(). Não há teste do controller. O build Java passou, segundo o autor. Ele declarou o backend sem ferramenta de testes porque 'mvn não está no PATH'; o inventário contém pom.xml e .tools/apache-maven-3.9.11/bin/mvn. O CI executa Maven no diretório raiz."
     }
   ]
 }

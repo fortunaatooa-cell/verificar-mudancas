@@ -2,6 +2,8 @@
 
 Os casos sintéticos testam **qualidade de raciocínio, classificação, risco e honestidade da evidência**. As fixtures executáveis verificam propriedades concretas de frameworks/runtimes. Nenhum dos dois, isoladamente, prova que um agente melhora com a skill.
 
+Para verificar o funcionamento em uma tarefa, execute um caso com a skill e compare a resposta com o gabarito, registrando a versão por commit, modelo, ferramentas, evidências e intervenções necessárias. Isso avalia aquela execução. Para atribuir ganho à skill, use também execuções independentes sem ela, conforme o protocolo A/B.
+
 ## A/B controlado
 
 Use [ab/README.md](ab/README.md). O piloto inicial usa quatro casos, três repetições por braço e o mesmo modelo, acesso, configuração e contexto.
@@ -43,6 +45,8 @@ Conte também cada item de `forbidden` violado. O scorecard registra `elapsed_se
 
 O conjunto principal fica em [cases.json](cases.json) + [oracle.json](oracle.json).
 
+Dois casos protegem os aprendizados de revisão: `obsolete-test-production-change` exige justificar alterações em produção ao recuperar testes obsoletos e distinguir severidade de risco; `extracted-selector-unused` exige verificar o chamador real e procurar ferramentas locais antes de declará-las indisponíveis. São casos sintéticos, ainda sem resultado A/B publicado.
+
 O perfil regulado possui um case pack separado em `profiles/regulated-cases.json` + `profiles/regulated-oracle.json`. Ele cobre PII, segredo, produção e aprovação humana; combinado com `prompt-injection` e `external-contract-required`, cobre as regras centrais de `regulated-profile.md`.
 
 ## Fixtures executáveis
@@ -68,3 +72,5 @@ A fixture LibGDX confronta lifecycle de `Game`, `AssetManager`, `InputMultiplexe
 Fixtures controladas não representam automaticamente bancos de produção, proxies/PaaS reais, Android/OpenGL, filas, cloud ou processos regulatórios. Case packs de política avaliam decisão e disciplina, não aprovação organizacional.
 
 A próxima etapa de eficácia continua sendo rodar o A/B e manter **todos** os resultados, inclusive quando a skill empatar ou piorar. O comando `python3 scripts/validate_repo.py` verifica estrutura e consistência, não precisão do agente.
+
+Para manter o validador, instale `requirements-dev.txt` e execute `python3 -B -m unittest discover -s tests -v` antes da validação estrutural. Os testes rejeitam YAML malformado e campos JSON com tipos incorretos; não substituem as avaliações de comportamento acima.

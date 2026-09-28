@@ -71,8 +71,12 @@ A skill pública **não contém política específica de banco, sistema interno 
 Antes de publicar mudanças:
 
 ```bash
+python3 -m pip install -r requirements-dev.txt
+python3 -B -m unittest discover -s tests -v
 python3 scripts/validate_repo.py
 ```
+
+As dependências acima servem à manutenção do repositório; não são necessárias para usar a pasta da skill em outro projeto. Os testes do validador cobrem YAML e entradas inválidas, não o raciocínio do agente.
 
 O CI também executa as fixtures. `SKILL.md` possui orçamento máximo de **14.420 bytes**; detalhe adicional deve ir para referências. Toda nova regra precisa de caso/fixture correspondente, conforme [CONTRIBUTING.md](CONTRIBUTING.md).
 

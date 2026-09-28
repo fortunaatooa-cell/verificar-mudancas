@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check skill packaging and evaluation fixtures without external dependencies."""
+"""Check skill packaging and evaluation cases; install requirements-dev.txt."""
 
 import csv
 import json
@@ -7,7 +7,30 @@ import re
 import sys
 from pathlib import Path
 
+import yaml
+
 MAX_SKILL_BYTES = 14_420
+
+
+class FrontmatterLoader(yaml.SafeLoader):
+    """Read YAML without silently accepting duplicate or non-text field names."""
+
+
+def unique_mapping(loader, node):
+    result = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node)
+        if not isinstance(key, str) or key in result:
+            raise yaml.constructor.ConstructorError(
+                None, None, "campo YAML duplicado ou não textual", key_node.start_mark
+            )
+        result[key] = loader.construct_object(value_node)
+    return result
+
+
+FrontmatterLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, unique_mapping
+)
 
 
 def load_case_pack(cases_path: Path, oracle_path: Path, errors: list[str], label: str):
@@ -33,16 +56,17 @@ def load_case_pack(cases_path: Path, oracle_path: Path, errors: list[str], label
     case_ids = [item.get("id") for item in case_items if isinstance(item, dict)]
     oracle_ids = [item.get("id") for item in oracle_items if isinstance(item, dict)]
     if (len(case_ids) != len(case_items) or len(oracle_ids) != len(oracle_items)
-            or any(not isinstance(case_id, str) or not case_id for case_id in case_ids + oracle_ids)):
+            or any(not isinstance(case_id, str) or not case_id.strip() for case_id in case_ids + oracle_ids)):
         errors.append(f"{label}: casos/oracles devem ser objetos com id textual")
-        return case_items, oracle_items
+        return [], []
     if len(set(case_ids)) != len(case_ids) or len(set(oracle_ids)) != len(oracle_ids):
         errors.append(f"{label}: id duplicado")
     if set(case_ids) != set(oracle_ids):
         errors.append(f"{label}: cada caso precisa de exatamente um oracle correspondente")
 
     for item in case_items:
-        if item.get("mode") not in {"conversation", "snippet"}:
+        mode = item.get("mode")
+        if not isinstance(mode, str) or mode not in {"conversation", "snippet"}:
             errors.append(f"{label}/{item.get('id')}: modo inválido")
         if any(not isinstance(item.get(field), str) or not item[field].strip()
                for field in ("id", "domain", "prompt", "evidence")):
@@ -75,11 +99,21 @@ def validate(root: Path) -> list[str]:
     if match is None:
         errors.append("SKILL.md: frontmatter ausente")
     else:
-        header = match.group(1)
-        if not re.search(r"^name: verificar-mudancas$", header, re.MULTILINE):
-            errors.append("SKILL.md: name inesperado")
-        if not re.search(r"^description: \S.+$", header, re.MULTILINE):
-            errors.append("SKILL.md: description ausente")
+        try:
+            header = yaml.load(match.group(1), Loader=FrontmatterLoader)
+        except yaml.YAMLError as exc:
+            errors.append(f"SKILL.md: frontmatter YAML inválido: {exc}")
+        else:
+            if not isinstance(header, dict):
+                errors.append("SKILL.md: frontmatter deve ser um objeto YAML")
+            else:
+                if set(header) != {"name", "description"}:
+                    errors.append("SKILL.md: esperado somente name e description")
+                if header.get("name") != "verificar-mudancas":
+                    errors.append("SKILL.md: name inesperado")
+                description = header.get("description")
+                if not isinstance(description, str) or not description.strip():
+                    errors.append("SKILL.md: description deve ser texto não vazio")
 
     expected_references = {
         "references/java.md", "references/python.md", "references/gamedev.md",
@@ -165,7 +199,10 @@ def validate(root: Path) -> list[str]:
                 errors.append(f"{document.relative_to(root)}: link ausente: {target}")
 
     case_items, _ = load_case_pack(root / "evals/cases.json", root / "evals/oracle.json", errors, "core")
-    domains = {item.get("domain") for item in case_items if isinstance(item, dict)}
+    domains = {
+        item["domain"] for item in case_items
+        if isinstance(item, dict) and isinstance(item.get("domain"), str)
+    }
     required_domains = {"java", "python", "gamedev", "libgdx", "unity", "data", "terraform", "security", "workflow", "api", "database", "distributed", "performance", "release", "runtime"}
     if not required_domains.issubset(domains):
         errors.append("casos não cobrem as áreas mínimas: " + ", ".join(sorted(required_domains - domains)))
