@@ -44,13 +44,23 @@ Para uso corporativo, fixe uma **tag ou commit aprovado**; não dependa de `main
 
 As fixtures executáveis provam propriedades concretas de frameworks/runtimes. Elas **não** provam que a skill melhora um agente. Para isso existe o protocolo [A/B controlado](evals/ab/README.md).
 
-Piloto inicial: quatro casos (`runtime-port-binding`, `external-contract-required`, `local-evidence-sufficient`, `java-404`), três repetições por braço e o mesmo modelo/acesso/contexto. Gere manifests cegos com:
+Piloto inicial: quatro casos (`runtime-port-binding`, `external-contract-required`, `local-evidence-sufficient`, `java-404`), três repetições por braço e o mesmo modelo/acesso/contexto. Com Codex CLI autenticado, o benchmark pode ser executado em sessões isoladas com:
 
 ```bash
-python3 scripts/prepare_ab_eval.py --out /tmp/verificar-ab
+python3 scripts/run_agent_eval.py \
+  --out eval-runs/pilot-001 \
+  --model <modelo-fixado> \
+  --reasoning-effort medium \
+  --web-search live
 ```
 
-O `scorecard.csv` registra pontuação, violações, tempo até conclusão útil e tamanho da resposta. Resultados negativos também devem ser preservados.
+O runner produz respostas cegadas, metadata operacional e `grading.csv`. Depois da pontuação cega:
+
+```bash
+python3 scripts/analyze_ab_results.py --run-dir eval-runs/pilot-001
+```
+
+Também é possível apenas gerar manifests com `scripts/prepare_ab_eval.py`. O `scorecard.csv` registra pontuação, violações, tempo até conclusão útil e tamanho da resposta. Resultados negativos também devem ser preservados.
 
 ## Uso regulado
 
