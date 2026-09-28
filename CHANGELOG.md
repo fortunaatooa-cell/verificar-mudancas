@@ -8,10 +8,14 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 - Política version-aware de evidência externa e sanitização de consultas.
 - Fixture de runtime/port binding e evals que distinguem pesquisa necessária de pesquisa desnecessária.
 - Base de adoção regulada: pacote de evidência de mudança, perfil regulado genérico e harness para A/B controlado.
+- Runner executável de A/B para Codex CLI com workspaces isolados, sessões efêmeras, captura de respostas/logs/tempo e detecção de contaminação por skill global.
+- Avaliação cega por `grading.csv` e analisador que gera `comparison.json` + `report.md` depois da pontuação.
+- Smoke test com fake Codex para provar no CI que baseline não recebe a skill e o treatment recebe.
 
 ### Changed
 - Runner Python passa a trabalhar em diretório temporário, sem sujar a fixture.
 - Validação do repositório passa a proteger o orçamento do núcleo e arquivos de higiene.
+- Helper de preparação A/B passa a expor funções reutilizáveis pelo runner executável.
 
 ## Política de versão
 
