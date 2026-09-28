@@ -28,3 +28,5 @@ jobs:
           assert (root / 'evaluator.csv').is_file()
           print('A/B manifest: 24 execuções (4 casos x 3 repetições x 2 braços).')
           PY
+      - name: Provar isolamento do runner com Codex fake
+        run: python3 evals/ab/test_runner.py
