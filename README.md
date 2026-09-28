@@ -18,6 +18,12 @@ O núcleo é combinado sob demanda com:
 
 O agente deve carregar somente o que for pertinente. A arquitetura modular existe para ampliar a análise sem inflar o contexto de todas as tarefas.
 
+### Fundação agentic v1.5
+
+A evolução agentic mantém a skill como núcleo e adiciona orquestração e papéis especializados. A entrada portátil está em [AGENTS.md](AGENTS.md), a especificação em [docs/agentic-v1.5.md](docs/agentic-v1.5.md), os [agentes](.agents/agents/README.md) e os [comandos canônicos em português](.agents/commands/README.md).
+
+A interface definida nesta fase é `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade` e `/aprender`. Em ferramentas sem subagentes, os mesmos papéis são executados sequencialmente no agente atual; adapters específicos ficam fora da v1.5.
+
 ## Conteúdo
 
 - [SKILL.md](.agents/skills/verificar-mudancas/SKILL.md): ciclo universal, classificação, risco, critérios de aceite, stop conditions, revisão e verificação.
@@ -25,8 +31,11 @@ O agente deve carregar somente o que for pertinente. A arquitetura modular exist
 - [Evidência de mudança](.agents/skills/verificar-mudancas/references/change-evidence.md): pacote genérico para PR/change record/auditoria.
 - [Perfil regulado](.agents/skills/verificar-mudancas/references/regulated-profile.md): baseline conservador para ambientes controlados; políticas locais mais restritivas prevalecem.
 - [Playbooks](.agents/skills/verificar-mudancas/playbooks/): variações conforme o tipo de tarefa.
+- [Agentes especializados](.agents/agents/README.md): investigação, runtime, testes, implementação, revisão, segurança e verificação de evidências.
+- [Comandos em português](.agents/commands/README.md): interface canônica independente do harness.
 - [Prompt para chat](prompt-chat-equipe.md): versão para ferramentas sem acesso ao repositório.
 - [Avaliações](evals/README.md): casos, oracle, fixtures e protocolo A/B.
+- [Evals agentic](evals/agentic/README.md): regressões da fundação v1.5.
 - [Contribuição](CONTRIBUTING.md) e [changelog](CHANGELOG.md): regras de evolução e versionamento.
 
 ## Uso em diferentes ferramentas
@@ -38,7 +47,7 @@ O agente deve carregar somente o que for pertinente. A arquitetura modular exist
 | Claude Code, Codex ou outro agente | Instalar a pasta completa no local aceito pela ferramenta. | Ferramentas, composição de skills e web variam por harness. |
 | Chat/Teams sem acesso ao projeto | Fornecer [o prompt](prompt-chat-equipe.md) e contexto permitido. | Receber diagnóstico/roteiro, não alegar execução inexistente. |
 
-Para uso corporativo, fixe uma **tag ou commit aprovado**; não dependa de `main`. Copiar somente `SKILL.md` remove referências e playbooks.
+Para uso corporativo, fixe uma **tag ou commit aprovado**; não dependa de `main`. Copiar somente `SKILL.md` remove referências, playbooks, agentes e comandos.
 
 ## Avaliação
 
@@ -74,10 +83,11 @@ Antes de publicar mudanças:
 python3 -m pip install -r requirements-dev.txt
 python3 -B -m unittest discover -s tests -v
 python3 scripts/validate_repo.py
+python3 scripts/validate_agentic.py
 ```
 
-As dependências acima servem à manutenção do repositório; não são necessárias para usar a pasta da skill em outro projeto. Os testes do validador cobrem YAML e entradas inválidas, não o raciocínio do agente.
+As dependências acima servem à manutenção do repositório; não são necessárias para usar a pasta da skill em outro projeto. Os testes dos validadores cobrem estrutura, YAML/JSON e entradas inválidas; não substituem a avaliação do raciocínio do agente.
 
-O CI também executa as fixtures. `SKILL.md` possui orçamento máximo de **14.420 bytes**; detalhe adicional deve ir para referências. Toda nova regra precisa de caso/fixture correspondente, conforme [CONTRIBUTING.md](CONTRIBUTING.md).
+O CI também executa as fixtures. `SKILL.md` possui orçamento máximo de **14.420 bytes**; detalhe adicional deve ir para referências ou componentes agentic. Toda nova regra precisa de caso/fixture correspondente, conforme [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Registre aprendizados sem dados de clientes ou código interno. Conhecimento específico deve permanecer no projeto autorizado; promova para o núcleo somente padrões recorrentes e verificáveis. A licença está em [LICENSE](LICENSE).
