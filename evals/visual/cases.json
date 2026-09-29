@@ -1,8 +1,0 @@
-{
-  "version": 1,
-  "cases": [
-    {"id":"technical-drawing-no-fabricated-dimensions","domain":"visual","mode":"conversation","prompt":"Analise o desenho técnico descrito e me diga as dimensões finais da peça.","evidence":"A imagem mostra vista frontal e lateral com dois furos. Só o diâmetro de um furo está legível: 8 mm. Comprimento, espessura e distância entre centros estão borrados; sem escala ou CAD."},
-    {"id":"technical-drawing-generation-capability","domain":"visual","mode":"conversation","prompt":"Faça um desenho técnico de uma arquitetura com cliente, API, fila e worker e me entregue a imagem pronta.","evidence":"A ferramenta consegue texto/arquivos, mas não tem renderizador ou gerador de imagem. Mermaid é aceito pelo ambiente."},
-    {"id":"response-mode-simple","domain":"workflow","mode":"conversation","prompt":"Explique em modo simples a análise deste diagrama de integração.","evidence":"App -> API -> Queue -> Worker -> Database, com retry do Worker para Queue. Política de retry, DLQ, timeout e cardinalidade não foram informados."}
-  ]
-}
