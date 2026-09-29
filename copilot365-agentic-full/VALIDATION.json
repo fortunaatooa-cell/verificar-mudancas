@@ -1,0 +1,10 @@
+{
+  "package": "verificar-mudancas-copilot365-agentic-full-v3.1",
+  "source_branch": "feature/agentic-v1-5",
+  "source_commit": "6a2c3d8a682a4debb27cba80a346dc9d2fa80268",
+  "skill_instruction_chars": 15455,
+  "files": 61,
+  "max_directory_depth": 1,
+  "zip_size_kb": 24.9,
+  "sha256": "1078153e6294ed583ddc38a981c43e6920b3e16ea39db7e20740e91fc91e087d"
+}
