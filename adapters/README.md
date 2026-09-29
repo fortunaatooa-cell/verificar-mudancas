@@ -1,5 +1,5 @@
 # Adapters
 
-Adapters conectam o núcleo portátil a diferentes harnesses sem colocar detalhes de fornecedor dentro da skill. Capacidades marcadas `runtime-detect` devem ser confirmadas na instalação/sessão atual.
+Manifests por superfície para declarar capacidades sem acoplar o núcleo ao produto. `runtime-detect` significa “verificar na sessão”, não “assumir disponível”.
 
-Todos preservam os comandos canônicos em português e degradam para papéis sequenciais quando subagentes ou hooks nativos não existirem.
+Além de repositório, shell, web, subagentes, hooks, memória e ferramentas externas, os adapters distinguem `vision_input` (inspecionar conteúdo visual real) de `visual_generation` (renderizar/criar saída visual). Mesmo sem `visual_generation`, o sistema pode produzir fonte textual editável como Mermaid/SVG quando a superfície permitir texto/arquivos.

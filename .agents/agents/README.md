@@ -1,19 +1,12 @@
 # Agentes especializados
 
-Os arquivos desta pasta definem papéis canônicos da arquitetura agentic da `verificar-mudancas`. Eles não pressupõem suporte nativo a subagentes: um adapter pode executá-los como agentes independentes ou como etapas sequenciais no mesmo agente.
+Papéis canônicos da arquitetura agentic. Não pressupõem subagentes nativos: adapters podem executá-los separadamente ou como etapas sequenciais no mesmo agente.
 
 ## Contrato comum
 
-Todo agente deve:
+Todo agente deve receber somente contexto necessário, separar fato/hipótese/inferência/desconhecido, não alegar acesso ou execução inexistente, preservar trabalho preexistente, devolver lacunas de evidência e respeitar stop conditions.
 
-- receber somente o contexto necessário;
-- separar `FATO`, `HIPOTESE`, `INFERENCIA` e `DESCONHECIDO` quando isso afetar a conclusão;
-- não alegar execução ou acesso inexistente;
-- preservar alterações preexistentes;
-- devolver resultado estruturado e lacunas de evidência;
-- respeitar stop conditions e políticas do ambiente.
-
-## Agentes v1.5
+## Agentes
 
 1. `investigador.md` — causa e experimentos discriminantes.
 2. `diagnosticador-runtime.md` — memória, JVM, container, Lambda, rede e runtime.
@@ -22,5 +15,7 @@ Todo agente deve:
 5. `revisor-codigo.md` — revisão adversarial e contraexemplos.
 6. `revisor-seguranca.md` — revisão condicional de segurança.
 7. `verificador-evidencias.md` — validação das alegações finais.
+8. `agente-aprendizado.md` — proposta sanitizada de aprendizado/regressão.
+9. `analista-desenhos-tecnicos.md` — interpretação e criação visual técnica com limites de precisão.
 
-O orquestrador deve selecionar apenas os agentes pertinentes ao problema.
+O orquestrador seleciona somente os papéis pertinentes.

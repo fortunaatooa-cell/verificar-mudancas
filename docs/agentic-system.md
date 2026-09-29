@@ -2,7 +2,7 @@
 
 ## Visão
 
-A `verificar-mudancas` evolui de skill única para sistema portátil de engenharia assistida por agentes, mantendo o núcleo evidence-first e compatibilidade com o uso simples da pasta da skill.
+A `verificar-mudancas` evolui de skill única para sistema portátil de engenharia assistida por agentes, mantendo núcleo evidence-first e compatibilidade com o uso simples da pasta da skill.
 
 Ciclo: **investigar → classificar → planejar → provar → implementar → revisar → verificar → aprender → melhorar**.
 
@@ -10,79 +10,72 @@ Ciclo: **investigar → classificar → planejar → provar → implementar → 
 
 ### Núcleo e skills auxiliares
 
-`.agents/skills/verificar-mudancas/` continua sendo a fonte metodológica principal, com referências e playbooks carregados sob demanda. A instalação completa também fornece skills focadas: `investigar`, `estrategia-testes`, `revisar-mudanca` e `diagnosticar-runtime`.
+`.agents/skills/verificar-mudancas/` continua sendo a fonte metodológica principal. A instalação completa fornece `investigar`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime` e `desenho-tecnico`.
 
 ### Orquestração e especialistas
 
-`AGENTS.md` roteia os comandos canônicos em português e seleciona apenas os papéis necessários: investigador, diagnosticador de runtime, estrategista de testes, implementador, revisor de código, revisor de segurança, verificador de evidências e agente de aprendizado.
+`AGENTS.md` roteia comandos em português e seleciona somente os papéis necessários: investigador, runtime, testes, implementação, código, segurança, evidências, aprendizado e análise de desenhos técnicos.
 
-### Regras
+### Desenhos técnicos e visual
 
-`.agents/rules/` separa invariantes compartilhadas do conhecimento específico: evidência, testes, mudança segura, HIGH/CRITICAL e ambiente regulado.
+O sistema trata entrada e saída visual como capacidades independentes. `vision_input` permite afirmar inspeção de imagem real; `visual_generation` permite afirmar render/criação visual. Ambas podem variar por harness e são `runtime-detect` nos adapters.
 
-### Hooks
+`analista-desenhos-tecnicos` e a skill auxiliar `desenho-tecnico` usam `references/technical-drawings.md` para:
 
-`.agents/hooks/` define `pre-edit`, `post-edit` e `pre-finish`. `scripts/run_hook.py` oferece fallback executável para harnesses sem hooks nativos. Hooks são conservadores e não executam ações externas.
+- identificar tipo, finalidade, revisão, escala, unidades, legenda e vistas;
+- inventariar componentes, conexões, cotas e anotações por região/camada;
+- separar observado, inferido e não determinável;
+- fazer cross-check com código/especificação quando disponível;
+- criar fonte editável em Mermaid/PlantUML/DOT/SVG/CAD conforme capacidade;
+- impedir falsa precisão e falsa alegação de renderização.
 
-### Quality gate
+### Modos de resposta
 
-`scripts/quality_gate.py` aceita configuração explícita ou detecta candidatos comuns. Sem `--execute`, apenas mostra o plano. Com execução autorizada produz `PASS`, `FAIL`, `PARTIAL`, `BLOCKED` ou `N/A` com evidência dos checks.
+`references/response-modes.md` define `simples`, `aprofundado` e `ambos`. O modo simples reduz detalhe, não requisitos de evidência, segurança ou incerteza material.
 
-### Evidência estruturada
+### Regras, hooks e quality gate
 
-`schemas/evidence.schema.json` representa claim, status, evidências e limitações. Resultado anterior à última edição não é suficiente para uma conclusão final sem ligação causal.
+`.agents/rules/` inclui evidência, testes, mudança segura, HIGH/CRITICAL, ambiente regulado e evidência visual. Hooks `pre-edit`, `post-edit` e `pre-finish` possuem runner portátil. `quality_gate.py` planeja por padrão e só executa com `--execute`.
 
 ### Memória e continuous learning
 
-`memory/` guarda `lesson`, `pattern`, `incident` e `project_knowledge` sanitizados. Conhecimento específico de projeto fica em `memory/project/` e JSON é ignorado pelo Git por padrão neste repositório público. `scripts/memory_store.py` valida privacidade, indexa e busca localmente.
+`memory/` guarda `lesson`, `pattern`, `incident` e `project_knowledge` sanitizados. Memória é hipótese histórica. `create_regression_eval.py` exige oracle explícito e gera bundle revisável; não há auto-promoção ao core.
 
-`agente-aprendizado` decide se uma conclusão merece proposta de memória, referência/playbook, regra ou eval. `scripts/create_regression_eval.py` gera um bundle de regressão revisável e exige `expected` e `forbidden` explícitos; o sistema não inventa oracle.
+### Adapters e capabilities
 
-Memória é sempre evidência histórica: nunca substitui investigação do caso atual.
+`generic`, `codex`, `claude`, `devin` e `copilot` declaram `repository_read`, `repository_write`, `shell`, `web`, `subagents`, `hooks`, `persistent_memory`, `external_tools`, `vision_input` e `visual_generation`. `detect_capabilities.py` mantém `unknown` quando não há prova e aplica fallback sequencial/textual.
 
-### Adapters
+### Instalador e observabilidade
 
-`adapters/` contém `generic`, `codex`, `claude`, `devin` e `copilot`. As capabilities canônicas são `repository_read`, `repository_write`, `shell`, `web`, `subagents`, `hooks`, `persistent_memory` e `external_tools`. Manifests usam `runtime-detect` quando a capacidade pode variar. `scripts/detect_capabilities.py` resolve apenas o observável ou explicitamente informado e preserva fallback sequencial.
+`install.py` suporta `skill` ou `full`; o modo full instala também o especialista visual. `record_run.py` registra execução sanitizada explicitamente fornecida; não captura conteúdo automaticamente.
 
-### Instalador
+## Comandos
 
-`scripts/install.py` suporta instalação `skill` ou `full`, adapter selecionado, dry-run e preservação de arquivos existentes por padrão. A instalação completa coloca runtime auxiliar em `.verificar-mudancas/` para não poluir scripts do projeto alvo.
+- `/verificar` — fluxo completo.
+- `/investigar` — diagnóstico sem edição.
+- `/corrigir` — investigação + correção + prova.
+- `/revisar` — revisão adversarial.
+- `/validar` — claims versus evidência.
+- `/portao-qualidade` — checks operacionais.
+- `/aprender` — aprendizado sanitizado.
+- `/desenho-tecnico` — analisar, revisar, criar ou redesenhar artefato técnico visual.
 
-### Observabilidade do sistema
+## Segurança e degradação
 
-`schemas/run.schema.json` define registro sanitizado de execução. `scripts/record_run.py` grava registros locais explicitamente fornecidos em `.verificar-mudancas/runs/`; não captura conteúdo automaticamente.
+HIGH/CRITICAL exigem blast radius, recuperação, stop conditions, sinais e aprovação humana quando aplicável. Sem subagentes, papéis rodam sequencialmente; sem hooks, use runner portátil; sem visão, não alegue inspeção; sem geração visual, entregue fonte/especificação e marque o render como não executado.
 
-## Comandos canônicos
+Em desenho mecânico, elétrico, civil, industrial ou de segurança, a análise é assistiva e não substitui validação por profissional habilitado/certificação normativa.
 
-- `/verificar`: fluxo completo e proporcional ao risco.
-- `/investigar`: diagnóstico sem edição.
-- `/corrigir`: investigação + menor mudança correta + prova.
-- `/revisar`: revisão adversarial de diff/mudança.
-- `/validar`: claims versus evidência.
-- `/portao-qualidade`: checks operacionais com execução explícita.
-- `/aprender`: proposta sanitizada de aprendizado, sem auto-promoção.
+## Evals
 
-## Segurança e stop conditions
+`evals/agentic/` cobre bug, runtime/memória, segurança, investigação-only, HIGH risk, memória como pista, sanitização, quality gate, adapter degradation e os fluxos visuais. `evals/visual/` cobre falsa precisão, fallback de geração e modo simples. Unit tests cobrem validadores, capabilities, installer e demais runners.
 
-O sistema bloqueia ou interrompe automação quando faltam elementos materiais, especialmente em HIGH/CRITICAL: ambiente/alvo, recuperação, aprovação humana quando requerida, blast radius, stop conditions ou evidência após a última mudança. Políticas locais mais restritivas prevalecem.
-
-## Compatibilidade e degradação
-
-Se subagentes não existirem, os papéis rodam sequencialmente. Se hooks não existirem, use o runner portátil. Se shell/filesystem não estiverem disponíveis, mantenha os controles como checklist explícito e marque o que não foi executado. Nenhum adapter pode fingir capability ausente.
-
-## Evals e regressão
-
-`evals/agentic/` cobre bug, memória/runtime, segurança, investigação-only, HIGH risk, memória como pista, sanitização de aprendizado, quality gate e degradação de adapter. `evals/regression/` recebe propostas geradas e revisadas. Unit tests cobrem validadores, hooks, memória, quality gate, capabilities, instalador e geração de regressão.
-
-A/B continua sendo a forma de medir se o sistema melhora o mesmo modelo contra baseline sem a skill. Resultado negativo deve ser preservado.
-
-## Status das fases do documento original
+## Status das fases
 
 - v1.1 — schemas/arquitetura/compatibilidade: implementado.
 - v1.5 — orquestrador e especialistas: implementado.
 - v1.8 — regras, comandos e quality gate: implementado.
 - v2.0 — hooks e capability detection: implementado com fallback portátil.
-- v2.5 — memória, project knowledge, retrieval e aprendizado/regressão controlados: implementado sem promoção automática.
+- v2.5 — memória, project knowledge, retrieval e aprendizado/regressão controlados: implementado.
 - v3.0 — adapters e instalador: implementado.
-
-A branch de desenvolvimento continua separada da `main`; merge/tag dependem de revisão e CI verde.
+- extensão visual — desenho técnico, visão/render capability e modos de resposta: implementado.

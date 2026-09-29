@@ -8,6 +8,7 @@ from pathlib import Path
 
 ADAPTERS = {"generic", "codex", "claude", "devin", "copilot"}
 RUNTIME_SCRIPTS = ("run_hook.py", "quality_gate.py", "memory_store.py", "detect_capabilities.py", "record_run.py", "create_regression_eval.py")
+AUXILIARY_SKILLS = ("investigar", "estrategia-testes", "revisar-mudanca", "diagnosticar-runtime", "desenho-tecnico")
 
 
 def _copy(source: Path, destination: Path, force: bool, dry_run: bool, operations: list):
@@ -27,7 +28,7 @@ def install(source_root: Path, target: Path, adapter: str, mode: str, force=Fals
     operations = []
     _copy(source_root / ".agents/skills/verificar-mudancas", target / ".agents/skills/verificar-mudancas", force, dry_run, operations)
     if mode == "full":
-        for auxiliary in ("investigar", "estrategia-testes", "revisar-mudanca", "diagnosticar-runtime"):
+        for auxiliary in AUXILIARY_SKILLS:
             _copy(source_root / ".agents/skills" / auxiliary, target / ".agents/skills" / auxiliary, force, dry_run, operations)
         for folder in ("agents", "commands", "rules", "hooks"):
             _copy(source_root / ".agents" / folder, target / ".agents" / folder, force, dry_run, operations)

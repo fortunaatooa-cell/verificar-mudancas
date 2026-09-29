@@ -7,7 +7,7 @@ import os
 import shutil
 from pathlib import Path
 
-BOOLEAN_ENV = {"web":"VM_CAP_WEB","subagents":"VM_CAP_SUBAGENTS","hooks":"VM_CAP_HOOKS","persistent_memory":"VM_CAP_MEMORY","external_tools":"VM_CAP_EXTERNAL_TOOLS"}
+BOOLEAN_ENV = {"web":"VM_CAP_WEB","subagents":"VM_CAP_SUBAGENTS","hooks":"VM_CAP_HOOKS","persistent_memory":"VM_CAP_MEMORY","external_tools":"VM_CAP_EXTERNAL_TOOLS","vision_input":"VM_CAP_VISION","visual_generation":"VM_CAP_VISUAL_GENERATION"}
 
 
 def _env_bool(name):
@@ -25,7 +25,7 @@ def detect(root: Path, adapter_dir: Path):
         elif name == "shell": resolved[name] = "available" if shutil.which("git") or shutil.which("python3") else "unknown"
         else:
             value = _env_bool(BOOLEAN_ENV.get(name)); resolved[name] = "available" if value is True else ("unavailable" if value is False else "unknown")
-    return {"adapter":manifest["adapter"],"declared":manifest["capabilities"],"resolved":resolved,"fallback":"Use staged roles/portable scripts whenever a runtime-detect capability is unknown or unavailable."}
+    return {"adapter":manifest["adapter"],"declared":manifest["capabilities"],"resolved":resolved,"fallback":"Use staged roles/portable scripts when capabilities are unknown. Without vision, analyze only provided text/metadata; without visual generation, emit editable diagram source/specification instead of claiming a render."}
 
 
 def _find_adapter(root: Path, adapter: str):

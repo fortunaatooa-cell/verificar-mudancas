@@ -1,13 +1,14 @@
 # Comandos canônicos em português
 
-Esta pasta define a interface portátil do sistema. O prefixo `/` representa a intenção do comando; cada adapter pode traduzi-lo para o mecanismo real da ferramenta.
+O prefixo `/` representa a intenção; cada adapter pode traduzi-lo para o mecanismo real da ferramenta.
 
 - `/verificar` — fluxo completo de mudança.
 - `/investigar` — somente investigação, sem edição.
-- `/corrigir` — corrigir problema já investigado ou conduzir investigação + correção.
-- `/revisar` — revisar diff/PR/mudança existente.
-- `/validar` — validar alegações e estado final.
-- `/portao-qualidade` — executar quality gate proporcional ao risco.
-- `/aprender` — propor aprendizado reutilizável; não promove automaticamente para o núcleo.
+- `/corrigir` — investigação + menor correção correta.
+- `/revisar` — revisar diff/PR/mudança.
+- `/validar` — claims versus evidência.
+- `/portao-qualidade` — quality gate proporcional ao risco.
+- `/aprender` — aprendizado revisável, sem promoção automática.
+- `/desenho-tecnico` — analisar, revisar, criar ou redesenhar material técnico visual.
 
-Quando a plataforma não suportar comandos ou subagentes, executar as mesmas etapas sequencialmente no agente atual.
+Qualquer comando pode usar modo de resposta `simples`, `aprofundado` ou `ambos`. Sem comandos/subagentes nativos, execute as mesmas etapas sequencialmente.

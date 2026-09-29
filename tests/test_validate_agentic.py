@@ -17,26 +17,33 @@ class ValidateAgenticTests(unittest.TestCase):
         shutil.copytree(ROOT, self.root, ignore=shutil.ignore_patterns(".git", "__pycache__", ".venv"))
 
     def test_current_repository_is_valid(self): self.assertEqual(validate(self.root), [])
+
     def test_missing_agent_is_rejected(self):
         (self.root / ".agents/agents/investigador.md").unlink(); self.assertTrue(any("agente ausente" in e for e in validate(self.root)))
-    def test_missing_aux_skill_is_rejected(self):
-        (self.root / ".agents/skills/investigar/SKILL.md").unlink(); self.assertTrue(any("skill auxiliar ausente" in e for e in validate(self.root)))
+
+    def test_missing_visual_specialist_is_rejected(self):
+        (self.root / ".agents/agents/analista-desenhos-tecnicos.md").unlink(); self.assertTrue(any("agente ausente" in e for e in validate(self.root)))
+
     def test_missing_rule_is_rejected(self):
-        (self.root / ".agents/rules/evidence-first.md").unlink(); self.assertTrue(any("regra ausente" in e for e in validate(self.root)))
+        (self.root / ".agents/rules/visual-evidence.md").unlink(); self.assertTrue(any("regra ausente" in e for e in validate(self.root)))
+
     def test_missing_hook_is_rejected(self):
         (self.root / ".agents/hooks/pre-finish.md").unlink(); self.assertTrue(any("hook ausente" in e for e in validate(self.root)))
+
     def test_missing_portuguese_command_is_rejected(self):
-        (self.root / ".agents/commands/portao-qualidade.md").unlink(); self.assertTrue(any("comando ausente" in e for e in validate(self.root)))
+        (self.root / ".agents/commands/desenho-tecnico.md").unlink(); self.assertTrue(any("comando ausente" in e for e in validate(self.root)))
+
     def test_invalid_schema_is_rejected(self):
         path = self.root / "schemas/task.schema.json"; path.write_text("[]", encoding="utf-8"); self.assertTrue(any("schema inválido" in e for e in validate(self.root)))
-    def test_missing_adapter_capability_is_rejected(self):
-        path = self.root / "adapters/generic/adapter.json"; data = json.loads(path.read_text(encoding="utf-8")); data["capabilities"].pop("external_tools"); path.write_text(json.dumps(data), encoding="utf-8"); self.assertTrue(any("conjunto de capabilities inválido" in e for e in validate(self.root)))
+
     def test_invalid_adapter_is_rejected(self):
-        path = self.root / "adapters/generic/adapter.json"; data = json.loads(path.read_text(encoding="utf-8")); data["capabilities"]["hooks"] = "magical"; path.write_text(json.dumps(data), encoding="utf-8"); self.assertTrue(any("capability inválida" in e for e in validate(self.root)))
+        path = self.root / "adapters/generic/adapter.json"; data = json.loads(path.read_text(encoding="utf-8")); data["capabilities"]["vision_input"] = "magical"; path.write_text(json.dumps(data), encoding="utf-8"); self.assertTrue(any("capability inválida" in e for e in validate(self.root)))
+
     def test_agentic_oracle_must_match_cases(self):
         path = self.root / "evals/agentic/oracle.json"; data = json.loads(path.read_text(encoding="utf-8")); data["oracles"].pop(); path.write_text(json.dumps(data), encoding="utf-8"); self.assertTrue(any("oracle correspondente" in e for e in validate(self.root)))
-    def test_required_agentic_case_set_is_fixed(self):
-        path = self.root / "evals/agentic/cases.json"; data = json.loads(path.read_text(encoding="utf-8")); data["cases"].pop(); path.write_text(json.dumps(data), encoding="utf-8"); self.assertTrue(any("conjunto de casos" in e for e in validate(self.root)))
+
+    def test_visual_case_set_is_fixed(self):
+        path = self.root / "evals/visual/cases.json"; data = json.loads(path.read_text(encoding="utf-8")); data["cases"].pop(); path.write_text(json.dumps(data), encoding="utf-8"); self.assertTrue(any("visual: conjunto de casos" in e for e in validate(self.root)))
 
 
 if __name__ == "__main__": unittest.main()

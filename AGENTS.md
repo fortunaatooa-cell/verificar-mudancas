@@ -11,26 +11,30 @@ Este repositório usa `.agents/skills/verificar-mudancas/SKILL.md` como núcleo 
 - `/validar`
 - `/portao-qualidade`
 - `/aprender`
+- `/desenho-tecnico`
 
 Consulte `.agents/commands/` ou trate intenção equivalente da mesma forma.
 
 ## Bootstrap
 
 1. Leia a skill principal.
-2. Detecte o adapter/capacidades quando a superfície for desconhecida. No repositório fonte: `python3 scripts/detect_capabilities.py --adapter <nome>`. Em instalação completa: `python3 .verificar-mudancas/scripts/detect_capabilities.py --adapter <nome>`.
+2. Detecte o adapter/capacidades quando a superfície for desconhecida: `python3 scripts/detect_capabilities.py --adapter <nome>`; em instalação completa, use `.verificar-mudancas/scripts/detect_capabilities.py`.
 3. Aplique as regras mínimas pertinentes em `.agents/rules/`.
-4. Carregue skill auxiliar apenas quando ajudar (`investigar`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime`).
-5. Se houver memória local, pesquise somente quando relevante e use resultados como hipótese histórica.
+4. Carregue skill auxiliar apenas quando ajudar (`investigar`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime`, `desenho-tecnico`).
+5. Se houver memória local, pesquise somente quando relevante e trate resultados como hipótese histórica.
+6. Respeite o modo de resposta pedido: `simples`, `aprofundado` ou `ambos`.
 
 ## Roteamento
 
-Fluxo base para correção:
+Fluxo base de correção:
 
 `investigador → estrategista-testes → implementador → revisor-codigo → verificador-evidencias`
 
 Para memória, JVM, container, Lambda, deploy, portas, CPU, startup, rede ou limites de recurso, incluir `diagnosticador-runtime`.
 
 Para autenticação, autorização, IAM, secrets, dados sensíveis, entrada externa ou exposição de rede, incluir `revisor-seguranca` quando pertinente.
+
+Para imagem, PDF técnico, diagrama, planta, esquema ou solicitação de desenho/redesenho, incluir `analista-desenhos-tecnicos`. Antes de afirmar inspeção visual, confirme `vision_input`; antes de prometer imagem/render, confirme `visual_generation`. Sem renderização, produza fonte editável como Mermaid/PlantUML/DOT/SVG quando apropriado.
 
 Para aprendizado após conclusão, use `agente-aprendizado`; ele propõe, não promove automaticamente. Falha recorrente pode gerar proposta de regressão com oracle explícito.
 
@@ -50,7 +54,8 @@ Eventos canônicos: `pre-edit`, `post-edit`, `pre-finish`. Harnesses sem hook na
 
 - evidência antes de confiança;
 - fato ≠ hipótese ≠ inferência ≠ desconhecido;
-- nunca alegar execução inexistente;
+- nunca alegar execução, visão ou render inexistentes;
+- não inventar dimensão, escala, tolerância ou norma;
 - menor mudança correta;
 - contraexemplo e revisão após implementação;
 - HIGH/CRITICAL exigem blast radius, recuperação, stop conditions e sinais;
