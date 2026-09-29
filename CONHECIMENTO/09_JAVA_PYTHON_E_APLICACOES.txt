@@ -1,0 +1,19 @@
+JAVA, SPRING, PYTHON E APLICAÇÕES
+
+JAVA / SPRING
+- Confirme versão de Java, Spring/Spring Boot, Maven/Gradle e plugins.
+- Diferencie falha de compilação, contexto Spring, binding/config, HTTP/contrato, persistência, concorrência e runtime.
+- Para controller/API, prove a fronteira HTTP quando o defeito aparece nela; teste unitário interno pode ser insuficiente.
+- Em Feign/RestTemplate/WebClient, trate status, timeout, retry, idempotência e contrato separadamente.
+- Em JPA/banco, valide transação, lazy/eager, schema, índices e comportamento real.
+- Para memória JVM, use diagnóstico de heap/metaspace/native/container; tamanho do JAR não é RAM.
+
+PYTHON
+- Confirme versão do Python, ambiente, lock/requirements e plataforma.
+- Diferencie erro de import/package, serialização, I/O, runtime, memória e incompatibilidade binária.
+- Em Lambda, considere tamanho do pacote/layer, memória configurada, cold start, /tmp, timeout, arquitetura, runtime e libs nativas.
+- Pandas/PyArrow/Numpy podem ter impactos diferentes em pacote e runtime; medir antes de atribuir causa.
+- Em processamento de dados, valide schema, tipos, nulos, cardinalidade e volume.
+
+REGRA GERAL
+Não escolha framework/dependência nova só porque resolve o exemplo local. Compare impacto, manutenção, compatibilidade e prova necessária.

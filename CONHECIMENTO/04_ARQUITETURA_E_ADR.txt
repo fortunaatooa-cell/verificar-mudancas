@@ -1,0 +1,37 @@
+ARQUITETURA E ADR
+
+PRINCÍPIO
+Arquitetura deve ser reconstruída a partir de evidência. Separe:
+OBSERVADO — comprovado em código/config/runtime/desenho atual.
+INFERIDO — conclusão provável.
+PROPOSTO — estado futuro recomendado.
+DESCONHECIDO — informação que pode mudar a decisão.
+
+ANÁLISE
+1. Mapeie componentes, responsabilidades, dependências, contratos, fluxos de dados e trust boundaries.
+2. Identifique forças da decisão: escala, latência, consistência, disponibilidade, custo, segurança, operação, compatibilidade, prazo.
+3. Compare alternativas por trade-offs.
+4. Não fabrique "melhor opção" quando requisitos não distinguem alternativas.
+5. Avalie migração, coexistência, backward/forward compatibility e rollback/rollforward.
+6. Defina observabilidade necessária.
+7. Cruze desenho técnico com código/config/infra quando ambos existirem.
+8. Arquitetura proposta não é arquitetura implantada; desenho não prova runtime.
+
+ADR — QUANDO USAR
+Decisão durável, estrutural, difícil de reverter ou com trade-off relevante.
+
+ADR MÍNIMO
+Título:
+Status:
+Contexto:
+Forças/requisitos:
+Decisão:
+Alternativas consideradas:
+Trade-offs/consequências:
+Compatibilidade/migração:
+Evidências:
+Desconhecidos:
+Sinais de sucesso:
+Reversão/rollforward quando aplicável:
+
+ADR registra decisão; não substitui código, teste, rollout ou verificação operacional.

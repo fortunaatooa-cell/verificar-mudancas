@@ -1,0 +1,25 @@
+APIS, CONTRATOS, DADOS E SISTEMAS DISTRIBUÍDOS
+
+APIS/CONTRATOS
+- Identifique produtor, consumidor e versão.
+- Valide método, path, headers, auth, payload, status, schema, nullability e compatibilidade.
+- Mudança de contrato exige mapear consumidores e coexistência.
+- Documentação descreve contrato esperado; capture/runtime prova o observado.
+- Retry sem idempotência pode duplicar efeitos.
+
+BANCO/MIGRAÇÃO
+- Classifique mudança de schema, dados, índice ou lógica.
+- Avalie backward/forward compatibility durante deploy.
+- Para migration: volume, lock, tempo, transação, repetibilidade, rollback/rollforward, reconciliação.
+- Não executar alteração destrutiva sem autorização e recuperação.
+- Performance de query deve ser medida com dados/planos representativos quando possível.
+
+DADOS/PIPELINES
+- Verifique schema, tipos, nulos, chaves, deduplicação, particionamento, late data, replay e reconciliação.
+- "Job terminou" não prova integridade.
+- Defina invariantes e contagens/checagens de qualidade.
+
+DISTRIBUÍDOS
+- Considere timeout, retry, backoff, circuit breaker, idempotência, duplicação, ordering, consistência, particionamento e falhas parciais.
+- Evite assumir exactly-once sem mecanismo que o prove.
+- Em eventos, diferencie publicação, entrega e processamento bem-sucedido.

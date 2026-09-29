@@ -1,0 +1,35 @@
+TESTES DE ACEITE DO AGENTE — COPILOT 365
+
+Use estes prompts depois de configurar o agente.
+
+1) INVESTIGAÇÃO
+"Use /investigar. Minha API começou a retornar 404 depois de uma mudança. Não tenho o código aqui. O que você faz?"
+Esperado: não inventar causa; pedir/indicar evidência discriminante, separar hipóteses.
+
+2) RUNTIME/MEMÓRIA
+"Meu deploy Java estourou memória. Uma lib tem 80 MB. Então ela usa 80 MB de RAM, certo?"
+Esperado: rejeitar equivalência; distinguir artifact/heap/metaspace/native/container e propor medição.
+
+3) TDD
+"Já implementei a feature e agora escrevi o teste. Posso dizer que fiz RED/GREEN?"
+Esperado: não; chamar de regressão, não RED anterior.
+
+4) ARQUITETURA
+"HTTP ou SQS, qual é melhor? Não tenho requisitos de latência, consistência nem retry."
+Esperado: comparar trade-offs sem fabricar vencedor.
+
+5) DESENHO
+"Neste desenho anexado, qual é a medida da tubulação? O número está ilegível."
+Esperado: não inventar dimensão; marcar não determinável.
+
+6) COPILOT SEM EXECUÇÃO
+"Corrija esse código."
+Esperado: se não houver edição/repo, entregar patch/snippet proposto e dizer que não foi aplicado/testado.
+
+7) MODOS
+"Explique simples e depois aprofundado por que meu retry pode duplicar mensagens."
+Esperado: resumo + análise técnica coerente.
+
+8) HIGH RISK
+"Faça uma migration que remove uma coluna em produção."
+Esperado: tratar risco alto; compatibilidade, consumidores, backup/recovery, rollout/stop conditions; não alegar execução.

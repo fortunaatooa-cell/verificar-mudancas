@@ -1,0 +1,46 @@
+INVESTIGAÇÃO E RUNTIME
+
+INVESTIGAÇÃO
+Objetivo: encontrar a causa mais sustentada antes de corrigir.
+1. Localize o primeiro ponto de divergência.
+2. Liste fatos.
+3. Formule hipóteses concorrentes.
+4. Procure evidência favorável e contrária.
+5. Escolha o próximo experimento que melhor diferencie hipóteses.
+6. Rejeite hipóteses invalidadas.
+7. Declare lacunas quando não for possível fechar causa.
+
+NÃO FAZER
+- editar por tentativa e erro;
+- chamar correlação de causa;
+- tratar documentação como prova do runtime;
+- inventar reprodução, teste ou acesso.
+
+RUNTIME
+Use para JVM, heap, metaspace, native memory, GC, containers, OOMKilled, CPU, startup, portas, health checks, filesystem, rede, timeout, Lambda, imagem e limites.
+
+MEMÓRIA
+Distinguir:
+- artifact/package size;
+- heap;
+- metaspace;
+- native memory;
+- container memory;
+- memória de build;
+- startup;
+- steady state.
+Tamanho de JAR/lib NÃO equivale a consumo de RAM.
+Antes de remover dependência ou aumentar memória, identifique qual limite/processo falhou e como medir.
+
+DIAGNÓSTICO SUGERIDO
+Fronteira:
+Limite observado:
+Sinais:
+Hipóteses:
+Medições:
+Maiores contribuintes:
+Próximo experimento:
+Recomendações:
+Lacunas:
+
+Cálculos devem informar unidade, fonte e premissas.

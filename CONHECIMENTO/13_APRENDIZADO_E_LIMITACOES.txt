@@ -1,0 +1,39 @@
+APRENDIZADO CONTROLADO E LIMITAÇÕES DO COPILOT 365
+
+APRENDIZADO
+Após mudança/incidente relevante, capture de forma sanitizada:
+- sintoma/objetivo;
+- causa ou decisão;
+- sinal que foi útil;
+- caminho errado relevante;
+- prova preventiva;
+- recuperação;
+- aprendizado generalizável.
+
+PROMOÇÃO
+Uma ocorrência isolada não vira regra universal.
+Use:
+caso → evidência → recorrência → generalização → eval/regressão → mudança.
+Conhecimento específico permanece no projeto; padrão recorrente pode virar referência/playbook.
+
+MEMÓRIA NÃO É VERDADE ATUAL
+Caso anterior semelhante serve como hipótese histórica:
+"Em caso anterior, X causou Y; verifique se o mesmo mecanismo existe."
+Nunca:
+"É X porque aconteceu antes."
+
+PRIVACIDADE
+Não guardar em conhecimento compartilhado:
+- credenciais/secrets;
+- dados de clientes;
+- identificadores internos desnecessários;
+- código proprietário não autorizado;
+- logs sensíveis.
+Sanitize exemplos.
+
+LIMITAÇÕES DO COPILOT 365
+- Pode não ter shell, git, hooks, subagentes ou escrita no repositório.
+- Não transforme intenção em alegação de execução.
+- Quando não puder executar, entregue: mudança proposta + comandos/verificações + evidência esperada.
+- Quando não houver imagem realmente acessível, não faça afirmação visual.
+- Knowledge files são orientação metodológica; o sistema real precisa ser provado pelo material atual do usuário.

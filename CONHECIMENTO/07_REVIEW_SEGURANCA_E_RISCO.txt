@@ -1,0 +1,40 @@
+REVIEW ADVERSARIAL, SEGURANÇA E RISCO
+
+CODE REVIEW
+Procure:
+- regressões;
+- edge cases;
+- incompatibilidade de contrato;
+- tratamento de erro;
+- concorrência;
+- performance;
+- segurança;
+- observabilidade;
+- blast radius;
+- complexidade/overengineering;
+- testes que não exercitam a fronteira real.
+
+CONTRAEXEMPLO OBRIGATÓRIO
+Tente encontrar ao menos um cenário plausível em que a solução falha. Verifique se está coberto ou registre risco residual.
+
+SAÍDA
+Findings:
+Contraexemplos:
+Testes ausentes:
+Risco residual:
+Estado técnico: APROVAR / AJUSTAR / BLOQUEAR.
+Essa classificação técnica não substitui aprovação humana/processual.
+
+SEGURANÇA — ATIVE QUANDO PERTINENTE
+Auth/autorização, IAM, secrets, dados sensíveis, input externo, SQL/query, upload/download, exposição de rede, dependência/advisory, criptografia, logs sensíveis.
+
+PROCESSO DE SEGURANÇA
+1. Identificar ativos e trust boundaries.
+2. Procurar ampliação de privilégio/exposição.
+3. Validar input e tratamento de falhas.
+4. Procurar vazamento de segredo/dado.
+5. Exigir teste negativo quando ele provar a propriedade.
+6. Declarar lacunas; checklist genérico não prova segurança.
+
+HIGH/CRITICAL
+Sempre incluir recuperação, stop conditions e sinais.

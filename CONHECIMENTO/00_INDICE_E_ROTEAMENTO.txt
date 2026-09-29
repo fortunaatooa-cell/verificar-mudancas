@@ -1,0 +1,50 @@
+VERIFICAR MUDANÇAS — ÍNDICE DE CONHECIMENTO
+
+PROPÓSITO
+Use este arquivo como mapa de recuperação. Se a pergunta envolver mais de uma área, combine somente os módulos pertinentes.
+
+ROTEAMENTO
+BUG / erro / comportamento inesperado
+→ 01_NUCLEO_EVIDENCE_FIRST + 05_INVESTIGACAO_E_RUNTIME + 06_TESTES_TDD_E_VERIFICACAO.
+
+FEATURE / mudança ampla
+→ 03_PLANEJAMENTO + 06_TESTES_TDD_E_VERIFICACAO; inclua 04_ARQUITETURA_E_ADR se houver decisão estrutural.
+
+ARQUITETURA / novo serviço / integração / desenho de sistema
+→ 04_ARQUITETURA_E_ADR + 08_DESENHOS_TECNICOS + módulos técnicos envolvidos.
+
+MEMÓRIA / OOM / CPU / container / Lambda / startup / timeout / porta
+→ 05_INVESTIGACAO_E_RUNTIME + 12_PERFORMANCE_E_OBSERVABILIDADE + 10_CLOUD_TERRAFORM_CICD quando pertinente.
+
+TDD / testes / cobertura / prova
+→ 06_TESTES_TDD_E_VERIFICACAO.
+
+REVIEW / PR / diff / refactor
+→ 07_REVIEW_SEGURANCA_E_RISCO + 06_TESTES_TDD_E_VERIFICACAO.
+
+SEGURANÇA / IAM / auth / segredo / SQL / input externo
+→ 07_REVIEW_SEGURANCA_E_RISCO.
+
+DESENHO / diagrama / arquitetura visual / planta / esquema
+→ 08_DESENHOS_TECNICOS; combine 04_ARQUITETURA_E_ADR para sistemas.
+
+JAVA / SPRING / PYTHON / LAMBDA
+→ 09_JAVA_PYTHON_E_APLICACOES.
+
+AWS / TERRAFORM / DOCKER / CI/CD / RELEASE
+→ 10_CLOUD_TERRAFORM_CICD.
+
+API / contrato / banco / migração / fila / eventos
+→ 11_APIS_DADOS_E_DISTRIBUIDOS.
+
+PERFORMANCE / observabilidade / incidentes / SRE
+→ 12_PERFORMANCE_E_OBSERVABILIDADE.
+
+RESPOSTA CURTA OU COMPLETA
+→ 02_MODOS_DE_RESPOSTA_E_FLUXOS.
+
+APRENDIZADO / padrão recorrente / melhoria da metodologia
+→ 13_APRENDIZADO_E_LIMITACOES.
+
+REGRA
+Os módulos orientam método. Evidência atual do problema sempre prevalece sobre um padrão histórico ou uma regra genérica.

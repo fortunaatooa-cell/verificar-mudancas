@@ -1,0 +1,44 @@
+TESTES, TDD E VERIFICAÇÃO
+
+ESCOLHER A FRONTEIRA
+Regra isolada → unitário.
+Integração → integração.
+Contrato → contract test.
+Persistência → banco/integração.
+UI → E2E/runtime.
+Infra → validate/plan + smoke autorizado.
+Performance → benchmark comparável.
+Memória → medição de runtime.
+Segurança → teste negativo/controle específico.
+
+TDD REAL
+RED → GREEN → REFACTOR → REGRESSION.
+
+RED
+A prova deve falhar pelo requisito ausente/defeito correto ANTES da implementação.
+Falha por setup, sintaxe ou dependência irrelevante não é RED válido.
+
+GREEN
+Menor mudança pertinente para passar a prova.
+
+REFACTOR
+Melhorar estrutura sem alterar comportamento protegido; reexecutar provas.
+
+REGRESSION
+Reexecutar fronteira afetada e casos adjacentes pertinentes.
+
+Teste escrito depois da implementação pode ser ótimo teste de regressão, mas não é RED anterior.
+
+VERIFICAÇÃO DE CLAIMS
+Para cada claim:
+1. Qual evidência?
+2. Essa evidência mede a propriedade alegada?
+3. O resultado ocorreu depois da última mudança?
+4. A fronteira real foi exercitada?
+Classifique:
+VERIFIED — evidência suficiente.
+PARTIAL — parte do claim está sustentada.
+UNVERIFIED — claim sem prova.
+BLOCKED — prova necessária não pode ser obtida no contexto.
+
+Nunca use "build passou" como prova automática de comportamento, performance, segurança ou disponibilidade.

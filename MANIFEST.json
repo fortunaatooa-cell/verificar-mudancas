@@ -1,0 +1,24 @@
+{
+  "package": "verificar-mudancas-copilot365",
+  "version": "3.1-copilot365-1",
+  "source_branch": "feature/agentic-v1-5",
+  "source_commit": "6a2c3d8a682a4debb27cba80a346dc9d2fa80268",
+  "knowledge_files": [
+    "00_INDICE_E_ROTEAMENTO.txt",
+    "01_NUCLEO_EVIDENCE_FIRST.txt",
+    "02_MODOS_DE_RESPOSTA_E_FLUXOS.txt",
+    "03_PLANEJAMENTO.txt",
+    "04_ARQUITETURA_E_ADR.txt",
+    "05_INVESTIGACAO_E_RUNTIME.txt",
+    "06_TESTES_TDD_E_VERIFICACAO.txt",
+    "07_REVIEW_SEGURANCA_E_RISCO.txt",
+    "08_DESENHOS_TECNICOS.txt",
+    "09_JAVA_PYTHON_E_APLICACOES.txt",
+    "10_CLOUD_TERRAFORM_CICD.txt",
+    "11_APIS_DADOS_E_DISTRIBUIDOS.txt",
+    "12_PERFORMANCE_E_OBSERVABILIDADE.txt",
+    "13_APRENDIZADO_E_LIMITACOES.txt"
+  ],
+  "knowledge_file_count": 14,
+  "instruction_characters": 5010
+}

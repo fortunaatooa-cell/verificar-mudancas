@@ -1,0 +1,26 @@
+CLOUD, TERRAFORM, CONTAINERS E CI/CD
+
+TERRAFORM / IAC
+- Antes de apply, examine plan.
+- Identifique create/update/destroy/replace.
+- Replacement inesperado, destruição, mudança de IAM ou perda potencial de dados é stop condition.
+- Diferencie configuração desejada de estado real.
+- Considere dependências, lifecycle, state, imports, drift e provider/version.
+- Para mudança HIGH, planeje rollback/rollforward e sinais pós-deploy.
+
+CONTAINERS / CLOUD RUNTIME
+- Confirme limites reais de CPU/memória.
+- Diferencie health check, bind, port mapping, DNS, TLS, security groups/firewall, load balancer e aplicação.
+- Deploy concluído sem erro NÃO prova aplicação saudável.
+- Use smoke/health/runtime signals quando autorizados.
+
+AWS / SERVERLESS
+- Confirme conta/região/ambiente antes de ação externa.
+- Para Lambda: runtime, layer, package, IAM, timeout, memory, concurrency, network/VPC e logs.
+- Para filas/eventos: retry, DLQ, idempotência, ordering, duplication e poison messages.
+
+CI/CD
+- Diferencie falha do pipeline de defeito no produto.
+- Preserve permissões mínimas.
+- Valide artifact correto, ambiente correto e comandos reais do projeto.
+- Resultado anterior à última mudança não prova estado final.

@@ -1,0 +1,31 @@
+DESENHOS TÉCNICOS E EVIDÊNCIA VISUAL
+
+USE QUANDO
+Diagrama, arquitetura, sequência, rede, infra, dados, planta, esquema, screenshot técnico, PDF com figura, CAD, desenho mecânico/elétrico/civil/P&ID.
+
+ANALISAR
+1. Identifique tipo e finalidade.
+2. Procure título, revisão, escala, unidades, legenda, vistas, cortes, símbolos, notas e fonte.
+3. Inventarie SOMENTE o visível: componentes, IDs, conexões, direção, interfaces, dimensões, tolerâncias, materiais, estados e anotações.
+4. Reconstrua relações/caminho funcional.
+5. Procure órfãos, duplicidades, conflitos, elementos sem legenda e inconsistências entre vistas.
+6. Separe OBSERVADO, INFERIDO e NÃO DETERMINÁVEL.
+7. Texto ilegível, escala ausente ou área cortada permanecem incerteza.
+8. Cruze com código, especificação, BOM, contrato ou configuração quando disponível.
+
+CRIAR/REDESENHAR
+Defina intenção, público, nível de detalhe, notação, dimensões conhecidas, interfaces e formato.
+Preferências:
+- arquitetura/fluxo/sequência → Mermaid, PlantUML, Graphviz/DOT;
+- vetorial → SVG;
+- CAD → somente com unidades/dimensões suficientes;
+- raster/gerativo → ilustrativo se não houver garantia geométrica.
+Entregue fonte editável quando possível.
+
+PROIBIDO
+Não invente cota, escala, tolerância, material, norma, carga, capacidade ou distância.
+Sem visão real, não diga que inspecionou imagem.
+Sem renderização, entregue código/especificação do desenho e diga que o render não foi executado.
+
+DOMÍNIOS REGULADOS
+Análise assistiva não substitui validação/certificação por profissional habilitado.

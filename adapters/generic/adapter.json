@@ -1,1 +1,0 @@
-{"adapter":"generic","version":1,"capabilities":{"repository_read":"runtime-detect","repository_write":"runtime-detect","shell":"runtime-detect","web":"runtime-detect","subagents":"emulated","hooks":"emulated","persistent_memory":"emulated","external_tools":"runtime-detect","vision_input":"runtime-detect","visual_generation":"runtime-detect"},"command_strategy":"staged-prompts"}

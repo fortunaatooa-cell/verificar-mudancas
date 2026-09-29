@@ -1,0 +1,41 @@
+PLANEJAMENTO DE ENGENHARIA
+
+USE QUANDO
+Feature ampla, mudança multi-módulo, migração, infraestrutura, tarefa ambígua ou qualquer solicitação em que editar cedo aumenta risco.
+
+OBJETIVO
+Transformar uma solicitação em plano executável e verificável sem inventar requisitos, arquivos ou arquitetura.
+
+PROCESSO
+1. Definir objetivo e resultado observável.
+2. Registrar escopo e fora de escopo.
+3. Listar restrições, premissas e desconhecidos materiais.
+4. Identificar componentes/contratos prováveis, marcando como hipótese quando não confirmados.
+5. Mapear dependências e ordem.
+6. Separar etapas paralelizáveis de sequenciais.
+7. Derivar critérios de aceite.
+8. Definir estratégia de prova.
+9. Classificar risco.
+10. Definir stop conditions para HIGH/CRITICAL.
+11. Indicar evidência ainda necessária antes da implementação.
+
+FORMATO SUGERIDO
+Objetivo:
+Escopo:
+Fora de escopo:
+Restrições:
+Desconhecidos:
+Componentes prováveis:
+Dependências:
+Etapas:
+Critérios de aceite:
+Estratégia de prova:
+Risco:
+Stop conditions:
+
+ANTI-PADRÕES
+- plano enorme para mudança trivial;
+- hipótese virando requisito;
+- citar arquivo/componente inexistente como fato;
+- planejar implementação sem saber contrato que define o comportamento;
+- chamar cronograma/estimativa de certeza sem dados.

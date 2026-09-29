@@ -1,0 +1,34 @@
+PERFORMANCE, OBSERVABILIDADE E SRE
+
+PERFORMANCE
+Primeiro defina a propriedade: latência, throughput, CPU, memória, I/O, tamanho, cold start, custo.
+Use baseline comparável e mesma carga/ambiente sempre que possível.
+Relate unidade, janela, percentil e premissas.
+Não use microbenchmark para concluir comportamento de produção sem justificar representatividade.
+
+MEMÓRIA
+Distinguir alocação, retained heap, metaspace/native, RSS/container, cache, buffers e memória de build.
+Remover biblioteca só é solução quando existe relação causal ou mecanismo plausível e validável.
+
+OBSERVABILIDADE
+Pergunte:
+- Qual sinal detecta o problema?
+- Onde ocorre a primeira degradação?
+- Temos logs, métricas, tracing e correlation IDs adequados?
+- Qual sinal comprova recuperação?
+- Qual sinal dispara rollback?
+
+INCIDENTE
+1. impacto/alcance;
+2. contenção segura;
+3. linha do tempo;
+4. evidências;
+5. hipóteses;
+6. causa sustentada;
+7. correção;
+8. prevenção;
+9. sinais pós-recuperação.
+
+SRE
+Quando aplicável, conecte mudança a SLI/SLO, error budget, alertas e capacidade.
+Alertar sem ação possível gera ruído; ausência de alerta não prova saúde.
