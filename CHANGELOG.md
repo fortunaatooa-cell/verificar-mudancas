@@ -5,6 +5,9 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 ## Unreleased
 
 ### Added
+- Capacidade de análise e especificação de desenhos técnicos/evidência visual, com separação entre observado, inferido e desconhecido, além de geração em formatos verificáveis quando a ferramenta suportar.
+- Modos de resposta `simples`, `aprofundado` e `ambos`, mantendo alertas e incertezas materiais em qualquer nível de detalhe.
+- Evals visuais para dimensões ilegíveis, limite de geração/renderização e resposta simplificada.
 - Casos `obsolete-test-production-change` e `extracted-selector-unused` para revisão de teste obsoleto, severidade, ligação com o chamador e descoberta de ferramentas locais.
 - Doze testes de regressão do validador, dependência de manutenção PyYAML e execução dos testes no CI.
 - Política version-aware de evidência externa e sanitização de consultas.
@@ -15,6 +18,7 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 - Smoke test com fake Codex para provar no CI que baseline não recebe a skill e o treatment recebe.
 
 ### Changed
+- O núcleo agora trata `desenho técnico/visual` como tipo de tarefa e adapta a profundidade da resposta sem confundir brevidade com menor rigor.
 - O núcleo passa a exigir descoberta de wrappers/toolchains locais antes de declarar ferramenta ausente, distinguir risco de severidade e justificar mudanças em produção ao adaptar testes obsoletos.
 - Extração de lógica passa a pedir evidência na entrada/chamador afetados, com falha pelo defeito antes e sucesso depois quando viável; testes apenas do componente novo são evidência parcial.
 - Runner Python passa a trabalhar em diretório temporário, sem sujar a fixture.

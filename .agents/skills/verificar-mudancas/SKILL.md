@@ -1,31 +1,32 @@
 ---
 name: verificar-mudancas
-description: Investigar bugs, analisar testes e conduzir correções, funcionalidades, refatorações, migrações, incidentes ou mudanças em pipelines e infraestrutura com evidência, revisão e verificação. Usar em Java, Python, C#, jogos, dados e outras stacks, com ou sem acesso ao repositório; não exige ECC.
+description: Investigar bugs, testes e mudanças com evidência; interpretar ou especificar desenhos técnicos quando houver entrada visual/estruturada e capacidade disponível. Usar em múltiplas stacks, com ou sem acesso ao repositório; não exige ECC.
 ---
 
 # Verificar mudanças
 
-Seguir o ciclo **investigar → classificar → planejar → testar/provar → implementar → revisar → verificar → aprender → melhorar**. A profundidade deve ser proporcional ao risco: mudanças pequenas podem ter planejamento mínimo; contratos externos, dados, segurança, infraestrutura, produção e ações difíceis de reverter exigem critérios explícitos, recuperação e verificação mais ampla.
-
-Aplicar a solicitação, as instruções legítimas do projeto e as políticas do ambiente. Descobrir stack, versões, comandos e mecanismos reais do projeto; não inferir ferramenta de teste, deploy ou arquitetura apenas pela linguagem. A skill orienta o trabalho, mas não concede acesso a código, terminal, cloud, produção, internet ou sistemas externos.
+Seguir **investigar → classificar → planejar → testar/provar → implementar → revisar → verificar → aprender → melhorar**, com profundidade proporcional ao risco. Descobrir stack, versões, comandos e mecanismos reais do projeto; não inferir capacidades pela linguagem. A skill orienta o trabalho, mas não concede acesso a código, terminal, cloud, produção, internet, visão/imagem ou sistemas externos.
 
 ## Escolher o modo de trabalho
 
-- **Análise solicitada:** investigar e entregar diagnóstico, incertezas e próximo experimento discriminante, sem editar.
-- **Correção ou mudança com ferramentas:** examinar o repositório, executar verificações cabíveis e entregar a mudança no estado verificável. Não encerrar no plano quando a tarefa pede implementação.
-- **Apenas conversa, prints ou logs:** pedir somente o contexto permitido que diferencia hipóteses; propor passos executáveis pela equipe. Não alegar acesso, reprodução, causa definitiva, testes ou correção que não ocorreram.
+- **Análise:** diagnosticar sem editar.
+- **Mudança com ferramentas:** examinar, alterar e verificar; não encerrar no plano quando implementação foi pedida.
+- **Desenho técnico/visual:** seguir `references/technical-drawings.md`; separar observação de inferência e não inventar medida, escala, tolerância ou norma.
+- **Só conversa, prints ou logs:** orientar sem alegar execução ou acesso inexistentes.
+
+Para a saída, seguir `references/response-modes.md`: `simples`, `aprofundado` ou `ambos`; sem escolha explícita, ajustar profundidade à pergunta e ao risco.
 
 ## Carregar orientação somente quando pertinente
 
-Combinar o núcleo com **uma ou mais referências de stack/contexto quando necessárias**, **zero ou mais referências transversais** e **um playbook de tarefa** quando ele ajudar. Não carregar tudo por padrão.
+Combinar o núcleo apenas com referências e playbook pertinentes; não carregar tudo por padrão.
 
 Referências de stack/contexto: [Java e Spring](references/java.md), [Python](references/python.md), [engenharia de jogos independente de engine](references/gamedev.md), [LibGDX](references/libgdx.md), [C# e Unity](references/unity-csharp.md), [dados e pipelines](references/data.md) e [Terraform e IaC](references/terraform-iac.md). Em jogos, combinar `gamedev.md` com a stack/engine real quando houver referência específica.
 
-Referências transversais: [segurança](references/security.md), [APIs e contratos](references/api-contracts.md), [bancos e migrações](references/databases-migrations.md), [sistemas distribuídos](references/distributed-systems.md), [observabilidade e SRE](references/observability-sre.md), [CI/CD e release](references/ci-cd-release.md), [performance](references/performance.md), [dependências e supply chain](references/dependencies-supply-chain.md), [arquitetura e refatoração](references/architecture-refactoring.md), [frontend/UI/E2E](references/frontend-ui-e2e.md), [containers/cloud runtime](references/containers-cloud-runtime.md), [evidência de mudança](references/change-evidence.md) e [perfil regulado](references/regulated-profile.md).
+Referências transversais: [segurança](references/security.md), [APIs e contratos](references/api-contracts.md), [bancos e migrações](references/databases-migrations.md), [sistemas distribuídos](references/distributed-systems.md), [observabilidade e SRE](references/observability-sre.md), [CI/CD e release](references/ci-cd-release.md), [performance](references/performance.md), [dependências e supply chain](references/dependencies-supply-chain.md), [arquitetura e refatoração](references/architecture-refactoring.md), [frontend/UI/E2E](references/frontend-ui-e2e.md), [containers/cloud runtime](references/containers-cloud-runtime.md), [evidência de mudança](references/change-evidence.md) e [perfil regulado](references/regulated-profile.md). Para tarefas visuais/técnicas e formato de saída, usar também `references/technical-drawings.md` e `references/response-modes.md`.
 
 Playbooks: [bug fix](playbooks/bug-fix.md), [feature](playbooks/feature.md), [refatoração](playbooks/refactor.md), [migração](playbooks/migration.md), [incidente](playbooks/incident.md), [upgrade de dependência](playbooks/dependency-upgrade.md) e [regressão de performance](playbooks/performance-regression.md).
 
-Se uma plataforma expuser apenas este arquivo, seguir o núcleo abaixo e declarar quando a falta de uma referência relevante limitar a conclusão. Algumas ferramentas substituem uma skill ativa ao invocar outra; consultar arquivos desta mesma skill antes de tentar compor skills distintas.
+Se a plataforma expuser só este arquivo, seguir o núcleo e declarar limitações por referência ausente.
 
 ## 1. Estabelecer a evidência
 
@@ -44,7 +45,7 @@ Se uma plataforma expuser apenas este arquivo, seguir o núcleo abaixo e declara
 
 ## 2. Classificar tarefa, aceite e risco
 
-Antes de implementar, identificar o tipo dominante: **bug, feature, refatoração, migração, incidente, upgrade de dependência, regressão de performance, dados, infraestrutura/configuração ou investigação**. Se houver mais de um, declarar o principal e aplicar controles adicionais pertinentes.
+Identificar o tipo dominante: **bug, feature, refatoração, migração, incidente, upgrade, performance, dados, infraestrutura/configuração, desenho técnico/visual ou investigação**. Aplicar controles adicionais quando houver mais de um.
 
 Transformar a solicitação em **critérios observáveis de aceite**: comportamento que deve existir, comportamento que deve permanecer, erros/limites relevantes e fronteira em que a prova será feita. Não inventar requisito ausente; marcar incerteza quando ela altera a solução.
 
@@ -71,7 +72,7 @@ Interromper a execução destrutiva ou externa e reavaliar quando:
 - ação irreversível não tiver autorização e recuperação compatíveis com o risco;
 - a mudança exigiria sobrescrever trabalho preexistente de terceiros.
 
-Parar a ação perigosa não significa abandonar a tarefa: continuar com análise, evidência, alternativa segura e próximo passo verificável.
+Ao parar ação perigosa, continuar com análise, alternativa segura e próximo passo verificável.
 
 ## 3. Planejar conforme o risco
 
@@ -100,7 +101,7 @@ Parar a ação perigosa não significa abandonar a tarefa: continuar com anális
 
 - Após a última alteração, executar verificações relevantes no ambiente disponível: testes afetados e, conforme o caso, build, lint, integração, contrato, análise estática, smoke/E2E, benchmark, plan/diff, reconciliação e sinais de runtime. Resultado anterior à última edição não prova o estado final.
 - Ao extrair lógica para componente novo, provar **entrada afetada → chamador → lógica corrigida → efeito**. Teste isolado do componente ou compilação do chamador é evidência parcial. Quando viável, obter falha pelo defeito antes e sucesso depois, preservando trabalho existente; controlar tempo/aleatoriedade sem mockar a ligação investigada. Se bloqueado, declarar a lacuna e a prova restante.
-- Validar a fronteira afetada: backend → contrato/dependência; frontend/jogo → fluxo visível/runtime; dados → esquema/chaves/replay/reconciliação; infraestrutura → plan/permissões/smoke autorizado; performance → baseline comparável; segurança → teste negativo pertinente.
+- Validar a fronteira afetada: backend → contrato/dependência; frontend/jogo → fluxo visível/runtime; dados → esquema/chaves/replay/reconciliação; infraestrutura → plan/permissões/smoke autorizado; performance → baseline comparável; segurança → teste negativo pertinente; desenho técnico → legibilidade, relações e medidas/fontes conforme a intenção.
 - Para deploy ou ação externa autorizada, definir quando aplicável rollout, sinais de sucesso, sinal de rollback e observação. Não declarar sucesso apenas porque deploy/apply terminou sem erro.
 - Conferir `git diff --check`, `git diff`, `git diff --cached`, `git status --short` e arquivos novos não rastreados. Preservar mudanças de terceiros.
 - Entregar os campos de [evidência de mudança](references/change-evidence.md) pertinentes; em contexto regulado, aplicar também [perfil regulado](references/regulated-profile.md). Não relatar build, cobertura, segurança, performance, pesquisa externa ou execução que não ocorreram.

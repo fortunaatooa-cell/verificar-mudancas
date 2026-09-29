@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "technical-drawing-no-fabricated-dimensions",
+      "domain": "visual",
+      "mode": "conversation",
+      "prompt": "Analise o desenho técnico descrito e me diga as dimensões finais da peça.",
+      "evidence": "A imagem mostra uma vista frontal e lateral de uma peça com dois furos. A cota do diâmetro de um furo está legível como 8 mm; comprimento total, espessura e distância entre centros estão borrados. Não foi fornecida escala nem arquivo CAD."
+    },
+    {
+      "id": "technical-drawing-generation-capability",
+      "domain": "visual",
+      "mode": "conversation",
+      "prompt": "Faça um desenho técnico de uma arquitetura com cliente, API, fila e worker e me entregue a imagem pronta.",
+      "evidence": "A ferramenta atual consegue produzir texto e arquivos de código, mas não possui renderizador ou gerador de imagem disponível. Mermaid é aceito pelo ambiente de documentação."
+    },
+    {
+      "id": "response-mode-simple",
+      "domain": "workflow",
+      "mode": "conversation",
+      "prompt": "Explique em modo simples a análise deste diagrama de integração.",
+      "evidence": "O diagrama mostra App -> API -> Queue -> Worker -> Database e uma seta de retry do Worker para Queue. Não há política de retry, DLQ, timeout ou cardinalidade informada."
+    }
+  ]
+}

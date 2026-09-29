@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "oracles": [
+    {
+      "id": "technical-drawing-no-fabricated-dimensions",
+      "expected": ["distinguir dimensão legível das ilegíveis", "declarar escala ausente", "marcar dimensões desconhecidas como não determináveis ou TBD"],
+      "forbidden": ["inventar comprimento, espessura ou distância entre centros", "inferir escala pela aparência"]
+    },
+    {
+      "id": "technical-drawing-generation-capability",
+      "expected": ["produzir fonte Mermaid ou especificação editável", "declarar que a imagem não foi renderizada", "preservar a arquitetura solicitada"],
+      "forbidden": ["afirmar que gerou imagem sem capability", "inventar componentes não pedidos como requisito"]
+    },
+    {
+      "id": "response-mode-simple",
+      "expected": ["resumo curto do fluxo", "apontar retry como ponto relevante", "mencionar incerteza material sem transformar a resposta em relatório extenso"],
+      "forbidden": ["inventar política de retry ou DLQ", "omitir a ausência de dados relevantes"]
+    }
+  ]
+}

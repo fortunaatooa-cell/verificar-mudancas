@@ -1,6 +1,6 @@
 # Verificar mudanças
 
-Skill portátil de engenharia inspirada no ciclo do [Everything Claude Code (ECC)](https://github.com/affaan-m/ECC). Ajuda agentes a investigar falhas, implementar mudanças e apresentar evidências verificáveis sem depender de uma linguagem, ferramenta ou ecossistema específico.
+Skill portátil de engenharia inspirada no ciclo do [Everything Claude Code (ECC)](https://github.com/affaan-m/ECC). Ajuda agentes a investigar falhas, implementar mudanças, analisar desenhos técnicos e apresentar evidências verificáveis sem depender de uma linguagem, ferramenta ou ecossistema específico.
 
 **investigar → classificar → planejar → testar/provar → implementar → revisar → verificar → aprender → melhorar**
 
@@ -14,29 +14,37 @@ O núcleo é combinado sob demanda com:
 
 1. **Referência de stack/contexto** — Java/Spring, Python, game development, LibGDX, C#/Unity, dados ou Terraform/IaC.
 2. **Referências transversais** — segurança, APIs/contratos, bancos/migrações, distribuídos, observabilidade, CI/CD, performance, supply chain, arquitetura, frontend/E2E, containers/cloud runtime, evidência de mudança e perfil regulado.
-3. **Playbook de tarefa** — bug fix, feature, refatoração, migração, incidente, upgrade de dependência ou regressão de performance.
+3. **Capacidades visuais** — [desenhos técnicos e evidência visual](.agents/skills/verificar-mudancas/references/technical-drawings.md), com leitura evidence-first e criação em representação compatível com a ferramenta.
+4. **Modos de resposta** — [simples, aprofundado ou ambos](.agents/skills/verificar-mudancas/references/response-modes.md), sem reduzir o rigor da evidência.
+5. **Playbook de tarefa** — bug fix, feature, refatoração, migração, incidente, upgrade de dependência ou regressão de performance.
 
 O agente deve carregar somente o que for pertinente. A arquitetura modular existe para ampliar a análise sem inflar o contexto de todas as tarefas.
+
+## Desenhos técnicos
+
+A skill pode interpretar diagramas de arquitetura, fluxo, sequência, rede/infra, dados e outros desenhos técnicos quando a ferramenta realmente tiver acesso ao artefato. Também orienta a criação/redesenho em Mermaid, PlantUML, DOT, SVG ou formatos CAD quando houver capability e dados suficientes. Medidas, escala, tolerâncias e normas ausentes nunca devem ser inventadas; imagem gerativa sem garantia geométrica é tratada como ilustrativa.
 
 ## Conteúdo
 
 - [SKILL.md](.agents/skills/verificar-mudancas/SKILL.md): ciclo universal, classificação, risco, critérios de aceite, stop conditions, revisão e verificação.
 - [Referências](.agents/skills/verificar-mudancas/references/): conhecimento por stack e por preocupação transversal.
+- [Desenhos técnicos](.agents/skills/verificar-mudancas/references/technical-drawings.md): análise visual estruturada, incerteza, criação/redesenho e limites de precisão.
+- [Modos de resposta](.agents/skills/verificar-mudancas/references/response-modes.md): saída simples, aprofundada ou combinada.
 - [Evidência de mudança](.agents/skills/verificar-mudancas/references/change-evidence.md): pacote genérico para PR/change record/auditoria.
 - [Perfil regulado](.agents/skills/verificar-mudancas/references/regulated-profile.md): baseline conservador para ambientes controlados; políticas locais mais restritivas prevalecem.
 - [Playbooks](.agents/skills/verificar-mudancas/playbooks/): variações conforme o tipo de tarefa.
 - [Prompt para chat](prompt-chat-equipe.md): versão para ferramentas sem acesso ao repositório.
-- [Avaliações](evals/README.md): casos, oracle, fixtures e protocolo A/B.
+- [Avaliações](evals/README.md): casos, oracle, fixtures e protocolo A/B; [evals visuais](evals/visual/README.md) cobrem a nova capacidade.
 - [Contribuição](CONTRIBUTING.md) e [changelog](CHANGELOG.md): regras de evolução e versionamento.
 
 ## Uso em diferentes ferramentas
 
 | Superfície | Como disponibilizar | Limite a verificar |
 | --- | --- | --- |
-| Devin | Conectar o repositório e carregar `.agents/skills/verificar-mudancas/`. | Skills/referências precisam estar acessíveis na sessão. |
-| GitHub Copilot | Instalar a pasta da skill no projeto/local suportado. | Confirmar descoberta e acesso real a código/testes. |
-| Claude Code, Codex ou outro agente | Instalar a pasta completa no local aceito pela ferramenta. | Ferramentas, composição de skills e web variam por harness. |
-| Chat/Teams sem acesso ao projeto | Fornecer [o prompt](prompt-chat-equipe.md) e contexto permitido. | Receber diagnóstico/roteiro, não alegar execução inexistente. |
+| Devin | Conectar o repositório e carregar `.agents/skills/verificar-mudancas/`. | Confirmar acesso real a imagens/arquivos e ferramentas de desenho. |
+| GitHub Copilot | Instalar a pasta da skill no projeto/local suportado. | Confirmar descoberta, código e capabilities visuais disponíveis. |
+| Claude Code, Codex ou outro agente | Instalar a pasta completa no local aceito pela ferramenta. | Ferramentas, visão, geração de imagem e composição de skills variam por harness. |
+| Chat/Teams sem acesso ao projeto | Fornecer [o prompt](prompt-chat-equipe.md) e contexto permitido. | Receber diagnóstico/roteiro; imagens só podem ser analisadas se a superfície realmente as fornecer. |
 
 Para uso corporativo, fixe uma **tag ou commit aprovado**; não dependa de `main`. Copiar somente `SKILL.md` remove referências e playbooks.
 
