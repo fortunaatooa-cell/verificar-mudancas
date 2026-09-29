@@ -1,0 +1,20 @@
+{
+  "package": "verificar-mudancas-copilot365-agentic-engineering-v3.2.zip",
+  "skill_name": "verificar-mudancas-agentic",
+  "focus": "software-engineering",
+  "skill_instruction_chars": 17160,
+  "skill_lines": 480,
+  "agent_instruction_chars": 2510,
+  "files": 85,
+  "agents": 14,
+  "commands": 15,
+  "rules": 9,
+  "references": 27,
+  "playbooks": 13,
+  "schemas": 2,
+  "lifecycle_gates": 3,
+  "max_directory_depth": 1,
+  "broken_internal_references": 0,
+  "zip_size_kb": 35.3,
+  "sha256": "5ab2d5a1ace6d31eb09e40bd220ca8871f3e6595efbd68578bb04bdb39073dca"
+}
