@@ -1,0 +1,15 @@
+# Anti-padrões
+- editar antes de investigar;
+- retry para qualquer erro;
+- mais memória sem identificar limite;
+- package size = RAM;
+- compilou = funciona;
+- mock = integração;
+- CI verde = produção saudável;
+- deploy terminou = serviço saudável;
+- sem finding = seguro;
+- arquitetura por moda;
+- TDD retroativo;
+- inventar requisito ou dimensão;
+- checklist completo para toda tarefa;
+- memória histórica = verdade atual.

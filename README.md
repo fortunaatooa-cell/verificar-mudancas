@@ -1,33 +1,29 @@
 # Verificar Mudanças — Devin Workspace v3.1
 
-Branch de distribuição específica para **Devin**, baseada em `feature/agentic-v1-5` no commit `6a2c3d8a682a4debb27cba80a346dc9d2fa80268`.
+Pacote de distribuição específico para **Devin**, baseado no estado atual do sistema agentic v3.1.
 
-## Arquivo para usar amanhã
+## O que inclui
 
-Baixe `verificar-mudancas-devin-workspace-v3.1.zip`.
-
-O ZIP é um **workspace overlay**: descompacte-o na raiz do repositório que o Devin vai editar. Ele cria `AGENTS.md`, `.agents/skills/` e a pasta `devin/` sem exigir que o Devin trate um ZIP como uma skill única.
-
-## O que existe no pacote
-
-- skill principal `verificar-mudancas`;
-- skills de investigação, planejamento, arquitetura, testes/TDD, review, segurança, runtime e desenho técnico;
-- referências de APIs/dados/cloud, performance/SRE, Java/Python, evidências e anti-padrões;
-- `AGENTS.md` para orquestração no workspace;
-- `devin/repo-setup/ADDITIONAL_NOTES.txt` pronto para o Repo Setup;
-- 8 templates de Playbooks para Settings → Playbooks;
+- `AGENTS.md` — orquestração do workspace;
+- `.agents/skills/verificar-mudancas/` — skill principal;
+- 8 skills especializadas: investigação, planejamento, arquitetura, testes/TDD, review, segurança, runtime e desenho técnico;
+- referências para APIs/dados/cloud, performance/SRE, Java/Python, segurança, desenhos e evidência;
+- `devin/repo-setup/ADDITIONAL_NOTES.txt`;
+- templates de Playbooks para `!verificar`, `!investigar`, `!planejar`, `!arquitetura`, `!tdd`, `!revisar`, `!runtime`, `!desenho`;
 - Knowledge condensado opcional;
-- testes de aceite para validar o comportamento.
+- testes de aceite.
 
 ## Instalação recomendada
 
-1. Descompacte o ZIP na raiz do repositório do projeto.
-2. Confirme `.agents/skills/verificar-mudancas/SKILL.md`.
-3. Em Settings → Devin's Machine → Repo Setup, mantenha os comandos reais de pull/dependências/lint/test/app do projeto.
+1. Descompacte o ZIP na **raiz do repositório** usado pelo Devin.
+2. Confirme que existe `.agents/skills/verificar-mudancas/SKILL.md`.
+3. Em Settings → Devin's Machine → Repo Setup, configure os comandos reais do projeto.
 4. Cole `devin/repo-setup/ADDITIONAL_NOTES.txt` em Additional Notes.
-5. Opcionalmente crie macros em Settings → Playbooks usando `devin/playbooks/`.
-6. Rode `devin/acceptance-tests/TESTES.md` em um sandbox/repo de teste antes do uso real.
+5. Opcional: crie os macros em Settings → Playbooks usando os arquivos em `devin/playbooks/`.
+6. Rode os testes de `devin/acceptance-tests/TESTES.md`.
 
-## Importante
+O ZIP é um **workspace overlay**, não um formato mágico de importação. Se sua interface tiver um upload de workspace, use-o somente se ele preservar a estrutura de diretórios. O caminho `.agents/skills/` é a parte essencial.
 
-O ZIP é transporte e overlay. A parte nativa mais importante para skills locais é `.agents/skills/`. Não coloque segredos no pacote; use Settings → Secrets.
+## Segurança
+
+Não inclua secrets no pacote. Configure credenciais em Settings → Secrets no Devin.

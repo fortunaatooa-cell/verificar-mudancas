@@ -1,0 +1,11 @@
+Use AGENTS.md e `.agents/skills/verificar-mudancas/SKILL.md` como metodologia de engenharia para tarefas de mudança.
+Carregue skills auxiliares em `.agents/skills/` somente quando pertinentes.
+Antes de editar, inspecione o repo e `git status --short`; preserve alterações preexistentes.
+Descubra e execute os comandos reais do projeto para build/test/lint em vez de assumir convenções.
+Em bugs, investigue causa antes de editar.
+Em mudanças amplas, planeje critérios de aceite e prova.
+Em arquitetura, separe observado/inferido/proposto.
+TDD só deve ser alegado com RED real antes da implementação.
+Após a última alteração, revise diff e execute as provas pertinentes.
+Não declare correção, segurança, performance ou deploy sem evidência compatível.
+Para HIGH/CRITICAL, explicite blast radius, compatibilidade, recuperação e stop conditions.

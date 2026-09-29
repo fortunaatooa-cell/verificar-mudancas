@@ -1,31 +1,31 @@
 {
   "name": "verificar-mudancas-devin-workspace",
   "version": "3.1",
-  "target": "Devin",
-  "layout": "workspace-overlay",
   "source_branch": "feature/agentic-v1-5",
   "source_commit": "6a2c3d8a682a4debb27cba80a346dc9d2fa80268",
+  "target": "Devin",
+  "layout": "workspace-overlay",
   "skills_path": ".agents/skills",
   "skills": [
     "verificar-mudancas",
+    "arquitetura",
+    "desenho-tecnico",
+    "diagnosticar-runtime",
+    "estrategia-testes",
     "investigar",
     "planejamento",
-    "arquitetura",
-    "estrategia-testes",
     "revisar-mudanca",
-    "revisar-seguranca",
-    "diagnosticar-runtime",
-    "desenho-tecnico"
+    "revisar-seguranca"
   ],
   "playbooks": [
-    "!verificar",
-    "!investigar",
-    "!planejar",
-    "!arquitetura",
-    "!tdd",
-    "!revisar",
-    "!runtime",
-    "!desenho"
+    "!arquitetura.md",
+    "!desenho.md",
+    "!investigar.md",
+    "!planejar.md",
+    "!revisar.md",
+    "!runtime.md",
+    "!tdd.md",
+    "!verificar.md"
   ],
-  "zip_sha256": "91779325a7ec9f952701ce23492deb965b8386b1a0c402cc832421c74ed56bfa"
+  "knowledge_optional": "devin/knowledge/VERIFICAR_MUDANCAS.md"
 }
