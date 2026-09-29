@@ -2,80 +2,53 @@
 
 ## Visão
 
-A `verificar-mudancas` evolui de skill única para sistema portátil de engenharia assistida por agentes, mantendo núcleo evidence-first e compatibilidade com o uso simples da pasta da skill.
+A `verificar-mudancas` é um sistema portátil de engenharia assistida por agentes, evidence-first e compatível com uso simples da skill ou instalação completa.
 
-Ciclo: **investigar → classificar → planejar → provar → implementar → revisar → verificar → aprender → melhorar**.
+Ciclo ampliado: **entender → planejar → arquitetar quando necessário → investigar → provar/TDD → implementar → revisar → verificar → aprender → melhorar**.
 
-## Componentes
+## Componentes principais
 
 ### Núcleo e skills auxiliares
 
-`.agents/skills/verificar-mudancas/` continua sendo a fonte metodológica principal. A instalação completa fornece `investigar`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime` e `desenho-tecnico`.
+A skill principal continua sendo a fonte metodológica. A instalação completa adiciona `investigar`, `planejamento`, `arquitetura`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime` e `desenho-tecnico`.
 
-### Orquestração e especialistas
+### Especialistas
 
-`AGENTS.md` roteia comandos em português e seleciona somente os papéis necessários: investigador, runtime, testes, implementação, código, segurança, evidências, aprendizado e análise de desenhos técnicos.
+O orquestrador pode selecionar investigador, planejador, arquiteto, diagnosticador de runtime, estrategista de testes, implementador, revisores, verificador de evidências, aprendizado e analista de desenhos técnicos. Sem subagentes, os papéis rodam sequencialmente.
+
+### Engineering Lifecycle v3.1
+
+A spec detalhada está em `docs/spec-v3-1-engineering-lifecycle.md`.
+
+- `planejador` decompõe trabalho amplo sem inventar requisito;
+- `arquiteto` reconstrói estado atual e compara alternativas por trade-offs;
+- TDD é modo do estrategista de testes: `RED → GREEN → REFACTOR → REGRESSION`;
+- ADR registra decisões materiais e não é tratado como prova de implementação;
+- arquitetura pode compor com análise/criação de desenhos técnicos.
 
 ### Desenhos técnicos e visual
 
-O sistema trata entrada e saída visual como capacidades independentes. `vision_input` permite afirmar inspeção de imagem real; `visual_generation` permite afirmar render/criação visual. Ambas podem variar por harness e são `runtime-detect` nos adapters.
-
-`analista-desenhos-tecnicos` e a skill auxiliar `desenho-tecnico` usam `references/technical-drawings.md` para:
-
-- identificar tipo, finalidade, revisão, escala, unidades, legenda e vistas;
-- inventariar componentes, conexões, cotas e anotações por região/camada;
-- separar observado, inferido e não determinável;
-- fazer cross-check com código/especificação quando disponível;
-- criar fonte editável em Mermaid/PlantUML/DOT/SVG/CAD conforme capacidade;
-- impedir falsa precisão e falsa alegação de renderização.
+`vision_input` e `visual_generation` são capabilities independentes. O sistema separa observado, inferido e não determinável, evita falsa precisão e usa Mermaid/PlantUML/DOT/SVG/CAD ou render conforme a capacidade real.
 
 ### Modos de resposta
 
-`references/response-modes.md` define `simples`, `aprofundado` e `ambos`. O modo simples reduz detalhe, não requisitos de evidência, segurança ou incerteza material.
+`simples`, `aprofundado` e `ambos`. Simplificar a linguagem não reduz requisitos de evidência, segurança ou incerteza material.
 
-### Regras, hooks e quality gate
+### Regras, hooks, quality gate, memória e adapters
 
-`.agents/rules/` inclui evidência, testes, mudança segura, HIGH/CRITICAL, ambiente regulado e evidência visual. Hooks `pre-edit`, `post-edit` e `pre-finish` possuem runner portátil. `quality_gate.py` planeja por padrão e só executa com `--execute`.
+Regras compartilhadas cobrem evidence-first, testing/TDD, decisões arquiteturais, segurança operacional, risco e visual. Hooks e quality gate possuem fallback portátil. Memória é sanitizada e histórica. Adapters `generic`, `codex`, `claude`, `devin` e `copilot` usam capability detection.
 
-### Memória e continuous learning
+## Comandos canônicos
 
-`memory/` guarda `lesson`, `pattern`, `incident` e `project_knowledge` sanitizados. Memória é hipótese histórica. `create_regression_eval.py` exige oracle explícito e gera bundle revisável; não há auto-promoção ao core.
-
-### Adapters e capabilities
-
-`generic`, `codex`, `claude`, `devin` e `copilot` declaram `repository_read`, `repository_write`, `shell`, `web`, `subagents`, `hooks`, `persistent_memory`, `external_tools`, `vision_input` e `visual_generation`. `detect_capabilities.py` mantém `unknown` quando não há prova e aplica fallback sequencial/textual.
-
-### Instalador e observabilidade
-
-`install.py` suporta `skill` ou `full`; o modo full instala também o especialista visual. `record_run.py` registra execução sanitizada explicitamente fornecida; não captura conteúdo automaticamente.
-
-## Comandos
-
-- `/verificar` — fluxo completo.
-- `/investigar` — diagnóstico sem edição.
-- `/corrigir` — investigação + correção + prova.
-- `/revisar` — revisão adversarial.
-- `/validar` — claims versus evidência.
-- `/portao-qualidade` — checks operacionais.
-- `/aprender` — aprendizado sanitizado.
-- `/desenho-tecnico` — analisar, revisar, criar ou redesenhar artefato técnico visual.
-
-## Segurança e degradação
-
-HIGH/CRITICAL exigem blast radius, recuperação, stop conditions, sinais e aprovação humana quando aplicável. Sem subagentes, papéis rodam sequencialmente; sem hooks, use runner portátil; sem visão, não alegue inspeção; sem geração visual, entregue fonte/especificação e marque o render como não executado.
-
-Em desenho mecânico, elétrico, civil, industrial ou de segurança, a análise é assistiva e não substitui validação por profissional habilitado/certificação normativa.
+`/verificar`, `/investigar`, `/planejar`, `/arquitetura`, `/tdd`, `/adr`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade`, `/aprender`, `/desenho-tecnico`.
 
 ## Evals
 
-`evals/agentic/` cobre bug, runtime/memória, segurança, investigação-only, HIGH risk, memória como pista, sanitização, quality gate, adapter degradation e os fluxos visuais. `evals/visual/` cobre falsa precisão, fallback de geração e modo simples. Unit tests cobrem validadores, capabilities, installer e demais runners.
+`evals/agentic/` cobre a arquitetura geral; `evals/visual/` protege análise visual e modos de resposta; `evals/lifecycle/` protege planejamento, trade-offs de arquitetura, TDD verdadeiro/falso, ADR e divergência desenho × implementação.
 
-## Status das fases
+## Status
 
-- v1.1 — schemas/arquitetura/compatibilidade: implementado.
-- v1.5 — orquestrador e especialistas: implementado.
-- v1.8 — regras, comandos e quality gate: implementado.
-- v2.0 — hooks e capability detection: implementado com fallback portátil.
-- v2.5 — memória, project knowledge, retrieval e aprendizado/regressão controlados: implementado.
-- v3.0 — adapters e instalador: implementado.
-- extensão visual — desenho técnico, visão/render capability e modos de resposta: implementado.
+- v1.1 a v3.0: implementados;
+- extensão visual: implementada;
+- v3.1 Engineering Lifecycle: implementada no primeiro corte com planejamento, arquitetura, TDD e ADR;
+- v3.2: candidata futura para performance, observabilidade/SRE e dados/banco após evidência de necessidade.

@@ -6,6 +6,10 @@ Este repositório usa `.agents/skills/verificar-mudancas/SKILL.md` como núcleo 
 
 - `/verificar`
 - `/investigar`
+- `/planejar`
+- `/arquitetura`
+- `/tdd`
+- `/adr`
 - `/corrigir`
 - `/revisar`
 - `/validar`
@@ -13,53 +17,43 @@ Este repositório usa `.agents/skills/verificar-mudancas/SKILL.md` como núcleo 
 - `/aprender`
 - `/desenho-tecnico`
 
-Consulte `.agents/commands/` ou trate intenção equivalente da mesma forma.
-
 ## Bootstrap
 
 1. Leia a skill principal.
-2. Detecte o adapter/capacidades quando a superfície for desconhecida: `python3 scripts/detect_capabilities.py --adapter <nome>`; em instalação completa, use `.verificar-mudancas/scripts/detect_capabilities.py`.
-3. Aplique as regras mínimas pertinentes em `.agents/rules/`.
-4. Carregue skill auxiliar apenas quando ajudar (`investigar`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime`, `desenho-tecnico`).
-5. Se houver memória local, pesquise somente quando relevante e trate resultados como hipótese histórica.
-6. Respeite o modo de resposta pedido: `simples`, `aprofundado` ou `ambos`.
+2. Detecte capabilities quando a superfície for desconhecida.
+3. Aplique somente regras pertinentes.
+4. Carregue skills auxiliares sob demanda: `investigar`, `planejamento`, `arquitetura`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime`, `desenho-tecnico`.
+5. Memória histórica é pista, não verdade atual.
+6. Respeite `simples`, `aprofundado` ou `ambos`.
 
 ## Roteamento
 
-Fluxo base de correção:
+Correção base: `investigador → estrategista-testes → implementador → revisor-codigo → verificador-evidencias`.
 
-`investigador → estrategista-testes → implementador → revisor-codigo → verificador-evidencias`
+Mudança ampla, multi-componente, migração ou dependências relevantes: incluir `planejador` antes da implementação.
 
-Para memória, JVM, container, Lambda, deploy, portas, CPU, startup, rede ou limites de recurso, incluir `diagnosticador-runtime`.
+Novo serviço, integração estrutural, fronteira de dados, alteração difícil de reverter ou pedido de arquitetura: incluir `arquiteto`. O arquiteto reconstrói estado atual antes de propor futuro e pode chamar `analista-desenhos-tecnicos`.
 
-Para autenticação, autorização, IAM, secrets, dados sensíveis, entrada externa ou exposição de rede, incluir `revisor-seguranca` quando pertinente.
+TDD é modo do `estrategista-testes`, não agente separado. Só declarar TDD com evidência de RED antes da implementação.
 
-Para imagem, PDF técnico, diagrama, planta, esquema ou solicitação de desenho/redesenho, incluir `analista-desenhos-tecnicos`. Antes de afirmar inspeção visual, confirme `vision_input`; antes de prometer imagem/render, confirme `visual_generation`. Sem renderização, produza fonte editável como Mermaid/PlantUML/DOT/SVG quando apropriado.
+Decisão arquitetural material/durável: usar `/adr`; ADR registra decisão, não prova implantação.
 
-Para aprendizado após conclusão, use `agente-aprendizado`; ele propõe, não promove automaticamente. Falha recorrente pode gerar proposta de regressão com oracle explícito.
+Runtime/recursos: incluir `diagnosticador-runtime`. Segurança pertinente: incluir `revisor-seguranca`. Visual/desenho: incluir `analista-desenhos-tecnicos`, respeitando `vision_input` e `visual_generation`.
 
-Em solicitação somente investigativa, não editar. Sem subagentes, execute os papéis sequencialmente mantendo separação lógica.
+Aprendizado: `agente-aprendizado` propõe; não promove automaticamente.
 
-## Hooks e quality gate
-
-Eventos canônicos: `pre-edit`, `post-edit`, `pre-finish`. Harnesses sem hook nativo podem chamar o runner portátil. `pre-finish` bloqueia conclusão confiante quando a evidência é insuficiente.
-
-`/portao-qualidade` primeiro mostra o plano; comandos detectados/configurados só são executados com autorização explícita (`--execute`).
-
-## Memória
-
-`memory/` aceita apenas conteúdo sanitizado. Use `memory_store.py` para validar, adicionar, indexar e buscar. `project_knowledge` é específico do workspace autorizado e não deve ser promovido ao repositório público. Uma ocorrência não vira regra universal só por existir na memória.
+Sem subagentes, executar os mesmos papéis sequencialmente.
 
 ## Invariantes
 
 - evidência antes de confiança;
 - fato ≠ hipótese ≠ inferência ≠ desconhecido;
+- arquitetura observada ≠ proposta ≠ implantada;
+- ADR ≠ prova de runtime;
+- nunca alegar TDD sem RED anterior demonstrável;
 - nunca alegar execução, visão ou render inexistentes;
-- não inventar dimensão, escala, tolerância ou norma;
 - menor mudança correta;
-- contraexemplo e revisão após implementação;
 - HIGH/CRITICAL exigem blast radius, recuperação, stop conditions e sinais;
-- produção/ações destrutivas exigem autorização apropriada;
 - dados corporativos, secrets e código proprietário não entram no repositório público.
 
-A arquitetura completa está em `docs/agentic-system.md`.
+Specs: `docs/agentic-system.md` e `docs/spec-v3-1-engineering-lifecycle.md`.

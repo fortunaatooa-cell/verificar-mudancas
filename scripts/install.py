@@ -8,7 +8,7 @@ from pathlib import Path
 
 ADAPTERS = {"generic", "codex", "claude", "devin", "copilot"}
 RUNTIME_SCRIPTS = ("run_hook.py", "quality_gate.py", "memory_store.py", "detect_capabilities.py", "record_run.py", "create_regression_eval.py")
-AUXILIARY_SKILLS = ("investigar", "estrategia-testes", "revisar-mudanca", "diagnosticar-runtime", "desenho-tecnico")
+AUXILIARY_SKILLS = ("investigar", "planejamento", "arquitetura", "estrategia-testes", "revisar-mudanca", "diagnosticar-runtime", "desenho-tecnico")
 
 
 def _copy(source: Path, destination: Path, force: bool, dry_run: bool, operations: list):
