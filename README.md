@@ -14,7 +14,7 @@ O núcleo é `.agents/skills/verificar-mudancas/` e continua utilizável sozinho
 
 1. **Referências e playbooks sob demanda** — stack, runtime, dados, segurança, IaC, contratos, desenhos técnicos e tipos de tarefa.
 2. **Skills auxiliares** — `investigar`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime` e `desenho-tecnico`.
-3. **Orquestração** — [AGENTS.md](AGENTS.md) e onze papéis especializados, incluindo investigação e validação de regressão em jogos.
+3. **Orquestração** — [AGENTS.md](AGENTS.md) e treze papéis especializados, incluindo investigação e validação de regressão em jogos.
 4. **Comandos em português** — `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade`, `/aprender`, `/desenho-tecnico` e `/depurar-jogo`.
 5. **Regras e hooks** — evidência, testes, mudança segura, HIGH/CRITICAL, ambiente regulado, evidência visual, `pre-edit`, `post-edit` e `pre-finish`.
 6. **Quality gate** — plano conservador e execução explícita de checks.
