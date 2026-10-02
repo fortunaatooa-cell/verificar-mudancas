@@ -45,6 +45,7 @@ def main() -> None:
             "--timeout-seconds", "30",
             "--codex-bin", f"{sys.executable} {fake}",
             "--allow-global-skill-contamination",
+            "--smoke-test",
         ]
         completed = subprocess.run(command, cwd=REPO_ROOT, text=True, capture_output=True, check=False)
         if completed.returncode != 0:
@@ -91,6 +92,8 @@ def main() -> None:
         experiment = json.loads((out / "experiment.json").read_text(encoding="utf-8"))
         assert experiment["run_count"] == 2
         assert experiment["model"] == "fake-model"
+        assert experiment["protocol_mode"] == "smoke"
+        assert experiment["oracle_review"]["verified"] is False
         print("A/B runner: isolamento, cegamento e reconciliação pós-avaliação verificados.")
 
 
