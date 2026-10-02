@@ -28,3 +28,16 @@ python3 scripts/validate_repo.py
 Os testes de `tests/` verificam regressões do validador com cópias temporárias: YAML malformado, tipos inválidos nos casos e inconsistências entre casos e gabaritos devem produzir erro legível, sem aprovação silenciosa nem traceback.
 
 Quando houver mudança em referências cobertas por fixtures, execute também as fixtures pertinentes ou deixe o GitHub Actions fazê-lo antes do merge. Mudanças em comportamento do agente devem ser comparadas com a versão anterior usando o protocolo de `evals/ab/` quando aplicável.
+
+
+## Feature grande e revisão humana
+
+Mudança com aproximadamente **mais de 500 linhas** deve ser trabalhada em blocos revisáveis e receber revisão humana antes de promoção. Um lote grande de commits gerados em poucos minutos é sinal de que a branch deve permanecer experimental; não é usado como selo automático de qualidade.
+
+Antes de promover uma feature grande, registre no PR:
+- quais casos/evals justificam a mudança;
+- quais blocos foram revisados por pessoa;
+- quais resultados D1–D3 existem;
+- o que permanece experimental.
+
+A branch `feature/agentic-v1-5` permanece `experimental, not evaluated` até T8/T14.
