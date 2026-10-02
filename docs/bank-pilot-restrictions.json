@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "note": "Preencher com segurança/IBM antes de qualquer piloto. O repositório não inventa respostas externas.",
+  "questions": [
+    {
+      "id": "ferramenta_aprovada",
+      "question": "A ferramenta/agente está aprovada para uso no ambiente do piloto?",
+      "answer": "pending",
+      "evidence": "",
+      "responded_by": "",
+      "responded_at": ""
+    },
+    {
+      "id": "propriedade_material",
+      "question": "A propriedade/licença do material usado no piloto permite esse uso?",
+      "answer": "pending",
+      "evidence": "",
+      "responded_by": "",
+      "responded_at": ""
+    },
+    {
+      "id": "dados",
+      "question": "Quais dados podem entrar no fluxo e quais devem permanecer mascarados/sintéticos?",
+      "answer": "pending",
+      "evidence": "",
+      "responded_by": "",
+      "responded_at": ""
+    },
+    {
+      "id": "segregacao_funcoes",
+      "question": "Como a segregação de funções e as aprovações humanas serão preservadas?",
+      "answer": "pending",
+      "evidence": "",
+      "responded_by": "",
+      "responded_at": ""
+    },
+    {
+      "id": "busca_externa",
+      "question": "Busca externa é permitida; se sim, sob quais regras de sanitização?",
+      "answer": "pending",
+      "evidence": "",
+      "responded_by": "",
+      "responded_at": ""
+    },
+    {
+      "id": "confirmacao_ibm",
+      "question": "Há confirmação registrada da IBM/parte responsável quando aplicável?",
+      "answer": "pending",
+      "evidence": "",
+      "responded_by": "",
+      "responded_at": ""
+    }
+  ],
+  "security_approval": {
+    "status": "pending",
+    "evidence": "",
+    "approved_by": "",
+    "approved_at": ""
+  }
+}
