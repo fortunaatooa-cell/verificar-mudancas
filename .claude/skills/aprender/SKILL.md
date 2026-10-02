@@ -1,7 +1,6 @@
 ---
 name: aprender
 description: "Propõe aprendizado sanitizado e regressões revisáveis sem promoção automática."
-allowed-tools: [Read, Grep, Glob, Bash]
 ---
 
 Este é o wrapper nativo do Claude Code para o comando portátil. Aplique também o núcleo em `.agents/skills/verificar-mudancas/SKILL.md`.
