@@ -41,12 +41,16 @@ def main() -> None:
 
     output = Path(value_after(args, "--output-last-message"))
     cwd = Path(value_after(args, "--cd"))
+    model = value_after(args, "--model")
+    if model == "fake-fail":
+        print(json.dumps({"type": "item.completed", "item": {"type": "command", "status": "failed"}}))
+        raise SystemExit(3)
     skill = cwd / ".agents" / "skills" / "verificar-mudancas" / "SKILL.md"
     present = skill.is_file()
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(f"skill_present={'true' if present else 'false'}\n", encoding="utf-8")
 
-    if present:
+    if present and model != "fake-no-read":
         print(json.dumps({
             "type": "item.completed",
             "item": {"type": "file_read", "path": str(skill)},
