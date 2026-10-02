@@ -6,7 +6,7 @@ Papéis canônicos da arquitetura agentic. Não pressupõem subagentes nativos: 
 
 Todo agente deve receber somente contexto necessário, separar fato/hipótese/inferência/desconhecido, não alegar acesso ou execução inexistente, preservar trabalho preexistente, devolver lacunas de evidência e respeitar stop conditions.
 
-## Agentes
+## Agentes (13 papéis)
 
 1. `investigador.md` — causa e experimentos discriminantes.
 2. `diagnosticador-runtime.md` — memória, JVM, container, Lambda, rede e runtime.
