@@ -1,7 +1,6 @@
 ---
 name: validar
 description: "Valida alegações contra evidências e classifica PASS, FAIL ou INCONCLUSIVE."
-allowed-tools: [Read, Grep, Glob, Bash]
 ---
 
 Este é o wrapper nativo do Claude Code para o comando portátil. Aplique também o núcleo em `.agents/skills/verificar-mudancas/SKILL.md`.
