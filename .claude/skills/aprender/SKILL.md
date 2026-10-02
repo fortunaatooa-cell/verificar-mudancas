@@ -1,6 +1,7 @@
 ---
 name: aprender
 description: "Propõe aprendizado sanitizado e regressões revisáveis sem promoção automática."
+disable-model-invocation: true
 ---
 
 Este é o wrapper nativo do Claude Code para o comando portátil. Aplique também o núcleo em `.agents/skills/verificar-mudancas/SKILL.md`.
