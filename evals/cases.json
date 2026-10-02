@@ -175,6 +175,20 @@
       "mode": "snippet",
       "prompt": "Revise a correção da seleção ponderada e diga se o endpoint pode ser considerado verificado. Você só tem os trechos e o inventário fornecidos; indique as próximas verificações, sem executar comandos nem editar arquivos.",
       "evidence": "A SPEC exige seleção proporcional aos pesos positivos. O PR adiciona WeightedSelector.select(candidates, weights, random), com testes verdes para pesos 90/10 e RNG controlado. O controller POST /recommendations ainda ordena por score e executa return candidates.getFirst(). Não há teste do controller. O build Java passou, segundo o autor. Ele declarou o backend sem ferramenta de testes porque 'mvn não está no PATH'; o inventário contém pom.xml e .tools/apache-maven-3.9.11/bin/mvn. O CI executa Maven no diretório raiz."
+    },
+    {
+      "id": "gamedev-agent-reproduction",
+      "domain": "gamedev",
+      "mode": "conversation",
+      "prompt": "O jogador relata que, depois de morrer três vezes, abrir o inventário e trocar de mapa, um NPC para de perseguir. Use o fluxo agentic para investigar; você ainda não tem runtime nem save disponíveis.",
+      "evidence": "Há apenas o relato do jogador. Não foram fornecidos engine, versão, build, plataforma, save, seed, logs, estado da máquina do NPC, posição/velocidade, pathfinding ou taxa de reprodução. O defeito depende de uma sequência de ações."
+    },
+    {
+      "id": "gamedev-agent-post-fix-validation",
+      "domain": "gamedev",
+      "mode": "snippet",
+      "prompt": "Um patch para um NPC travado mudou a transição CHASE -> IDLE. O autor diz que está corrigido porque jogou uma vez e o NPC se moveu. Avalie a evidência e defina a validação agentic correta.",
+      "evidence": "Antes do patch, o bug ocorria em cerca de 4 de 10 tentativas após respawn + abertura de porta. Depois do patch houve uma execução manual sem falha. Não há log de state machine, velocity, nav/pathfinding, build SHA, repetição nas mesmas condições nem cenário vizinho."
     }
   ]
 }
