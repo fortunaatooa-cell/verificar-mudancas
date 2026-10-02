@@ -12,8 +12,8 @@ O núcleo é `.agents/skills/verificar-mudancas/` e continua utilizável sozinho
 
 1. **Referências e playbooks sob demanda** — stack, runtime, dados, segurança, IaC, contratos, desenhos técnicos e tipos de tarefa.
 2. **Skills auxiliares** — `investigar`, `estrategia-testes`, `revisar-mudanca`, `diagnosticar-runtime` e `desenho-tecnico`.
-3. **Orquestração** — [AGENTS.md](AGENTS.md) e nove papéis especializados.
-4. **Comandos em português** — `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade`, `/aprender` e `/desenho-tecnico`.
+3. **Orquestração** — [AGENTS.md](AGENTS.md) e onze papéis especializados, incluindo investigação e validação de regressão em jogos.
+4. **Comandos em português** — `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/portao-qualidade`, `/aprender`, `/desenho-tecnico` e `/depurar-jogo`.
 5. **Regras e hooks** — evidência, testes, mudança segura, HIGH/CRITICAL, ambiente regulado, evidência visual, `pre-edit`, `post-edit` e `pre-finish`.
 6. **Quality gate** — plano conservador e execução explícita de checks.
 7. **Memória controlada** — lessons, patterns, incidents e project knowledge sanitizados; memória é pista, não verdade.
@@ -21,7 +21,7 @@ O núcleo é `.agents/skills/verificar-mudancas/` e continua utilizável sozinho
 9. **Adapters** — generic, Codex, Claude, Devin e Copilot com capability detection/fallback, incluindo `vision_input` e `visual_generation`.
 10. **Instalador** — modo `skill` ou `full`, dry-run e preservação de arquivos existentes.
 
-A especificação implementada está em [docs/agentic-system.md](docs/agentic-system.md) e a instalação em [docs/installation.md](docs/installation.md).
+A especificação implementada está em [docs/agentic-system.md](docs/agentic-system.md), a instalação em [docs/installation.md](docs/installation.md) e os gates de maturidade em [docs/maturity.md](docs/maturity.md).
 
 ## Desenhos técnicos e respostas
 
@@ -75,6 +75,27 @@ Sem `--execute`, o runner não executa checks.
 ## Avaliação
 
 Fixtures executáveis provam propriedades concretas de frameworks/runtimes, não que a skill melhora um agente. O protocolo A/B mantém mesmo modelo/acesso/contexto nos dois braços. `evals/agentic/` cobre também desenho técnico e degradação visual; `evals/visual/` protege contra falsa precisão, falsa renderização e excesso de detalhe no modo simples.
+
+Uma **rodada real de eficácia é bloqueada por padrão** até existir revisão humana independente registrada do oracle para todos os casos selecionados. O registro é vinculado por hashes normalizados de `evals/cases.json` e `evals/oracle.json`, então uma mudança no gabarito invalida a aprovação anterior.
+
+```bash
+python3 scripts/eval_protocol.py template \
+  --out evals/oracle-review.json \
+  --case-id runtime-port-binding \
+  --case-id external-contract-required \
+  --case-id local-evidence-sufficient \
+  --case-id java-404
+
+# após uma segunda pessoa revisar e preencher o registro
+python3 scripts/eval_protocol.py verify \
+  --review evals/oracle-review.json \
+  --case-id runtime-port-binding \
+  --case-id external-contract-required \
+  --case-id local-evidence-sufficient \
+  --case-id java-404
+```
+
+`--smoke-test` no runner existe para validar isolamento, cegamento e reconciliação com agente simulado; mesmo quando o critério matemático passa, o relatório marca essa execução como **não utilizável para alegação de eficácia**.
 
 ## Uso regulado
 
