@@ -70,3 +70,11 @@ python3 scripts/validate_repo.py
 ```
 
 `tests/test_claude_native.py` impede drift entre os wrappers Claude versionados e as fontes portáteis.
+
+Ao alterar um comando/agente/regra portátil nesta branch, regenere os wrappers versionados:
+
+```bash
+python3 scripts/claude_native.py
+```
+
+O teste anti-drift falha se a versão nativa ficar diferente da fonte canônica.
