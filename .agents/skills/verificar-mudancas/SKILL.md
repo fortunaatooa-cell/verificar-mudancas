@@ -58,7 +58,7 @@ Classificar risco:
 
 Separar risco da mudança de severidade do defeito. Usar a escala de P0/P1 do projeto e justificar impacto, alcance e urgência. Sem escala, descrever o impacto concreto e marcar eventual classificação como proposta. CI vermelho não comprova incidente em produção.
 
-Para **HIGH/CRITICAL**, explicitar blast radius, compatibilidade, recuperação/rollback ou rollforward, critérios de parada, sinais de sucesso e segunda revisão independente quando a ferramenta/processo permitirem. Risco CRITICAL não autoriza execução externa.
+Para **HIGH/CRITICAL**, explicitar blast radius, compatibilidade, recuperação/rollback ou rollforward, critérios de parada, sinais de sucesso e segunda revisão independente quando a ferramenta/processo permitirem; a saída deve incluir literalmente `aprovacao_humana_necessaria=true`. Risco CRITICAL não autoriza execução externa.
 
 ### Stop conditions
 
