@@ -30,7 +30,7 @@ Exemplos:
 - `/revisar`: revisão adversarial;
 - `/depurar-jogo`: especialização de gameplay já existente.
 
-As skills de comando **não usam `allowed-tools` para pré-aprovar Bash/Edit/Write**. Assim, invocar `/corrigir` ou `/depurar-jogo` não contorna o fluxo normal de permissões do Claude Code.
+As skills de comando usam `disable-model-invocation: true` e **não usam `allowed-tools` para pré-aprovar Bash/Edit/Write**. Assim, os comandos ficam explícitos no menu `/`, enquanto a skill principal `verificar-mudancas` continua descobrível automaticamente e `/corrigir` ou `/depurar-jogo` não contornam o fluxo normal de permissões do Claude Code.
 
 ## Subagents
 
