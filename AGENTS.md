@@ -16,6 +16,7 @@ Este repositório usa `.agents/skills/verificar-mudancas/SKILL.md` como núcleo 
 - `/portao-qualidade`
 - `/aprender`
 - `/desenho-tecnico`
+- `/depurar-jogo`
 
 ## Bootstrap
 
@@ -39,6 +40,8 @@ TDD é modo do `estrategista-testes`, não agente separado. Só declarar TDD com
 Decisão arquitetural material/durável: usar `/adr`; ADR registra decisão, não prova implantação.
 
 Runtime/recursos: incluir `diagnosticador-runtime`. Segurança pertinente: incluir `revisor-seguranca`. Visual/desenho: incluir `analista-desenhos-tecnicos`, respeitando `vision_input` e `visual_generation`.
+
+Bug de jogo/runtime interativo: usar `/depurar-jogo`; incluir `investigador-gameplay` para reprodução/redução e `validador-regressao-jogo` após a implementação. Eles especializam o fluxo geral e não substituem `investigador`, `estrategista-testes` ou `verificador-evidencias`.
 
 Aprendizado: `agente-aprendizado` propõe; não promove automaticamente.
 
