@@ -14,9 +14,9 @@ Quando houver conflito entre um wrapper nativo de Claude e o arquivo portátil c
 
 ## Uso nativo no Claude Code
 
-- Skills ficam em `.claude/skills/`; use `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/depurar-jogo` e os demais comandos existentes.
-- Subagents ficam em `.claude/agents/`. Delegue trabalho especializado ou isolável; tarefas independentes podem rodar em paralelo.
-- A sessão principal integra resultados, decide conflitos e responde pela validação final.
+- Skills ficam em `.claude/skills/`; podem ser chamadas por `/verificar`, `/investigar`, `/corrigir`, `/revisar`, `/validar`, `/depurar-jogo` e demais comandos existentes.
+- Subagents ficam em `.claude/agents/`. Delegue somente trabalho especializado ou isolável; tarefas independentes podem rodar em paralelo.
+- A sessão principal integra resultados, decide conflitos e é responsável pela validação final.
 - Regras em `.claude/rules/` espelham as regras portáteis.
 - Hooks em `.claude/settings.json` adicionam guardrails determinísticos sem substituir a metodologia.
 
