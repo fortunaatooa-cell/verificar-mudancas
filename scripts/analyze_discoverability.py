@@ -8,6 +8,7 @@ import csv
 from collections import defaultdict
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
@@ -56,7 +57,7 @@ def main() -> None:
         "discovery_rate": f"{total_discovered / total:.6f}",
     })
 
-    out = Path(args.out).resolve() if args.out else root / "discoverability.csv"
+    out = Path(args.out).resolve() if args.out else REPO_ROOT / "evals/ab/discoverability.csv"
     with out.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
             handle, fieldnames=["case_id", "runs", "successful", "discovered", "discovery_rate"]
