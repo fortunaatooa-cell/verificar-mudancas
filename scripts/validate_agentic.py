@@ -13,11 +13,14 @@ AUX_SKILLS = {"investigar","planejamento","arquitetura","estrategia-testes","rev
 SCHEMAS = {"task.schema.json","investigation.schema.json","evidence.schema.json","result.schema.json","plan.schema.json","adr.schema.json","lesson.schema.json","pattern.schema.json","incident.schema.json","project-knowledge.schema.json","capabilities.schema.json","hook-event.schema.json","quality-gate.schema.json","quality-gate-result.schema.json","run.schema.json"}
 ADAPTERS = {"generic","codex","claude","devin","copilot"}
 REQUIRED_CAPS = {"repository_read","repository_write","shell","web","subagents","hooks","persistent_memory","external_tools","vision_input","visual_generation"}
-RUNTIME_SCRIPTS = {"run_hook.py","quality_gate.py","memory_store.py","install.py","detect_capabilities.py","record_run.py","create_regression_eval.py"}
+RUNTIME_SCRIPTS = {"run_hook.py","quality_gate.py","memory_store.py","install.py","detect_capabilities.py","record_run.py","create_regression_eval.py","claude_native.py","claude_hook_bridge.py"}
 REQUIRED_AGENTIC_CASES = {"agentic-java-bug","agentic-runtime-memory","agentic-security-change","agentic-investigation-only","agentic-high-risk","agentic-memory-not-truth","agentic-learning-sanitization","agentic-quality-gate","agentic-adapter-degradation","agentic-technical-drawing","agentic-visual-generation-fallback"}
 REQUIRED_VISUAL_CASES = {"technical-drawing-no-fabricated-dimensions","technical-drawing-generation-capability","response-mode-simple"}
 REQUIRED_LIFECYCLE_CASES = {"lifecycle-planning-unknowns","lifecycle-architecture-tradeoffs","lifecycle-tdd-real-red","lifecycle-tdd-false-red","lifecycle-adr-not-proof","lifecycle-architecture-drawing-crosscheck"}
 CAP_VALUES = {"native","emulated","runtime-detect","unsupported"}
+CLAUDE_SKILLS = (COMMANDS - {"README.md"}) | {"verificar-mudancas.md"}
+CLAUDE_AGENTS = AGENTS - {"README.md"}
+CLAUDE_RULES = RULES - {"README.md"}
 
 
 def read_json(path: Path, errors: list[str]):
@@ -71,6 +74,35 @@ def validate(root: Path) -> list[str]:
             if set(capabilities) != REQUIRED_CAPS: errors.append(f"adapter com conjunto de capabilities inválido: {adapter}")
             if any(value not in CAP_VALUES for value in capabilities.values()): errors.append(f"adapter com capability inválida: {adapter}")
         if data.get("command_strategy") not in {"native","staged-prompts","portable-files"}: errors.append(f"adapter com command_strategy inválida: {adapter}")
+    claude_adapter = read_json(root / "adapters/claude/adapter.json", errors)
+    if claude_adapter is not None:
+        native = claude_adapter.get("native")
+        if claude_adapter.get("command_strategy") != "native":
+            errors.append("adapter Claude deve usar command_strategy=native")
+        if not isinstance(native, dict):
+            errors.append("adapter Claude sem metadados native")
+        else:
+            for key in ("project_memory", "skills", "subagents", "rules", "settings", "hooks", "mods"):
+                if not isinstance(native.get(key), str) or not native[key].strip():
+                    errors.append(f"adapter Claude sem native.{key}")
+
+    if not (root / "CLAUDE.md").is_file():
+        errors.append("Claude nativo ausente: CLAUDE.md")
+    settings = read_json(root / ".claude/settings.json", errors)
+    if settings is not None and not isinstance(settings.get("hooks"), dict):
+        errors.append("Claude nativo: .claude/settings.json sem hooks")
+
+    for command in sorted(CLAUDE_SKILLS):
+        name = command.removesuffix(".md")
+        if not (root / ".claude/skills" / name / "SKILL.md").is_file():
+            errors.append(f"Claude skill nativa ausente: {name}")
+    for filename in sorted(CLAUDE_AGENTS):
+        if not (root / ".claude/agents" / filename).is_file():
+            errors.append(f"Claude subagent nativo ausente: {filename}")
+    for filename in sorted(CLAUDE_RULES):
+        if not (root / ".claude/rules" / filename).is_file():
+            errors.append(f"Claude rule nativa ausente: {filename}")
+
     for relative in ("memory/README.md","memory/index/index.json","docs/agentic-system.md","docs/spec-v3-1-engineering-lifecycle.md","docs/installation.md","quality-gate.repo.json","AGENTS.md","evals/regression/README.md","evals/visual/README.md","evals/lifecycle/README.md"):
         if not (root / relative).is_file(): errors.append(f"componente agentic ausente: {relative}")
     for folder in ("memory/lessons","memory/patterns","memory/incidents","memory/project","evals/regression/generated"):
