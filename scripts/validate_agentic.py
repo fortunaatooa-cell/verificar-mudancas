@@ -103,7 +103,7 @@ def validate(root: Path) -> list[str]:
         if not (root / ".claude/rules" / filename).is_file():
             errors.append(f"Claude rule nativa ausente: {filename}")
 
-    for relative in ("memory/README.md","memory/index/index.json","docs/agentic-system.md","docs/spec-v3-1-engineering-lifecycle.md","docs/installation.md","quality-gate.repo.json","AGENTS.md","evals/regression/README.md","evals/visual/README.md","evals/lifecycle/README.md"):
+    for relative in ("memory/README.md","memory/index/index.json","docs/agentic-system.md","docs/spec-v3-1-engineering-lifecycle.md","docs/installation.md","docs/claude-integration.md","docs/harness-promotion-manifest.md","quality-gate.repo.json","AGENTS.md","evals/regression/README.md","evals/visual/README.md","evals/lifecycle/README.md"):
         if not (root / relative).is_file(): errors.append(f"componente agentic ausente: {relative}")
     for folder in ("memory/lessons","memory/patterns","memory/incidents","memory/project","evals/regression/generated"):
         if not (root / folder).is_dir(): errors.append(f"diretório agentic ausente: {folder}")
