@@ -1,6 +1,7 @@
 ---
 name: desenho-tecnico
 description: "Analisa ou especifica desenho técnico sem inventar medidas, escala ou render inexistente."
+disable-model-invocation: true
 ---
 
 Este é o wrapper nativo do Claude Code para o comando portátil. Aplique também o núcleo em `.agents/skills/verificar-mudancas/SKILL.md`.
