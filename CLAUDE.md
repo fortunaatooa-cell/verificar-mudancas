@@ -30,4 +30,4 @@ Quando houver conflito entre um wrapper nativo de Claude e o arquivo portátil c
 - HIGH/CRITICAL exige controles e `aprovacao_humana_necessaria=true`;
 - dados corporativos, secrets e código proprietário não entram no repositório público.
 
-A branch `feature/agentic-v1-5` continua experimental até as provas T8/T14 da Spec 10/10.
+A integração agentic desta versão do `verificar-mudancas` continua experimental até as provas T8/T14 da Spec 10/10; isso não descreve a branch do projeto de destino.
