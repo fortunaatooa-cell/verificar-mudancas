@@ -17,5 +17,7 @@ Todo agente deve receber somente contexto necessário, separar fato/hipótese/in
 7. `verificador-evidencias.md` — validação das alegações finais.
 8. `agente-aprendizado.md` — proposta sanitizada de aprendizado/regressão.
 9. `analista-desenhos-tecnicos.md` — interpretação e criação visual técnica com limites de precisão.
+10. `investigador-gameplay.md` — reprodução, redução e instrumentação de bugs de jogo/runtime.
+11. `validador-regressao-jogo.md` — reexecução do cenário e regressão na fronteira real do jogo.
 
 O orquestrador seleciona somente os papéis pertinentes.
