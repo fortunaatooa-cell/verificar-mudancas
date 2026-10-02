@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tiny fake Codex CLI used only to test runner isolation in CI."""
+"""Tiny fake Codex CLI used only to test runner isolation and treatment observation."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ def value_after(args: list[str], flag: str) -> str:
 def main() -> None:
     args = sys.argv[1:]
     if args == ["--version"]:
-        print("codex-cli fake-1.0")
+        print("codex-cli fake-2.0")
         return
     if args[:2] == ["exec", "--help"]:
         print(HELP)
@@ -46,8 +46,16 @@ def main() -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(f"skill_present={'true' if present else 'false'}\n", encoding="utf-8")
 
+    if present:
+        print(json.dumps({
+            "type": "item.completed",
+            "item": {"type": "file_read", "path": str(skill)},
+        }))
     print(json.dumps({"type": "item.completed", "item": {"type": "agent_message"}}))
-    print(json.dumps({"type": "turn.completed", "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15}}))
+    print(json.dumps({
+        "type": "turn.completed",
+        "usage": {"input_tokens": 10, "output_tokens": 5, "total_tokens": 15},
+    }))
 
 
 if __name__ == "__main__":
