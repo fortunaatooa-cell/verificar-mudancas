@@ -64,6 +64,11 @@ def load_case_pack(cases_path: Path, oracle_path: Path, errors: list[str], label
     if set(case_ids) != set(oracle_ids):
         errors.append(f"{label}: cada caso precisa de exatamente um oracle correspondente")
 
+    score_fields = {
+        "classificacao", "aceite", "risco", "causa", "experimento", "fronteira",
+        "regressao", "compatibilidade", "seguranca", "observabilidade", "honestidade", "escopo",
+    }
+    case_by_id = {}
     for item in case_items:
         mode = item.get("mode")
         if not isinstance(mode, str) or mode not in {"conversation", "snippet"}:
@@ -71,6 +76,16 @@ def load_case_pack(cases_path: Path, oracle_path: Path, errors: list[str], label
         if any(not isinstance(item.get(field), str) or not item[field].strip()
                for field in ("id", "domain", "prompt", "evidence")):
             errors.append(f"{label}/{item.get('id')}: dados de entrada incompletos")
+        if label == "core":
+            dims = item.get("applicable_dimensions")
+            if (
+                not isinstance(dims, list)
+                or not dims
+                or len(dims) != len(set(dims))
+                or any(dim not in score_fields for dim in dims)
+            ):
+                errors.append(f"{label}/{item.get('id')}: applicable_dimensions inválido")
+        case_by_id[item.get("id")] = item
 
     for item in oracle_items:
         for field in ("expected", "forbidden"):
@@ -79,6 +94,28 @@ def load_case_pack(cases_path: Path, oracle_path: Path, errors: list[str], label
                 not isinstance(value, str) or not value.strip() for value in values
             ):
                 errors.append(f"{label}/{item.get('id')}: {field} inválido")
+        if label == "core":
+            dims = item.get("applicable_dimensions")
+            case_dims = case_by_id.get(item.get("id"), {}).get("applicable_dimensions")
+            if dims != case_dims:
+                errors.append(f"{label}/{item.get('id')}: applicable_dimensions diverge entre caso e oracle")
+            for text_field, source_field in (
+                ("expected", "expected_sources"),
+                ("forbidden", "forbidden_sources"),
+            ):
+                values = item.get(text_field, [])
+                sources = item.get(source_field)
+                if (
+                    not isinstance(sources, list)
+                    or len(sources) != len(values)
+                    or any(
+                        not isinstance(group, list)
+                        or not group
+                        or any(not isinstance(source, str) or not source.strip() for source in group)
+                        for group in sources
+                    )
+                ):
+                    errors.append(f"{label}/{item.get('id')}: {source_field} deve citar fonte para cada item")
     return case_items, oracle_items
 
 
@@ -155,7 +192,14 @@ def validate(root: Path) -> list[str]:
         if not (skill_dir / relative).is_file():
             errors.append(f"playbook ausente: {relative}")
 
-    for relative in {".gitignore", ".gitattributes", "CHANGELOG.md", "CONTRIBUTING.md", "evals/ab/README.md", "evals/oracle-review.example.json", "docs/maturity.md", "scripts/prepare_ab_eval.py", "scripts/eval_protocol.py"}:
+    for relative in {
+        ".gitignore", ".gitattributes", "CHANGELOG.md", "CONTRIBUTING.md",
+        "evals/ab/README.md", "evals/ab/effect-minimum.json", "evals/oracle-review.example.json",
+        "docs/maturity.md", "docs/branch-status.md", "docs/bank-pilot-restrictions.json",
+        "docs/pilot-metrics.md", "scripts/prepare_ab_eval.py", "scripts/eval_protocol.py",
+        "scripts/analyze_discoverability.py", "scripts/check_sensitive_examples.py",
+        "scripts/check_pilot_readiness.py",
+    }:
         if not (root / relative).is_file():
             errors.append(f"arquivo de manutenção ausente: {relative}")
 
@@ -214,7 +258,7 @@ def validate(root: Path) -> list[str]:
     if regulated_ids != required_regulated:
         errors.append("regulated: conjunto de casos inesperado")
 
-    required_scorecard_columns = {"run_id", "blind_id", "case_id", "condition", "repetition", "agent", "model", "skill_commit", "access", "run_date", "elapsed_seconds", "response_chars", "classificacao", "aceite", "risco", "causa", "experimento", "fronteira", "regressao", "compatibilidade", "seguranca", "observabilidade", "honestidade", "escopo", "violacoes", "observacoes"}
+    required_scorecard_columns = {"run_id", "blind_id", "case_id", "condition", "repetition", "agent", "model", "skill_commit", "access", "run_date", "elapsed_seconds", "response_chars", "classificacao", "aceite", "risco", "causa", "experimento", "fronteira", "regressao", "compatibilidade", "seguranca", "observabilidade", "honestidade", "escopo", "violacoes", "regressao_critica", "observacoes"}
     try:
         with (root / "evals/scorecard.csv").open(encoding="utf-8", newline="") as handle:
             header = next(csv.reader(handle), [])
@@ -228,6 +272,33 @@ def validate(root: Path) -> list[str]:
                 errors.append(f"scorecard.csv: colunas ausentes: {', '.join(missing)}")
             if unexpected:
                 errors.append(f"scorecard.csv: colunas inesperadas: {', '.join(unexpected)}")
+
+
+    try:
+        effect = json.loads((root / "evals/ab/effect-minimum.json").read_text(encoding="utf-8"))
+        dimensions = effect.get("dimensions", {})
+        expected_dimensions = {
+            "classificacao", "aceite", "risco", "causa", "experimento", "fronteira",
+            "regressao", "compatibilidade", "seguranca", "observabilidade", "honestidade", "escopo",
+        }
+        if set(dimensions) != expected_dimensions:
+            errors.append("effect-minimum.json: dimensões inesperadas")
+        if any(not isinstance(value, (int, float)) or value < 0 for value in dimensions.values()):
+            errors.append("effect-minimum.json: limiar inválido")
+    except (OSError, ValueError) as exc:
+        errors.append(f"effect-minimum.json inválido: {exc}")
+
+    try:
+        pilot = json.loads((root / "docs/bank-pilot-restrictions.json").read_text(encoding="utf-8"))
+        ids = {item.get("id") for item in pilot.get("questions", []) if isinstance(item, dict)}
+        required_questions = {
+            "ferramenta_aprovada", "propriedade_material", "dados",
+            "segregacao_funcoes", "busca_externa", "confirmacao_ibm",
+        }
+        if ids != required_questions:
+            errors.append("bank-pilot-restrictions.json: seis perguntas esperadas ausentes/divergentes")
+    except (OSError, ValueError) as exc:
+        errors.append(f"bank-pilot-restrictions.json inválido: {exc}")
 
     return errors
 
