@@ -5,6 +5,7 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 ## Unreleased
 
 ### Added
+- Integração nativa do Claude Code para o adapter já existente: `CLAUDE.md`, Skills, subagents, rules e hooks gerados a partir das fontes portáteis, com testes anti-drift e guardrails determinísticos.
 - Implementação da Spec 10/10 na branch experimental: observação real do tratamento, denominador fixo por oracle, falhas como não-vitória, efeito mínimo versionado/hashado, experimento de descobribilidade separado, fontes por item do oracle, scanner de dados sensíveis e gates do piloto regulado.
 - Gate de revisão humana independente para rodadas A/B reais, com hashes normalizados de `cases.json`/`oracle.json`, template verificável e modo `--smoke-test` explicitamente não publicável como evidência de eficácia.
 - Documento `docs/maturity.md` separando maturidade do harness, prova A/B e piloto real.
