@@ -169,6 +169,7 @@ def main() -> None:
         run([
             sys.executable, str(REPO_ROOT / "scripts/analyze_discoverability.py"),
             "--run-dir", str(discovery),
+            "--out", str(discovery / "discoverability.csv"),
         ])
         drows = read_csv(discovery / "discoverability.csv")
         overall = next(row for row in drows if row["case_id"] == "__overall__")
