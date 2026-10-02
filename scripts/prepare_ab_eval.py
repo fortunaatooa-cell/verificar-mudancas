@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare blinded A/B manifests without invoking a model."""
+"""Prepare blinded efficacy or discoverability manifests without invoking a model."""
 
 import argparse
 import csv
@@ -15,6 +15,7 @@ DEFAULT_CASES = [
     "java-404",
 ]
 DEFAULT_SEED = 20260928
+MODES = {"efficacy", "discoverability"}
 
 
 def blind_id(seed: int, case_id: str, condition: str, repetition: int) -> str:
@@ -27,9 +28,12 @@ def build_rows(
     case_ids: list[str] | None = None,
     repetitions: int = 3,
     seed: int = DEFAULT_SEED,
+    mode: str = "efficacy",
 ) -> list[dict[str, object]]:
     if repetitions < 1:
         raise ValueError("repetitions deve ser >= 1")
+    if mode not in MODES:
+        raise ValueError("mode deve ser efficacy ou discoverability")
 
     payload = json.loads(cases_path.read_text(encoding="utf-8"))
     cases = {item["id"]: item for item in payload["cases"]}
@@ -38,10 +42,11 @@ def build_rows(
     if missing:
         raise ValueError("casos ausentes: " + ", ".join(missing))
 
+    conditions = ("baseline", "with_skill") if mode == "efficacy" else ("skill_installed_unprompted",)
     rows: list[dict[str, object]] = []
     for case_id in selected:
         for repetition in range(1, repetitions + 1):
-            for condition in ("baseline", "with_skill"):
+            for condition in conditions:
                 item = cases[case_id]
                 rows.append({
                     "blind_id": blind_id(seed, case_id, condition, repetition),
@@ -81,8 +86,9 @@ def prepare(
     case_ids: list[str] | None = None,
     repetitions: int = 3,
     seed: int = DEFAULT_SEED,
+    mode: str = "efficacy",
 ) -> list[dict[str, object]]:
-    rows = build_rows(cases_path, case_ids=case_ids, repetitions=repetitions, seed=seed)
+    rows = build_rows(cases_path, case_ids=case_ids, repetitions=repetitions, seed=seed, mode=mode)
     write_manifests(rows, out)
     return rows
 
@@ -94,6 +100,7 @@ def main() -> None:
     parser.add_argument("--repetitions", type=int, default=3)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--case-id", action="append", dest="case_ids")
+    parser.add_argument("--mode", choices=sorted(MODES), default="efficacy")
     args = parser.parse_args()
 
     try:
@@ -103,11 +110,12 @@ def main() -> None:
             case_ids=args.case_ids,
             repetitions=args.repetitions,
             seed=args.seed,
+            mode=args.mode,
         )
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 
-    print(f"{len(rows)} execuções preparadas em {args.out}")
+    print(f"{len(rows)} execuções ({args.mode}) preparadas em {args.out}")
 
 
 if __name__ == "__main__":
