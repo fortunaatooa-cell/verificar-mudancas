@@ -5,8 +5,8 @@ import json
 import sys
 from pathlib import Path
 
-AGENTS = {"README.md","investigador.md","planejador.md","arquiteto.md","diagnosticador-runtime.md","estrategista-testes.md","implementador.md","revisor-codigo.md","revisor-seguranca.md","verificador-evidencias.md","agente-aprendizado.md","analista-desenhos-tecnicos.md"}
-COMMANDS = {"README.md","verificar.md","investigar.md","planejar.md","arquitetura.md","tdd.md","adr.md","corrigir.md","revisar.md","validar.md","portao-qualidade.md","aprender.md","desenho-tecnico.md"}
+AGENTS = {"README.md","investigador.md","planejador.md","arquiteto.md","diagnosticador-runtime.md","estrategista-testes.md","implementador.md","revisor-codigo.md","revisor-seguranca.md","verificador-evidencias.md","agente-aprendizado.md","analista-desenhos-tecnicos.md","investigador-gameplay.md","validador-regressao-jogo.md"}
+COMMANDS = {"README.md","verificar.md","investigar.md","planejar.md","arquitetura.md","tdd.md","adr.md","corrigir.md","revisar.md","validar.md","portao-qualidade.md","aprender.md","desenho-tecnico.md","depurar-jogo.md"}
 RULES = {"README.md","evidence-first.md","testing.md","tdd-cycle.md","architecture-decisions.md","safe-change.md","high-risk.md","regulated.md","visual-evidence.md"}
 HOOKS = {"README.md","pre-edit.md","post-edit.md","pre-finish.md"}
 AUX_SKILLS = {"investigar","planejamento","arquitetura","estrategia-testes","revisar-mudanca","diagnosticar-runtime","desenho-tecnico"}
@@ -88,4 +88,4 @@ if __name__ == "__main__":
     if problems:
         for problem in problems: print(f"ERRO: {problem}", file=sys.stderr)
         raise SystemExit(1)
-    print("Sistema agentic completo válido: planejamento, arquitetura, TDD, ADR, desenho técnico, agentes, skills, comandos, regras, memória, adapters, schemas e evals presentes.")
+    print("Sistema agentic completo válido: planejamento, arquitetura, TDD, ADR, desenho técnico, debugging de jogos, agentes, skills, comandos, regras, memória, adapters, schemas e evals presentes.")
