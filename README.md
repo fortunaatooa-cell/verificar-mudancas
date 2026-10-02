@@ -1,5 +1,7 @@
 # Verificar mudanças
 
+> **Status desta branch:** `feature/agentic-v1-5` é **experimental, not evaluated**. A infraestrutura da Spec 10/10 está sendo implementada aqui, mas as capacidades agentic não devem ser promovidas à `main` antes de T8/T14.
+
 Skill e sistema portátil de engenharia inspirado no ciclo do [Everything Claude Code (ECC)](https://github.com/affaan-m/ECC). Ajuda agentes a investigar falhas, implementar mudanças, analisar/criar desenhos técnicos e apresentar evidências verificáveis sem depender de uma linguagem, ferramenta ou ecossistema específico.
 
 **investigar → classificar → planejar → testar/provar → implementar → revisar → verificar → aprender → melhorar**
@@ -96,6 +98,8 @@ python3 scripts/eval_protocol.py verify \
 ```
 
 `--smoke-test` no runner existe para validar isolamento, cegamento e reconciliação com agente simulado; mesmo quando o critério matemático passa, o relatório marca essa execução como **não utilizável para alegação de eficácia**.
+
+O runner também mede `treatment_observed` pela leitura real da skill, usa `applicable_dimensions` fixas do oracle, preserva falhas como não-vitória e congela o efeito mínimo por hash. O experimento de descobribilidade usa `--experiment-mode discoverability` e é analisado separadamente por `scripts/analyze_discoverability.py`.
 
 ## Uso regulado
 
