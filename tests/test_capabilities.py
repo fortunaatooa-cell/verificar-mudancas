@@ -14,6 +14,14 @@ class CapabilityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp: result = detect(Path(tmp), ROOT / "adapters/generic")
         self.assertEqual(result["adapter"], "generic"); self.assertIn("fallback", result); self.assertIn("external_tools", result["resolved"]); self.assertIn("vision_input", result["resolved"]); self.assertIn("visual_generation", result["resolved"])
 
+    def test_claude_exposes_native_feature_metadata_without_assuming_availability(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = detect(Path(tmp), ROOT / "adapters/claude")
+        self.assertEqual(result["adapter"], "claude")
+        self.assertEqual(result["native"]["skills"], ".claude/skills")
+        self.assertEqual(result["native"]["subagents"], ".claude/agents")
+        self.assertEqual(result["native"]["mods"], "opt-in-post-t8")
+
     def test_runtime_env_can_confirm_agentic_and_visual_capabilities(self):
         env = {"VM_CAP_SUBAGENTS":"true","VM_CAP_EXTERNAL_TOOLS":"true","VM_CAP_VISION":"true","VM_CAP_VISUAL_GENERATION":"false"}
         with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, env): result = detect(Path(tmp), ROOT / "adapters/codex")
