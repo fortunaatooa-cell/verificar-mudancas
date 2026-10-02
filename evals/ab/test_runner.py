@@ -84,6 +84,73 @@ def main() -> None:
         assert comparison["efficacy_claim_allowed"] is False
         assert comparison["publishable_success"] is False
 
+
+        no_read = root / "no-read"
+        run([
+            sys.executable, str(REPO_ROOT / "scripts/run_agent_eval.py"),
+            "--out", str(no_read),
+            "--model", "fake-no-read",
+            "--reasoning-effort", "medium",
+            "--web-search", "disabled",
+            "--case-id", "local-evidence-sufficient",
+            "--repetitions", "1",
+            "--timeout-seconds", "30",
+            "--codex-bin", f"{sys.executable} {fake}",
+            "--allow-global-skill-contamination",
+            "--smoke-test",
+        ])
+        nr_results = read_csv(no_read / "results.csv")
+        nr_treatment = next(row for row in nr_results if row["condition"] == "with_skill")
+        assert nr_treatment["status"] == "treatment_not_observed"
+        nr_grading = read_csv(no_read / "grading.csv")
+        for row in nr_grading:
+            for field in SCORE_FIELDS:
+                row[field] = "1"
+            row["violacoes"] = "0"
+            row["regressao_critica"] = "false"
+        write_csv(no_read / "grading.csv", nr_grading)
+        run([
+            sys.executable, str(REPO_ROOT / "scripts/analyze_ab_results.py"),
+            "--run-dir", str(no_read),
+        ])
+        nr_comparison = json.loads((no_read / "comparison.json").read_text(encoding="utf-8"))
+        assert nr_comparison["treatment_not_observed_excluded"] == 1
+        assert nr_comparison["with_skill_wins"] == 0
+
+        failed = root / "failed"
+        failed_command = [
+            sys.executable, str(REPO_ROOT / "scripts/run_agent_eval.py"),
+            "--out", str(failed),
+            "--model", "fake-fail",
+            "--reasoning-effort", "medium",
+            "--web-search", "disabled",
+            "--case-id", "local-evidence-sufficient",
+            "--repetitions", "1",
+            "--timeout-seconds", "30",
+            "--codex-bin", f"{sys.executable} {fake}",
+            "--allow-global-skill-contamination",
+            "--smoke-test",
+        ]
+        completed = subprocess.run(
+            failed_command, cwd=REPO_ROOT, text=True, capture_output=True, check=False
+        )
+        assert completed.returncode == 2
+        failed_results = read_csv(failed / "results.csv")
+        assert len(failed_results) == 2
+        assert all(row["status"] == "failed" for row in failed_results)
+        failed_grading = read_csv(failed / "grading.csv")
+        for row in failed_grading:
+            row["violacoes"] = "0"
+            row["regressao_critica"] = "false"
+        write_csv(failed / "grading.csv", failed_grading)
+        run([
+            sys.executable, str(REPO_ROOT / "scripts/analyze_ab_results.py"),
+            "--run-dir", str(failed),
+        ])
+        failed_comparison = json.loads((failed / "comparison.json").read_text(encoding="utf-8"))
+        assert failed_comparison["failed_runs"] == 2
+        assert failed_comparison["with_skill_wins"] == 0
+
         discovery = root / "discoverability"
         run([
             sys.executable, str(REPO_ROOT / "scripts/run_agent_eval.py"),
