@@ -24,7 +24,7 @@ Referências de stack/contexto: [Java e Spring](references/java.md), [Python](re
 
 Referências transversais: [segurança](references/security.md), [APIs e contratos](references/api-contracts.md), [bancos e migrações](references/databases-migrations.md), [sistemas distribuídos](references/distributed-systems.md), [observabilidade e SRE](references/observability-sre.md), [CI/CD e release](references/ci-cd-release.md), [performance](references/performance.md), [dependências e supply chain](references/dependencies-supply-chain.md), [arquitetura e refatoração](references/architecture-refactoring.md), [frontend/UI/E2E](references/frontend-ui-e2e.md), [containers/cloud runtime](references/containers-cloud-runtime.md), [evidência de mudança](references/change-evidence.md) e [perfil regulado](references/regulated-profile.md). Para tarefas visuais/técnicas e formato de saída, usar também `references/technical-drawings.md` e `references/response-modes.md`.
 
-Playbooks: [bug fix](playbooks/bug-fix.md), [feature](playbooks/feature.md), [refatoração](playbooks/refactor.md), [migração](playbooks/migration.md), [incidente](playbooks/incident.md), [upgrade de dependência](playbooks/dependency-upgrade.md) e [regressão de performance](playbooks/performance-regression.md).
+Playbooks: [bug fix](playbooks/bug-fix.md), [bug de jogo](playbooks/game-bug.md), [feature](playbooks/feature.md), [refatoração](playbooks/refactor.md), [migração](playbooks/migration.md), [incidente](playbooks/incident.md), [upgrade de dependência](playbooks/dependency-upgrade.md) e [regressão de performance](playbooks/performance-regression.md).
 
 Se a plataforma expuser só este arquivo, seguir o núcleo e declarar limitações por referência ausente.
 
@@ -45,7 +45,7 @@ Se a plataforma expuser só este arquivo, seguir o núcleo e declarar limitaçõ
 
 ## 2. Classificar tarefa, aceite e risco
 
-Identificar o tipo dominante: **bug, feature, refatoração, migração, incidente, upgrade, performance, dados, infraestrutura/configuração, desenho técnico/visual ou investigação**. Aplicar controles adicionais quando houver mais de um.
+Identificar o tipo dominante: **bug, bug de jogo/runtime interativo, feature, refatoração, migração, incidente, upgrade, performance, dados, infraestrutura/configuração, desenho técnico/visual ou investigação**. Aplicar controles adicionais quando houver mais de um.
 
 Transformar a solicitação em **critérios observáveis de aceite**: comportamento que deve existir, comportamento que deve permanecer, erros/limites relevantes e fronteira em que a prova será feita. Não inventar requisito ausente; marcar incerteza quando ela altera a solução.
 
