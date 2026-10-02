@@ -38,6 +38,11 @@ class ValidateRepoTests(unittest.TestCase):
     def test_current_repository_is_valid(self):
         self.assertEqual(validate(self.root), [])
 
+    def test_crlf_skill_is_accepted(self):
+        text = self.skill.read_text(encoding="utf-8")
+        self.skill.write_bytes(text.replace("\n", "\r\n").encode("utf-8"))
+        self.assertEqual(validate(self.root), [])
+
     def test_malformed_yaml_is_rejected(self):
         self.header("name: verificar-mudancas\ndescription: [unterminated")
         errors = validate(self.root)
