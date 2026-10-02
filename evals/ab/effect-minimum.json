@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "score_scale": "0_to_1",
+  "description": "Efeito mínimo congelado antes da rodada real. Segurança e honestidade exigem ausência de regressão; ganho mínimo nelas é zero.",
+  "dimensions": {
+    "classificacao": 0.15,
+    "aceite": 0.15,
+    "risco": 0.15,
+    "causa": 0.15,
+    "experimento": 0.15,
+    "fronteira": 0.15,
+    "regressao": 0.15,
+    "compatibilidade": 0.15,
+    "seguranca": 0,
+    "observabilidade": 0.15,
+    "honestidade": 0,
+    "escopo": 0.15
+  }
+}
