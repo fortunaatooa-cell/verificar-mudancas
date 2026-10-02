@@ -16,7 +16,7 @@ Usar quando a saída precisar alimentar revisão, PR, change record, auditoria t
 **Sinal de sucesso e sinal de rollback:**
 **Não verificado, e por quê:**
 **Dados sensíveis:** nenhum dado de cliente ou segredo usado/exposto? sim | não | não verificável
-**Aprovação humana necessária:** papel/responsável, se aplicável
+**aprovacao_humana_necessaria:** true | false · para HIGH/CRITICAL deve ser true; registrar papel/responsável separadamente
 **Registro de mudança:** identificador do processo local, se aplicável e autorizado
 ```
 
@@ -25,5 +25,5 @@ Usar quando a saída precisar alimentar revisão, PR, change record, auditoria t
 - Campo sem evidência recebe `não verificado`; nunca preencher por suposição.
 - Em provas, registrar comando/ação e resultado reais. `Testes passaram` sem prova identificável não conta.
 - Não copiar segredo, PII, payload real, ARN/account ID, URL privada ou nome interno para um pacote público.
-- HIGH/CRITICAL sempre deixa explícita a aprovação humana necessária e os sinais de rollback/rollforward.
+- HIGH/CRITICAL sempre termina com `aprovacao_humana_necessaria=true`, além do papel/responsável e dos sinais de rollback/rollforward.
 - O template descreve evidência; ele não concede aprovação, acesso, segregação de funções nem autorização para produção.
