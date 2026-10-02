@@ -1,7 +1,6 @@
 ---
 name: portao-qualidade
 description: "Executa o quality gate proporcional ao risco, sem alegar checks não executados."
-allowed-tools: [Read, Grep, Glob, Bash]
 ---
 
 Este é o wrapper nativo do Claude Code para o comando portátil. Aplique também o núcleo em `.agents/skills/verificar-mudancas/SKILL.md`.
