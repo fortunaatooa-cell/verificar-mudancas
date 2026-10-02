@@ -24,6 +24,12 @@ class ValidateAgenticTests(unittest.TestCase):
     def test_missing_visual_specialist_is_rejected(self):
         (self.root / ".agents/agents/analista-desenhos-tecnicos.md").unlink(); self.assertTrue(any("agente ausente" in e for e in validate(self.root)))
 
+    def test_missing_gameplay_specialist_is_rejected(self):
+        (self.root / ".agents/agents/investigador-gameplay.md").unlink(); self.assertTrue(any("agente ausente" in e for e in validate(self.root)))
+
+    def test_missing_game_debug_command_is_rejected(self):
+        (self.root / ".agents/commands/depurar-jogo.md").unlink(); self.assertTrue(any("comando ausente" in e for e in validate(self.root)))
+
     def test_missing_rule_is_rejected(self):
         (self.root / ".agents/rules/visual-evidence.md").unlink(); self.assertTrue(any("regra ausente" in e for e in validate(self.root)))
 
