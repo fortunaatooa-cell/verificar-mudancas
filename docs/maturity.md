@@ -1,30 +1,26 @@
 # Maturidade do verificar-mudancas
 
-A maturidade é baseada em evidência, não em quantidade de instruções.
+A maturidade é baseada em prova independente por dimensão, não em quantidade de agentes ou testes.
 
-## Estado atual
+## Dimensões
 
-O projeto possui núcleo modular, referências por domínio, playbooks, agentes especializados, quality gate, memória controlada, fixtures e runner A/B. Isso sustenta maturidade de engenharia do harness, mas **não prova eficácia causal da skill**.
+- **D1 Eficácia:** A/B cego, tratamento observado, efeito mínimo congelado, sem regressão de segurança.
+- **D2 Descobribilidade:** experimento `skill_installed_unprompted` separado, com leitura espontânea medida.
+- **D3 Correção do gabarito:** fixture executável ou fonte por item + revisão independente.
+- **D4 Adequação ao banco:** scanner de dados públicos, aprovação humana explícita e piloto bloqueado até as seis respostas/revisão de segurança.
+- **D5 Sustentabilidade:** orçamento do núcleo, regra caso-antes-de-regra, CI/testes/fixtures e revisão humana de feature grande.
 
-Uma rodada com agente simulado valida isolamento, cegamento, reconciliação e arquivos produzidos. Ela não conta como evidência de que um modelo real melhora com a skill.
+## Estado desta branch
 
-## Gate de eficácia
+`feature/agentic-v1-5` permanece **experimental, not evaluated**. Smoke tests, testes unitários e CI verde provam consistência interna, não D1.
 
-Uma rodada A/B real só é considerada evidência quando:
+O código implementa os mecanismos necessários para T1–T7, T10–T12 e T14. T8 (24 execuções reais), T9 (decisão após o resultado) e T13 (piloto mínimo de duas semanas) dependem de evidência externa/tempo real e não podem ser fabricados pelo repositório.
 
-1. usa o mesmo modelo, configuração, ferramentas e contexto nos dois braços;
-2. mantém sessões independentes e cegamento do avaliador;
-3. fixa a versão da skill e os hashes de `cases.json` e `oracle.json`;
-4. possui revisão humana independente registrada para todos os casos selecionados;
-5. preserva resultados negativos e falhas;
-6. aplica o critério de sucesso definido antes da execução.
+## Gates
 
-O runner bloqueia por padrão a rodada real quando `evals/oracle-review.json` está ausente, desatualizado ou incompleto. `--smoke-test` existe apenas para validar o harness sem gastar uma rodada de eficácia.
+A rodada real é bloqueada se:
+- a revisão humana independente do oracle não corresponder aos hashes atuais;
+- a versão/configuração mudar no resume;
+- o tratamento estiver instalado mas não for observado, caso em que a execução é excluída e contada.
 
-## Referência de níveis
-
-- **8,5:** arquitetura e fixtures sólidas, sem evidência A/B suficiente.
-- **9:** A/B real com pelo menos 8 casos, 3 execuções por braço, gabaritos revisados e scorecard completo.
-- **9,5:** A/B ampliado e piloto real aprovado, com métricas, governança e revisão humana.
-
-Nenhuma dessas faixas significa que a skill detecta todo bug ou substitui revisão técnica.
+O piloto regulado é bloqueado por `scripts/check_pilot_readiness.py` até as seis respostas e a aprovação de segurança estarem registradas.
