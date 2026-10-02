@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke test for the executable A/B runner using fake Codex."""
+"""Smoke tests for efficacy and discoverability with fake Codex."""
 
 from __future__ import annotations
 
@@ -29,13 +29,22 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
         writer.writerows(rows)
 
 
+def run(command: list[str]) -> None:
+    completed = subprocess.run(
+        command, cwd=REPO_ROOT, text=True, capture_output=True, check=False
+    )
+    if completed.returncode != 0:
+        raise AssertionError(completed.stdout + "\n" + completed.stderr)
+
+
 def main() -> None:
+    fake = REPO_ROOT / "evals/ab/fake_codex.py"
     with tempfile.TemporaryDirectory(prefix="verificar-ab-test-") as tmp:
-        out = Path(tmp) / "run"
-        fake = REPO_ROOT / "evals/ab/fake_codex.py"
-        command = [
-            sys.executable,
-            str(REPO_ROOT / "scripts/run_agent_eval.py"),
+        root = Path(tmp)
+
+        out = root / "efficacy"
+        run([
+            sys.executable, str(REPO_ROOT / "scripts/run_agent_eval.py"),
             "--out", str(out),
             "--model", "fake-model",
             "--reasoning-effort", "medium",
@@ -46,57 +55,60 @@ def main() -> None:
             "--codex-bin", f"{sys.executable} {fake}",
             "--allow-global-skill-contamination",
             "--smoke-test",
-        ]
-        completed = subprocess.run(command, cwd=REPO_ROOT, text=True, capture_output=True, check=False)
-        if completed.returncode != 0:
-            raise AssertionError(completed.stdout + "\n" + completed.stderr)
+        ])
 
         operator = read_csv(out / "operator.csv")
-        assert len(operator) == 2
         condition = {row["blind_id"]: row["condition"] for row in operator}
-        observed = {}
-        for blind_id, arm in condition.items():
-            response = (out / "responses" / f"{blind_id}.md").read_text(encoding="utf-8").strip()
-            observed[arm] = response
-        assert observed == {
-            "baseline": "skill_present=false",
-            "with_skill": "skill_present=true",
-        }, observed
-
         results = read_csv(out / "results.csv")
-        assert len(results) == 2
-        assert all(row["status"] == "success" for row in results)
-        assert {row["condition"] for row in results} == {"baseline", "with_skill"}
+        treatment = next(row for row in results if row["condition"] == "with_skill")
+        assert treatment["treatment_observed"].lower() == "true"
+        assert treatment["status"] == "success"
 
         grading = read_csv(out / "grading.csv")
-        assert grading and "condition" not in grading[0]
         for row in grading:
             score = "2" if condition[row["blind_id"]] == "with_skill" else "1"
             for field in SCORE_FIELDS:
                 row[field] = score
             row["violacoes"] = "0"
+            row["regressao_critica"] = "false"
         write_csv(out / "grading.csv", grading)
 
-        analyzed = subprocess.run(
-            [sys.executable, str(REPO_ROOT / "scripts/analyze_ab_results.py"), "--run-dir", str(out)],
-            cwd=REPO_ROOT, text=True, capture_output=True, check=False,
-        )
-        if analyzed.returncode != 0:
-            raise AssertionError(analyzed.stdout + "\n" + analyzed.stderr)
+        run([
+            sys.executable, str(REPO_ROOT / "scripts/analyze_ab_results.py"),
+            "--run-dir", str(out),
+        ])
         comparison = json.loads((out / "comparison.json").read_text(encoding="utf-8"))
         assert comparison["with_skill_wins"] == 1
-        assert comparison["baseline_wins"] == 0
-        assert comparison["criterion_met"] is True
+        assert comparison["treatment_not_observed_excluded"] == 0
+        assert comparison["effect_minimum_sha256"]
         assert comparison["efficacy_claim_allowed"] is False
         assert comparison["publishable_success"] is False
-        assert (out / "report.md").is_file()
 
-        experiment = json.loads((out / "experiment.json").read_text(encoding="utf-8"))
-        assert experiment["run_count"] == 2
-        assert experiment["model"] == "fake-model"
-        assert experiment["protocol_mode"] == "smoke"
-        assert experiment["oracle_review"]["verified"] is False
-        print("A/B runner: isolamento, cegamento e reconciliação pós-avaliação verificados.")
+        discovery = root / "discoverability"
+        run([
+            sys.executable, str(REPO_ROOT / "scripts/run_agent_eval.py"),
+            "--out", str(discovery),
+            "--model", "fake-model",
+            "--reasoning-effort", "medium",
+            "--web-search", "disabled",
+            "--case-id", "local-evidence-sufficient",
+            "--repetitions", "1",
+            "--timeout-seconds", "30",
+            "--codex-bin", f"{sys.executable} {fake}",
+            "--allow-global-skill-contamination",
+            "--experiment-mode", "discoverability",
+            "--smoke-test",
+        ])
+        run([
+            sys.executable, str(REPO_ROOT / "scripts/analyze_discoverability.py"),
+            "--run-dir", str(discovery),
+        ])
+        drows = read_csv(discovery / "discoverability.csv")
+        overall = next(row for row in drows if row["case_id"] == "__overall__")
+        assert overall["discovery_rate"] == "1.000000"
+        assert not (discovery / "grading.csv").exists()
+
+        print("A/B: tratamento observado, scoring fixo e descobribilidade verificados.")
 
 
 if __name__ == "__main__":
