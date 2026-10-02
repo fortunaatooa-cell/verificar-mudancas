@@ -20,3 +20,10 @@ Branch: `feature/agentic-v1-5`.
 | T14 revisão agentic | checklist pronto; execução bloqueada até T8 | agentic-review-checklist.md |
 
 A distinção entre **implementado** e **evidência externa pendente** é intencional. O repositório não fabrica revisão humana, resultado de 24 execuções ou duas semanas de piloto.
+
+
+### Atualização de compatibilidade Claude
+
+O adapter Claude existente ganhou integração nativa com `CLAUDE.md`, `.claude/skills`, `.claude/agents`, `.claude/rules` e hooks. A mudança reaproveita os mesmos papéis e regras e **não altera o status de T7–T14**: é consistência/portabilidade agentic, não evidência D1, D2 ou D4.
+
+Nenhum plugin/mod adicional foi ativado automaticamente; isso permanece fora do escopo antes de T8.
