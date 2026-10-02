@@ -5,6 +5,8 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 ## Unreleased
 
 ### Added
+- Gate de revisão humana independente para rodadas A/B reais, com hashes normalizados de `cases.json`/`oracle.json`, template verificável e modo `--smoke-test` explicitamente não publicável como evidência de eficácia.
+- Documento `docs/maturity.md` separando maturidade do harness, prova A/B e piloto real.
 - Especialização agentic para bugs de jogos: `investigador-gameplay`, `validador-regressao-jogo`, comando `/depurar-jogo` e playbook `game-bug`, reutilizando o mesmo harness e as referências de engine existentes.
 - Capacidade de análise, revisão e especificação de desenhos técnicos com especialista `analista-desenhos-tecnicos`, skill auxiliar `desenho-tecnico`, comando `/desenho-tecnico` e regra de evidência visual.
 - Capabilities `vision_input` e `visual_generation` independentes em todos os adapters, com fallback textual/editável quando visão ou render não estiverem disponíveis.
@@ -25,6 +27,7 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 - O núcleo exige descoberta de wrappers/toolchains locais antes de declarar ferramenta ausente, distingue risco de severidade e reforça prova na fronteira afetada.
 
 ### Fixed
+- O validador aceita checkouts CRLF do Windows sem alterar a semântica do frontmatter nem inflar artificialmente o orçamento do `SKILL.md`.
 - O validador interpreta YAML com carregador seguro e rejeita campos duplicados/ inválidos sem traceback.
 
 ## Política de versão
