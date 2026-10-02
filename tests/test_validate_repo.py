@@ -95,6 +95,20 @@ class ValidateRepoTests(unittest.TestCase):
         (self.skill.parent / "references/python.md").unlink()
         self.assertTrue(validate(self.root))
 
+    def test_applicable_dimensions_must_match_oracle(self):
+        path = self.root / "evals/oracle.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data["oracles"][0]["applicable_dimensions"] = ["seguranca"]
+        path.write_text(json.dumps(data), encoding="utf-8")
+        self.assertTrue(validate(self.root))
+
+    def test_oracle_sources_are_required_per_item(self):
+        path = self.root / "evals/oracle.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data["oracles"][0]["expected_sources"] = []
+        path.write_text(json.dumps(data), encoding="utf-8")
+        self.assertTrue(validate(self.root))
+
     def test_oracle_must_match_cases(self):
         path = self.root / "evals/oracle.json"
         data = json.loads(path.read_text(encoding="utf-8"))
