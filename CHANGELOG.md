@@ -5,6 +5,7 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 ## Unreleased
 
 ### Added
+- Especialização agentic para bugs de jogos: `investigador-gameplay`, `validador-regressao-jogo`, comando `/depurar-jogo` e playbook `game-bug`, reutilizando o mesmo harness e as referências de engine existentes.
 - Capacidade de análise, revisão e especificação de desenhos técnicos com especialista `analista-desenhos-tecnicos`, skill auxiliar `desenho-tecnico`, comando `/desenho-tecnico` e regra de evidência visual.
 - Capabilities `vision_input` e `visual_generation` independentes em todos os adapters, com fallback textual/editável quando visão ou render não estiverem disponíveis.
 - Modos de resposta `simples`, `aprofundado` e `ambos` aplicáveis a engenharia e desenhos técnicos.
