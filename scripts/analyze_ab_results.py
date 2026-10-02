@@ -77,6 +77,12 @@ def main() -> None:
     operator = read_csv(root / "operator.csv")
     grading = read_csv(root / "grading.csv")
     results = read_csv(root / "results.csv")
+    experiment_path = root / "experiment.json"
+    experiment = json.loads(experiment_path.read_text(encoding="utf-8")) if experiment_path.is_file() else {}
+    protocol_mode = experiment.get("protocol_mode", "legacy")
+    review_info = experiment.get("oracle_review") if isinstance(experiment.get("oracle_review"), dict) else {}
+    review_verified = review_info.get("verified") is True
+    efficacy_claim_allowed = protocol_mode == "real" and review_verified
 
     condition_by_blind = {row["blind_id"]: row["condition"] for row in operator}
     result_by_blind = {row["blind_id"]: row for row in results}
@@ -194,6 +200,10 @@ def main() -> None:
         "required_skill_wins": required_wins,
         "security_losses": security_losses,
         "criterion_met": criterion_met,
+        "protocol_mode": protocol_mode,
+        "oracle_review_verified": review_verified,
+        "efficacy_claim_allowed": efficacy_claim_allowed,
+        "publishable_success": criterion_met and efficacy_claim_allowed,
         "mean_elapsed_seconds": {
             "baseline": numeric_mean("baseline", "elapsed_seconds"),
             "with_skill": numeric_mean("with_skill", "elapsed_seconds"),
@@ -214,6 +224,10 @@ def main() -> None:
         f"- Vitórias baseline: **{baseline_wins}**",
         f"- Empates: **{ties}**",
         f"- Critério pré-definido atendido: **{'sim' if criterion_met else 'não'}**",
+        f"- Modo do protocolo: **{protocol_mode}**",
+        f"- Revisão independente do oracle verificada: **{'sim' if review_verified else 'não'}**",
+        f"- Pode sustentar alegação de eficácia: **{'sim' if efficacy_claim_allowed else 'não'}**",
+        f"- Resultado publicável pelo gate: **{'sim' if (criterion_met and efficacy_claim_allowed) else 'não'}**",
         f"- Perdas em segurança: **{', '.join(security_losses) if security_losses else 'nenhuma'}**",
         "",
         "| Caso | Baseline | Com skill | Δ pp | Resultado | Violações A/B | Δ segurança |",
@@ -230,6 +244,7 @@ def main() -> None:
     lines.extend([
         "",
         "O critério resume o protocolo pré-definido; ele não substitui inspeção dos casos individuais, das violações e das respostas brutas.",
+        "Execuções em modo smoke validam o harness, mas não podem ser usadas como evidência de eficácia da skill.",
     ])
     (root / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(root / "report.md")
