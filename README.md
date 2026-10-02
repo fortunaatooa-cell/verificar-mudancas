@@ -20,7 +20,7 @@ O núcleo é `.agents/skills/verificar-mudancas/` e continua utilizável sozinho
 6. **Quality gate** — plano conservador e execução explícita de checks.
 7. **Memória controlada** — lessons, patterns, incidents e project knowledge sanitizados; memória é pista, não verdade.
 8. **Continuous learning seguro** — aprendizado explícito e geração revisável de eval de regressão, sem promoção automática.
-9. **Adapters** — generic, Codex, Claude, Devin e Copilot com capability detection/fallback, incluindo `vision_input` e `visual_generation`.
+9. **Adapters** — generic, Codex, Claude, Devin e Copilot com capability detection/fallback, incluindo `vision_input` e `visual_generation`; Claude Code possui mapeamento nativo para `CLAUDE.md`, Skills, subagents, rules e hooks.
 10. **Instalador** — modo `skill` ou `full`, dry-run e preservação de arquivos existentes.
 
 A especificação implementada está em [docs/agentic-system.md](docs/agentic-system.md), a instalação em [docs/installation.md](docs/installation.md) e os gates de maturidade em [docs/maturity.md](docs/maturity.md).
@@ -56,6 +56,15 @@ python3 scripts/install.py --target /caminho/do/projeto --adapter codex --mode f
 ```
 
 Em uso corporativo, fixe uma **tag ou commit aprovado**; não dependa de uma branch móvel.
+
+### Claude Code
+
+```bash
+python3 scripts/install.py --target /caminho/do/projeto --adapter claude --mode full --dry-run
+python3 scripts/install.py --target /caminho/do/projeto --adapter claude --mode full
+```
+
+O adapter gera wrappers nativos sem duplicar a fonte de verdade: os arquivos em `.agents/` continuam canônicos, enquanto `CLAUDE.md`, `.claude/skills/`, `.claude/agents/`, `.claude/rules/` e `.claude/settings.json` integram o harness ao Claude Code atual. Plugins/mods permanecem opt-in e fora do caminho automático antes de T8.
 
 ## Capabilities visuais
 
