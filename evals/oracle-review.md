@@ -4,6 +4,8 @@ Data da revisão estrutural: 2026-09-28.
 
 Este arquivo separa **gabarito sustentado por fixture executável** de **gabarito revisado apenas contra a evidência sintética/referências da skill**. A segunda categoria ainda pede revisão humana independente antes de ser tratada como benchmark maduro.
 
+A tabela abaixo é histórico técnico, não a aprovação do benchmark. A rodada A/B real exige também `evals/oracle-review.json`, gerado por `scripts/eval_protocol.py template` e preenchido por uma segunda pessoa. O runner confere hashes de `cases.json`/`oracle.json` e bloqueia qualquer caso selecionado sem `status: approved`. Hoje esse registro independente ainda não está presente no repositório, portanto a execução real deve permanecer bloqueada; smoke tests continuam permitidos.
+
 | Caso | Base atual | Status |
 | --- | --- | --- |
 | java-404 | fixture Java/Spring com falha 200→404 | fixture-backed |
