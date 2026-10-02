@@ -21,13 +21,13 @@ from pathlib import Path
 from typing import Any
 
 DESTRUCTIVE_PATTERNS = (
-    (re.compile(r"(?i)(?:^|\\s)rm\\s+-[^\\n]*r[^\\n]*f\\b"), "rm recursivo/forçado"),
-    (re.compile(r"(?i)\\bgit\\s+push\\b[^\\n]*(?:--force|-f)\\b"), "git push forçado"),
-    (re.compile(r"(?i)\\bgit\\s+reset\\s+--hard\\b"), "git reset --hard"),
-    (re.compile(r"(?i)\\bgit\\s+clean\\b[^\\n]*-[^\\n]*f"), "git clean forçado"),
-    (re.compile(r"(?i)\\bterraform\\s+destroy\\b"), "terraform destroy"),
-    (re.compile(r"(?i)\\bkubectl\\s+delete\\b"), "kubectl delete"),
-    (re.compile(r"(?i)\\bDROP\\s+(?:TABLE|DATABASE|SCHEMA)\\b"), "DDL destrutivo"),
+    (re.compile(r"(?i)(?:^|\s)rm\s+-[^\n]*r[^\n]*f\b"), "rm recursivo/forçado"),
+    (re.compile(r"(?i)\bgit\s+push\b[^\n]*(?:--force|-f)\b"), "git push forçado"),
+    (re.compile(r"(?i)\bgit\s+reset\s+--hard\b"), "git reset --hard"),
+    (re.compile(r"(?i)\bgit\s+clean\b[^\n]*-[^\n]*f"), "git clean forçado"),
+    (re.compile(r"(?i)\bterraform\s+destroy\b"), "terraform destroy"),
+    (re.compile(r"(?i)\bkubectl\s+delete\b"), "kubectl delete"),
+    (re.compile(r"(?i)\bDROP\s+(?:TABLE|DATABASE|SCHEMA)\b"), "DDL destrutivo"),
 )
 
 
