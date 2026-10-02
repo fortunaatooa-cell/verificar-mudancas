@@ -19,7 +19,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from prepare_ab_eval import DEFAULT_SEED, prepare
+from eval_protocol import canonical_sha256, verify_review
+from prepare_ab_eval import DEFAULT_CASES, DEFAULT_SEED, prepare
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_RELATIVE = Path(".agents/skills/verificar-mudancas")
@@ -262,6 +263,7 @@ def execute_one(
 def experiment_signature(
     skill_commit: str, codex_version: str, model: str, reasoning_effort: str,
     web_search: str, seed: int, rows: list[dict[str, str]], allow_contamination: bool,
+    protocol_mode: str, protocol_review: dict[str, Any], cases_sha256: str, oracle_sha256: str,
 ) -> dict[str, Any]:
     return {
         "skill_commit": skill_commit,
@@ -277,6 +279,10 @@ def experiment_signature(
         "run_count": len(rows),
         "blind_ids": sorted(row["blind_id"] for row in rows),
         "global_skill_contamination_allowed": allow_contamination,
+        "protocol_mode": protocol_mode,
+        "oracle_review": protocol_review,
+        "cases_sha256": cases_sha256,
+        "oracle_sha256": oracle_sha256,
     }
 
 
@@ -284,7 +290,8 @@ def verify_resume(existing: dict[str, Any], current: dict[str, Any]) -> None:
     keys = [
         "skill_commit", "codex_version", "model", "reasoning_effort", "web_search", "sandbox",
         "ephemeral", "ignore_user_config", "ignore_rules", "seed", "run_count", "blind_ids",
-        "global_skill_contamination_allowed",
+        "global_skill_contamination_allowed", "protocol_mode", "oracle_review",
+        "cases_sha256", "oracle_sha256",
     ]
     differences = [key for key in keys if existing.get(key) != current.get(key)]
     if differences:
@@ -302,6 +309,8 @@ def main() -> None:
     parser.add_argument("--web-search", choices=("live", "disabled"), default="live")
     parser.add_argument("--codex-bin", default="codex", help="Executável/comando Codex. Útil para teste com adapter fake.")
     parser.add_argument("--cases", default=str(REPO_ROOT / "evals/cases.json"))
+    parser.add_argument("--oracle", default=str(REPO_ROOT / "evals/oracle.json"))
+    parser.add_argument("--oracle-review", default=str(REPO_ROOT / "evals/oracle-review.json"))
     parser.add_argument("--case-id", action="append", dest="case_ids")
     parser.add_argument("--repetitions", type=int, default=3)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
@@ -309,6 +318,10 @@ def main() -> None:
     parser.add_argument("--resume", action="store_true", help="Pula execuções já concluídas com sucesso.")
     parser.add_argument("--keep-workspaces", action="store_true", help="Somente para depuração; pode revelar a condição.")
     parser.add_argument("--allow-global-skill-contamination", action="store_true")
+    parser.add_argument(
+        "--smoke-test", action="store_true",
+        help="Valida o harness sem revisão independente; resultados não são evidência de eficácia.",
+    )
     args = parser.parse_args()
 
     if args.timeout_seconds < 1:
@@ -317,6 +330,30 @@ def main() -> None:
     if out.exists() and any(out.iterdir()) and not args.resume:
         raise SystemExit(f"diretório de saída não está vazio: {out}; use --resume ou outro diretório")
     out.mkdir(parents=True, exist_ok=True)
+
+    cases_path = Path(args.cases).resolve()
+    oracle_path = Path(args.oracle).resolve()
+    selected_case_ids = args.case_ids or DEFAULT_CASES
+    cases_hash = canonical_sha256(cases_path)
+    oracle_hash = canonical_sha256(oracle_path)
+    protocol_mode = "smoke" if args.smoke_test else "real"
+    if args.smoke_test:
+        protocol_review = {
+            "verified": False,
+            "reason": "smoke-test: revisão independente não exigida; não usar como evidência de eficácia",
+            "reviewed_case_ids": sorted(set(selected_case_ids)),
+        }
+    else:
+        try:
+            protocol_review = verify_review(
+                Path(args.oracle_review).resolve(), cases_path, oracle_path, selected_case_ids,
+            )
+        except ValueError as exc:
+            raise SystemExit(
+                str(exc)
+                + "\nGere um registro com `python scripts/eval_protocol.py template` e peça revisão a uma segunda pessoa. "
+                  "Para testar somente o harness, use --smoke-test."
+            ) from exc
 
     try:
         ensure_skill_clean()
@@ -338,7 +375,7 @@ def main() -> None:
         rows = read_csv(operator_path)
     else:
         try:
-            prepare(Path(args.cases), out, case_ids=args.case_ids, repetitions=args.repetitions, seed=args.seed)
+            prepare(cases_path, out, case_ids=args.case_ids, repetitions=args.repetitions, seed=args.seed)
         except ValueError as exc:
             raise SystemExit(str(exc)) from exc
         rows = read_csv(operator_path)
@@ -346,6 +383,7 @@ def main() -> None:
     signature = experiment_signature(
         skill_commit, codex_version, args.model, args.reasoning_effort, args.web_search,
         args.seed, rows, args.allow_global_skill_contamination,
+        protocol_mode, protocol_review, cases_hash, oracle_hash,
     )
     experiment_path = out / "experiment.json"
     if args.resume and experiment_path.is_file():
@@ -408,6 +446,9 @@ def main() -> None:
 
     print(f"Resultados: {out}")
     print(f"Sucesso: {summary['success']}/{summary['total']}")
+    print(f"Modo do protocolo: {protocol_mode}")
+    if protocol_mode == "smoke":
+        print("ATENÇÃO: smoke-test valida o harness, não demonstra eficácia da skill.")
     print("Entregue `grading.csv` + `responses/` ao avaliador; não entregue `operator.csv`.")
     if failures:
         raise SystemExit(2)
