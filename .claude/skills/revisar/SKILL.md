@@ -1,7 +1,6 @@
 ---
 name: revisar
 description: "Revisa diff ou PR de forma adversarial, procurando regressões, riscos e evidência insuficiente."
-allowed-tools: [Read, Grep, Glob, Bash]
 ---
 
 Este é o wrapper nativo do Claude Code para o comando portátil. Aplique também o núcleo em `.agents/skills/verificar-mudancas/SKILL.md`.
