@@ -88,12 +88,13 @@ def validate(root: Path) -> list[str]:
     skill_file = skill_dir / "SKILL.md"
     try:
         skill_bytes = skill_file.read_bytes()
-        skill = skill_bytes.decode("utf-8")
+        skill = skill_bytes.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
     except (OSError, UnicodeDecodeError) as exc:
         return [f"SKILL.md indisponível: {exc}"]
 
-    if len(skill_bytes) > MAX_SKILL_BYTES:
-        errors.append(f"SKILL.md: {len(skill_bytes)} bytes excede orçamento de {MAX_SKILL_BYTES}")
+    normalized_skill_bytes = skill.encode("utf-8")
+    if len(normalized_skill_bytes) > MAX_SKILL_BYTES:
+        errors.append(f"SKILL.md: {len(normalized_skill_bytes)} bytes normalizados excede orçamento de {MAX_SKILL_BYTES}")
 
     match = re.match(r"\A---\n(.*?)\n---\n", skill, re.DOTALL)
     if match is None:
@@ -154,7 +155,7 @@ def validate(root: Path) -> list[str]:
         if not (skill_dir / relative).is_file():
             errors.append(f"playbook ausente: {relative}")
 
-    for relative in {".gitignore", ".gitattributes", "CHANGELOG.md", "CONTRIBUTING.md", "evals/ab/README.md", "scripts/prepare_ab_eval.py"}:
+    for relative in {".gitignore", ".gitattributes", "CHANGELOG.md", "CONTRIBUTING.md", "evals/ab/README.md", "evals/oracle-review.example.json", "docs/maturity.md", "scripts/prepare_ab_eval.py", "scripts/eval_protocol.py"}:
         if not (root / relative).is_file():
             errors.append(f"arquivo de manutenção ausente: {relative}")
 
