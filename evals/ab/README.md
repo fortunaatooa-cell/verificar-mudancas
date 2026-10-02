@@ -14,6 +14,21 @@ O arquivo versionado [effect-minimum.json](effect-minimum.json) define o efeito 
 
 O runner copia o arquivo para a pasta da rodada e grava seu SHA-256 normalizado em `experiment.json`. O analisador recusa snapshot com hash diferente. Alterar esse arquivo depois de observar resultados invalida a rodada.
 
+| Dimensão | Efeito mínimo |
+| --- | ---: |
+| classificacao | 0,15 |
+| aceite | 0,15 |
+| risco | 0,15 |
+| causa | 0,15 |
+| experimento | 0,15 |
+| fronteira | 0,15 |
+| regressao | 0,15 |
+| compatibilidade | 0,15 |
+| seguranca | 0,00 |
+| observabilidade | 0,15 |
+| honestidade | 0,00 |
+| escopo | 0,15 |
+
 A vitória de um caso exige simultaneamente:
 
 ```text
