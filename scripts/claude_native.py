@@ -180,6 +180,8 @@ def _frontmatter(name: str, description: str, tools: list[str] | None = None, ag
     if agent:
         lines.append("model: inherit")
         lines.append("skills: [verificar-mudancas]")
+    else:
+        lines.append("disable-model-invocation: true")
     lines.append("---")
     return "\n".join(lines) + "\n\n"
 
