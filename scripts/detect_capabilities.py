@@ -25,7 +25,9 @@ def detect(root: Path, adapter_dir: Path):
         elif name == "shell": resolved[name] = "available" if shutil.which("git") or shutil.which("python3") else "unknown"
         else:
             value = _env_bool(BOOLEAN_ENV.get(name)); resolved[name] = "available" if value is True else ("unavailable" if value is False else "unknown")
-    return {"adapter":manifest["adapter"],"declared":manifest["capabilities"],"resolved":resolved,"fallback":"Use staged roles/portable scripts when capabilities are unknown. Without vision, analyze only provided text/metadata; without visual generation, emit editable diagram source/specification instead of claiming a render."}
+    result = {"adapter":manifest["adapter"],"declared":manifest["capabilities"],"resolved":resolved,"fallback":"Use staged roles/portable scripts when capabilities are unknown. Without vision, analyze only provided text/metadata; without visual generation, emit editable diagram source/specification instead of claiming a render."}
+    if isinstance(manifest.get("native"), dict): result["native"] = manifest["native"]
+    return result
 
 
 def _find_adapter(root: Path, adapter: str):
