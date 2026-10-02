@@ -138,7 +138,7 @@ def validate(root: Path) -> list[str]:
             errors.append(f"referência ausente: {relative}")
 
     expected_playbooks = {
-        "playbooks/bug-fix.md", "playbooks/feature.md", "playbooks/refactor.md",
+        "playbooks/bug-fix.md", "playbooks/game-bug.md", "playbooks/feature.md", "playbooks/refactor.md",
         "playbooks/migration.md", "playbooks/incident.md", "playbooks/dependency-upgrade.md",
         "playbooks/performance-regression.md",
     }
