@@ -45,6 +45,25 @@ class ValidateAgenticTests(unittest.TestCase):
     def test_invalid_adapter_is_rejected(self):
         path = self.root / "adapters/generic/adapter.json"; data = json.loads(path.read_text(encoding="utf-8")); data["capabilities"]["vision_input"] = "magical"; path.write_text(json.dumps(data), encoding="utf-8"); self.assertTrue(any("capability inválida" in e for e in validate(self.root)))
 
+    def test_missing_claude_project_memory_is_rejected(self):
+        (self.root / "CLAUDE.md").unlink()
+        self.assertTrue(any("Claude nativo ausente" in e for e in validate(self.root)))
+
+    def test_missing_claude_native_skill_is_rejected(self):
+        (self.root / ".claude/skills/investigar/SKILL.md").unlink()
+        self.assertTrue(any("Claude skill nativa ausente" in e for e in validate(self.root)))
+
+    def test_missing_claude_native_subagent_is_rejected(self):
+        (self.root / ".claude/agents/investigador.md").unlink()
+        self.assertTrue(any("Claude subagent nativo ausente" in e for e in validate(self.root)))
+
+    def test_claude_adapter_requires_native_metadata(self):
+        path = self.root / "adapters/claude/adapter.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data.pop("native", None)
+        path.write_text(json.dumps(data), encoding="utf-8")
+        self.assertTrue(any("adapter Claude sem metadados native" in e for e in validate(self.root)))
+
     def test_agentic_oracle_must_match_cases(self):
         path = self.root / "evals/agentic/oracle.json"; data = json.loads(path.read_text(encoding="utf-8")); data["oracles"].pop(); path.write_text(json.dumps(data), encoding="utf-8"); self.assertTrue(any("oracle correspondente" in e for e in validate(self.root)))
 
