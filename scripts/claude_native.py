@@ -175,11 +175,11 @@ def _yaml_string(value: str) -> str:
 
 def _frontmatter(name: str, description: str, tools: list[str] | None = None, agent: bool = False) -> str:
     lines = ["---", f"name: {name}", f"description: {_yaml_string(description)}"]
-    if tools:
-        key = "tools" if agent else "allowed-tools"
-        lines.append(f"{key}: [{', '.join(tools)}]")
+    if tools and agent:
+        lines.append(f"tools: [{', '.join(tools)}]")
     if agent:
         lines.append("model: inherit")
+        lines.append("skills: [verificar-mudancas]")
     lines.append("---")
     return "\n".join(lines) + "\n\n"
 
