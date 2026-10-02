@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "reviewer": "",
+  "reviewed_at": "",
+  "independent": false,
+  "cases_sha256": "GERAR_COM_scripts/eval_protocol.py_template",
+  "oracle_sha256": "GERAR_COM_scripts/eval_protocol.py_template",
+  "reviews": [
+    {
+      "case_id": "runtime-port-binding",
+      "status": "pending",
+      "method": "",
+      "notes": ""
+    },
+    {
+      "case_id": "external-contract-required",
+      "status": "pending",
+      "method": "",
+      "notes": ""
+    },
+    {
+      "case_id": "local-evidence-sufficient",
+      "status": "pending",
+      "method": "",
+      "notes": ""
+    },
+    {
+      "case_id": "java-404",
+      "status": "pending",
+      "method": "",
+      "notes": ""
+    }
+  ]
+}
