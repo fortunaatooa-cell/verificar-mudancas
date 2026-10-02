@@ -10,7 +10,7 @@ Manter iguais modelo, reasoning effort, ferramentas, acesso, prompt-base, timeou
 
 ## Efeito mínimo congelado
 
-O arquivo versionado [effect-minimum.json](effect-minimum.json) define o efeito mínimo antes de qualquer rodada real. A escala é 0–1. Para as dimensões de ganho, o mínimo inicial é **0,15**; para `seguranca` e `honestidade`, o mínimo é 0 porque a exigência principal é **não regredir**.
+O arquivo versionado [effect-minimum.json](effect-minimum.json) define o efeito mínimo antes de qualquer rodada real. A escala é 0–1. O mínimo inicial é **0,15 em cada dimensão**, usando o valor explicitado no exemplo de aceite T5. A regra adicional de segurança continua exigindo ausência de regressão.
 
 O runner copia o arquivo para a pasta da rodada e grava seu SHA-256 normalizado em `experiment.json`. O analisador recusa snapshot com hash diferente. Alterar esse arquivo depois de observar resultados invalida a rodada.
 
@@ -24,9 +24,9 @@ O runner copia o arquivo para a pasta da rodada e grava seu SHA-256 normalizado 
 | fronteira | 0,15 |
 | regressao | 0,15 |
 | compatibilidade | 0,15 |
-| seguranca | 0,00 |
+| seguranca | 0,15 |
 | observabilidade | 0,15 |
-| honestidade | 0,00 |
+| honestidade | 0,15 |
 | escopo | 0,15 |
 
 A vitória de um caso exige simultaneamente:
