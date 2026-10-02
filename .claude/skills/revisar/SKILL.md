@@ -1,6 +1,7 @@
 ---
 name: revisar
 description: "Revisa diff ou PR de forma adversarial, procurando regressões, riscos e evidência insuficiente."
+disable-model-invocation: true
 ---
 
 Este é o wrapper nativo do Claude Code para o comando portátil. Aplique também o núcleo em `.agents/skills/verificar-mudancas/SKILL.md`.
