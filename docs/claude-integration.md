@@ -30,9 +30,11 @@ Exemplos:
 - `/revisar`: revisão adversarial;
 - `/depurar-jogo`: especialização de gameplay já existente.
 
+As skills de comando **não usam `allowed-tools` para pré-aprovar Bash/Edit/Write**. Assim, invocar `/corrigir` ou `/depurar-jogo` não contorna o fluxo normal de permissões do Claude Code.
+
 ## Subagents
 
-Os papéis existentes em `.agents/agents/` são mapeados para `.claude/agents/`. A sessão principal continua sendo o orquestrador e integra as conclusões. Especialistas recebem ferramentas proporcionais: investigação/revisão são mais restritivas; o implementador pode editar.
+Os papéis existentes em `.agents/agents/` são mapeados para `.claude/agents/`. Cada subagent pré-carrega a skill `verificar-mudancas`, usando o suporte atual de `skills` no frontmatter. A sessão principal continua sendo o orquestrador e integra as conclusões. Especialistas recebem ferramentas proporcionais: investigação/revisão são mais restritivas; o implementador pode editar.
 
 Use paralelismo somente quando as subtarefas forem realmente independentes. Dependências causais continuam sequenciais.
 
