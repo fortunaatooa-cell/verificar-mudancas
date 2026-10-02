@@ -23,9 +23,15 @@ Cada linha abaixo aponta o comando que confronta a propriedade central do caso. 
 
 Os demais casos usam `expected_sources` e `forbidden_sources` no `oracle.json`, apontando para o código/evidência sintética do caso e para a referência normativa pertinente. Isso torna a origem auditável, mas **não transforma auto-revisão em revisão independente**.
 
-### local-evidence-sufficient
+### Revisão independente ainda pendente
 
-O caso está **source-backed**: o requisito, o teste reproduzível e o trecho `age > 18` estão no próprio caso, e o oracle aponta essa fonte. Ele pode compor o piloto somente quando uma segunda pessoa o aprovar no registro hashado de revisão. Até lá, a rodada real permanece bloqueada.
+| Caso | Sustentação atual | Pendência |
+| --- | --- | --- |
+| `local-evidence-sufficient` | source-backed pelo requisito, teste reproduzível e trecho `age > 18` do próprio caso | segunda pessoa precisa revisar e assinar o hash |
+| `obsolete-test-production-change` | `expected_sources`/`forbidden_sources` no oracle | segunda pessoa precisa revisar e assinar o hash |
+| `extracted-selector-unused` | `expected_sources`/`forbidden_sources` no oracle | segunda pessoa precisa revisar e assinar o hash |
+
+`local-evidence-sufficient` pode compor o piloto somente quando essa revisão independente estiver registrada. Até lá, a rodada real permanece bloqueada.
 
 ## Regra de maturidade
 
