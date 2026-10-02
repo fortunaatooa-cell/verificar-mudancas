@@ -18,6 +18,34 @@ Rodar **3 repetições por caso e por braço**:
 
 Manter iguais: modelo, esforço/configuração, ferramentas, acesso, prompt-base, tempo máximo e evidência fornecida. O agente recebe somente `prompt` + `evidence`; nunca `oracle.json`.
 
+## Gate antes de gastar uma rodada real
+
+A rodada real é bloqueada até existir um registro de **revisão humana independente** que corresponda ao conteúdo atual de `cases.json` e `oracle.json` e aprove todos os casos selecionados. Isso impede usar como benchmark um gabarito auto-revisado ou alterado depois da aprovação.
+
+Gere o registro pendente:
+
+```bash
+python3 scripts/eval_protocol.py template \
+  --out evals/oracle-review.json \
+  --case-id runtime-port-binding \
+  --case-id external-contract-required \
+  --case-id local-evidence-sufficient \
+  --case-id java-404
+```
+
+Uma segunda pessoa deve revisar item por item, preencher `reviewer`, `reviewed_at`, marcar `independent: true`, registrar o `method` de cada caso e mudar o respectivo `status` para `approved`. Depois:
+
+```bash
+python3 scripts/eval_protocol.py verify \
+  --review evals/oracle-review.json \
+  --case-id runtime-port-binding \
+  --case-id external-contract-required \
+  --case-id local-evidence-sufficient \
+  --case-id java-404
+```
+
+Os hashes são calculados com normalização LF/CRLF para que um checkout Windows não invalide uma revisão sem mudança de conteúdo. Se `cases.json` ou `oracle.json` mudar de fato, a revisão fica obsoleta e o runner bloqueia novamente.
+
 ## Preparar apenas os manifests
 
 ```bash
@@ -90,4 +118,4 @@ Critério inicial pré-definido: a skill vence em pelo menos dois terços dos ca
 
 ## Teste do runner
 
-O CI usa `fake_codex.py` para provar a propriedade central do harness: baseline recebe workspace sem skill e `with_skill` recebe workspace com skill, sem chamar um modelo real nem gastar tokens.
+O CI usa `fake_codex.py` com `--smoke-test` para provar a propriedade central do harness: baseline recebe workspace sem skill e `with_skill` recebe workspace com skill, sem chamar um modelo real nem gastar tokens. Smoke tests não exigem revisão independente porque não medem eficácia; `experiment.json` e o relatório os marcam como não publicáveis para essa finalidade.
