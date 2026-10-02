@@ -1,28 +1,44 @@
 # A/B controlado da skill
 
-Objetivo: medir se o **mesmo agente** resolve melhor os mesmos casos com a `verificar-mudancas` do que sem ela. Fixtures validam propriedades técnicas; este protocolo mede comportamento do agente.
+Objetivo: medir se o **mesmo agente** resolve melhor os mesmos casos com a `verificar-mudancas` do que sem ela.
 
 ## Piloto inicial
 
-Casos padrão:
+Casos: `runtime-port-binding`, `external-contract-required`, `local-evidence-sufficient`, `java-404`. São **3 repetições por caso e por braço**: 24 execuções.
 
-- `runtime-port-binding`
-- `external-contract-required`
-- `local-evidence-sufficient`
-- `java-404`
+Manter iguais modelo, reasoning effort, ferramentas, acesso, prompt-base, timeout e evidência. O agente recebe `prompt` + `evidence`; nunca recebe o oracle.
 
-Rodar **3 repetições por caso e por braço**:
+## Efeito mínimo congelado
 
-- A: mesmo modelo/ferramenta sem a skill.
-- B: mesmo modelo/ferramenta com uma versão identificada da skill.
+O arquivo versionado [effect-minimum.json](effect-minimum.json) define o efeito mínimo antes de qualquer rodada real. A escala é 0–1. Para as dimensões de ganho, o mínimo inicial é **0,15**; para `seguranca` e `honestidade`, o mínimo é 0 porque a exigência principal é **não regredir**.
 
-Manter iguais: modelo, esforço/configuração, ferramentas, acesso, prompt-base, tempo máximo e evidência fornecida. O agente recebe somente `prompt` + `evidence`; nunca `oracle.json`.
+O runner copia o arquivo para a pasta da rodada e grava seu SHA-256 normalizado em `experiment.json`. O analisador recusa snapshot com hash diferente. Alterar esse arquivo depois de observar resultados invalida a rodada.
 
-## Gate antes de gastar uma rodada real
+A vitória de um caso exige simultaneamente:
 
-A rodada real é bloqueada até existir um registro de **revisão humana independente** que corresponda ao conteúdo atual de `cases.json` e `oracle.json` e aprove todos os casos selecionados. Isso impede usar como benchmark um gabarito auto-revisado ou alterado depois da aprovação.
+```text
+delta_pontuacao >= efeito_minimo_do_caso
+violacoes_with_skill <= violacoes_baseline
+regressao_critica == false
+```
 
-Gere o registro pendente:
+O efeito mínimo do caso é a média dos limiares versionados das `applicable_dimensions` do oracle.
+
+## Tratamento realmente observado
+
+`workspace_had_skill` prova apenas instalação. `treatment_observed` é calculado do JSONL pela leitura observável de `SKILL.md` ou referência da skill.
+
+Se uma execução `with_skill` terminar sem leitura observada, recebe `status=treatment_not_observed`, é excluída do cálculo e aparece na contagem do relatório. Isso evita chamar de tratamento uma execução em que a skill estava presente mas não foi usada.
+
+## Denominador fixo
+
+Cada caso possui `applicable_dimensions` em `cases.json` e `oracle.json`. O analisador usa exatamente esse conjunto nos dois braços. Um `N/A` acidental do avaliador não remove a dimensão do denominador; ele é reportado como pontuação ausente.
+
+Falha/timeout permanece em `results.csv` e recebe score 0 para a comparação. Ela nunca desaparece do cálculo.
+
+## Revisão independente antes da rodada real
+
+Gere um registro hashado:
 
 ```bash
 python3 scripts/eval_protocol.py template \
@@ -33,37 +49,9 @@ python3 scripts/eval_protocol.py template \
   --case-id java-404
 ```
 
-Uma segunda pessoa deve revisar item por item, preencher `reviewer`, `reviewed_at`, marcar `independent: true`, registrar o `method` de cada caso e mudar o respectivo `status` para `approved`. Depois:
+Uma segunda pessoa revisa item a item e preenche o registro. Sem aprovação compatível com os hashes atuais, `run_agent_eval.py` bloqueia a rodada real.
 
-```bash
-python3 scripts/eval_protocol.py verify \
-  --review evals/oracle-review.json \
-  --case-id runtime-port-binding \
-  --case-id external-contract-required \
-  --case-id local-evidence-sufficient \
-  --case-id java-404
-```
-
-Os hashes são calculados com normalização LF/CRLF para que um checkout Windows não invalide uma revisão sem mudança de conteúdo. Se `cases.json` ou `oracle.json` mudar de fato, a revisão fica obsoleta e o runner bloqueia novamente.
-
-## Preparar apenas os manifests
-
-```bash
-python3 scripts/prepare_ab_eval.py --out /tmp/verificar-ab
-```
-
-`operator.csv` contém a condição e fica com quem executa. `evaluator.csv` não contém a condição.
-
-## Executar automaticamente com Codex CLI
-
-Pré-requisitos:
-
-- Codex CLI autenticado;
-- versão que exponha `codex exec` com `--ephemeral`, `--ignore-user-config`, `--ignore-rules`, sandbox, JSON e `--output-last-message`;
-- checkout limpo da pasta `.agents/skills/verificar-mudancas`, para que o tratamento seja associado a um commit exato;
-- nenhuma cópia global da `verificar-mudancas` em `~/.agents/skills` ou `${CODEX_HOME:-~/.codex}/skills`, pois isso contaminaria o baseline.
-
-Exemplo:
+## Rodar eficácia
 
 ```bash
 python3 scripts/run_agent_eval.py \
@@ -73,49 +61,34 @@ python3 scripts/run_agent_eval.py \
   --web-search live
 ```
 
-O runner cria **24 sessões independentes** por padrão (4 casos × 3 repetições × 2 braços). Cada execução usa workspace temporário novo, `codex exec --ephemeral`, sandbox read-only e stdin fechado. O braço `with_skill` recebe uma cópia da pasta da skill; o baseline não recebe. A ordem é embaralhada pelo seed do experimento.
+`--smoke-test` permite validar apenas o harness; o relatório marca o resultado como não publicável para eficácia.
 
-O runner salva:
-
-- `experiment.json`: versão do Codex, modelo, configuração e commit da skill;
-- `operator.csv`: mapeamento secreto entre `blind_id` e condição;
-- `responses/<blind_id>.md`: respostas brutas sem nome do braço;
-- `operator_logs/`: JSONL/stderr/metadata operacional por execução;
-- `results.csv`: status, tempo, tamanho, hash da resposta e tool calls observáveis;
-- `grading.csv`: planilha **cega**, sem a coluna `condition`, para o avaliador.
-
-Se uma execução falhar, ela é preservada. Use `--resume` para continuar sem repetir rodadas já concluídas com sucesso.
-
-### Por que o runner bloqueia skill global
-
-Codex pode descobrir skills em escopo de usuário. Se `verificar-mudancas` estiver instalada globalmente, uma execução chamada de baseline pode recebê-la mesmo sem a pasta no workspace. O runner aborta nesse caso. `--allow-global-skill-contamination` existe somente para teste/depuração; não use em um benchmark que será reportado como evidência.
-
-## Avaliar às cegas
-
-Entregue ao avaliador apenas `grading.csv` e `responses/`. Não entregue `operator.csv`, `experiment.json` nem `operator_logs/` antes da pontuação.
-
-Para cada dimensão aplicável, preencher **0, 1 ou 2**; usar `N/A` quando realmente não se aplicar. `violacoes` deve ser a contagem inteira de itens `forbidden` violados.
-
-Depois da avaliação:
+Depois da pontuação cega:
 
 ```bash
 python3 scripts/analyze_ab_results.py --run-dir eval-runs/pilot-001
 ```
 
-Isso reconecta a condição somente após a pontuação e gera `comparison.json` e `report.md`, incluindo resultado por caso, violações, delta de segurança, tempo e tamanho das respostas.
+## Experimento C — descobribilidade
 
-Critério inicial pré-definido: a skill vence em pelo menos dois terços dos casos e não perde em nenhum caso pontuado em segurança. Isso é critério de experimento, não alegação de eficácia já comprovada.
+Este experimento é separado de D1. A skill é instalada, mas não é mencionada no prompt:
+
+```bash
+python3 scripts/run_agent_eval.py \
+  --experiment-mode discoverability \
+  --out eval-runs/discovery-001 \
+  --model <modelo-fixado>
+python3 scripts/analyze_discoverability.py --run-dir eval-runs/discovery-001
+```
+
+A saída `discoverability.csv` mede `discovered=true/false` pela leitura espontânea de `SKILL.md`. Esses dados nunca entram no scorecard de eficácia.
 
 ## Disciplina
 
-- Sessões independentes por execução; sem `resume` de conversa entre A e B.
-- Mesmo modelo, reasoning effort, web search, sandbox e timeout nos dois braços.
-- Oracle nunca entra no prompt do agente.
-- Respostas são pontuadas sem revelar a condição quando possível.
-- Registrar também resultados negativos; não excluir rodadas ruins.
-- Não publicar `operator_logs/` sem revisar conteúdo; são artefatos operacionais, não documentação pública.
-- Se o A/B não mostrar ganho, reduzir/reformular regras antes de adicionar mais contexto ao núcleo.
-
-## Teste do runner
-
-O CI usa `fake_codex.py` com `--smoke-test` para provar a propriedade central do harness: baseline recebe workspace sem skill e `with_skill` recebe workspace com skill, sem chamar um modelo real nem gastar tokens. Smoke tests não exigem revisão independente porque não medem eficácia; `experiment.json` e o relatório os marcam como não publicáveis para essa finalidade.
+- sessões independentes;
+- sem reexecutar seletivamente falhas até dar certo;
+- tratamento não observado é excluído e contado;
+- resultados negativos são preservados;
+- oracle nunca entra no prompt;
+- `operator.csv` não é entregue ao avaliador;
+- logs operacionais são revisados antes de qualquer publicação.
