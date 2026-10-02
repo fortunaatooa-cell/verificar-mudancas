@@ -5,6 +5,7 @@ Todas as mudanças relevantes da `verificar-mudancas` devem ser registradas aqui
 ## Unreleased
 
 ### Added
+- Implementação da Spec 10/10 na branch experimental: observação real do tratamento, denominador fixo por oracle, falhas como não-vitória, efeito mínimo versionado/hashado, experimento de descobribilidade separado, fontes por item do oracle, scanner de dados sensíveis e gates do piloto regulado.
 - Gate de revisão humana independente para rodadas A/B reais, com hashes normalizados de `cases.json`/`oracle.json`, template verificável e modo `--smoke-test` explicitamente não publicável como evidência de eficácia.
 - Documento `docs/maturity.md` separando maturidade do harness, prova A/B e piloto real.
 - Especialização agentic para bugs de jogos: `investigador-gameplay`, `validador-regressao-jogo`, comando `/depurar-jogo` e playbook `game-bug`, reutilizando o mesmo harness e as referências de engine existentes.
