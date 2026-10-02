@@ -18,6 +18,26 @@ python3 scripts/install.py --target /caminho/do/projeto --adapter codex --mode f
 
 Por padrão, arquivos existentes são preservados. Use `--force` somente após revisar o dry-run. A instalação completa inclui núcleo, skills auxiliares, agentes/comandos/regras/hooks, schemas, adapter, scripts portáteis e estrutura de memória.
 
+## Claude Code nativo
+
+Com `--adapter claude --mode full`, o instalador mantém os arquivos portáteis e adiciona automaticamente:
+
+- `CLAUDE.md` curto para bootstrap;
+- `.claude/skills/<comando>/SKILL.md` para os comandos existentes;
+- `.claude/agents/*.md` para os mesmos papéis especializados;
+- `.claude/rules/*.md` para as regras existentes;
+- `.claude/settings.json` com hooks determinísticos;
+- `.verificar-mudancas/scripts/claude_hook_bridge.py` no projeto de destino.
+
+```bash
+python3 scripts/install.py --target /caminho/do/projeto --adapter claude --mode full --dry-run
+python3 scripts/install.py --target /caminho/do/projeto --adapter claude --mode full
+```
+
+O modo `skill` instala apenas o núcleo portátil e a skill nativa `.claude/skills/verificar-mudancas/SKILL.md`. Arquivos Claude já existentes são preservados sem `--force`.
+
+A integração não depende de sincronização de conta, plugin ou mod para funcionar. Recursos recentes do Claude Code podem ser detectados em runtime, mas a configuração versionada no repositório continua a fonte reproduzível.
+
 ## Detectar capabilities
 
 ```bash
