@@ -37,6 +37,7 @@ A especificação implementada está em [docs/agentic-system.md](docs/agentic-sy
 - [Desenhos técnicos](.agents/skills/verificar-mudancas/references/technical-drawings.md) e [modos de resposta](.agents/skills/verificar-mudancas/references/response-modes.md).
 - [Agentes](.agents/agents/README.md), [comandos](.agents/commands/README.md), [regras](.agents/rules/README.md) e [hooks](.agents/hooks/README.md).
 - [Memória](memory/README.md), [adapters](adapters/README.md), schemas em `schemas/` e [regressões geradas](evals/regression/README.md).
+- [Integração Claude Code](docs/claude-integration.md) — `CLAUDE.md`, Skills, subagents, rules, hooks e instalação nativa.
 - [Avaliações](evals/README.md), [evals agentic](evals/agentic/README.md), [evals visuais](evals/visual/README.md) e [A/B controlado](evals/ab/README.md).
 - [Prompt para chat](prompt-chat-equipe.md) para superfícies sem acesso ao repositório.
 
