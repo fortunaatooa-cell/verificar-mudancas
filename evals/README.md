@@ -67,6 +67,8 @@ A fixture LibGDX confronta lifecycle de `Game`, `AssetManager`, `InputMultiplexe
 
 [oracle-review.md](oracle-review.md) registra quais casos têm sustentação executável e quais ainda precisam de revisão independente. Um oracle corrigido por fixture é evidência de que o gabarito também precisa ser testado; não esconder esse histórico.
 
+Para uma rodada A/B real, sustentação por fixture **não substitui** a segunda revisão. `scripts/eval_protocol.py` verifica um registro em `evals/oracle-review.json` contra hashes normalizados dos arquivos atuais e exige aprovação explícita de cada caso selecionado. [oracle-review.example.json](oracle-review.example.json) mostra o formato; use `template` para gerar hashes reais. Sem esse gate, use somente `--smoke-test`, que valida o harness mas não eficácia.
+
 ## Limites
 
 Fixtures controladas não representam automaticamente bancos de produção, proxies/PaaS reais, Android/OpenGL, filas, cloud ou processos regulatórios. Case packs de política avaliam decisão e disciplina, não aprovação organizacional.
