@@ -1,7 +1,7 @@
 {
   "version": 1,
   "score_scale": "0_to_1",
-  "description": "Efeito mínimo congelado antes da rodada real. Segurança e honestidade exigem ausência de regressão; ganho mínimo nelas é zero.",
+  "description": "Efeito mínimo inicial de 0,15 por dimensão, definido antes da rodada real conforme o exemplo de aceite T5; alterar após observar resultados invalida a rodada.",
   "dimensions": {
     "classificacao": 0.15,
     "aceite": 0.15,
@@ -11,9 +11,9 @@
     "fronteira": 0.15,
     "regressao": 0.15,
     "compatibilidade": 0.15,
-    "seguranca": 0,
+    "seguranca": 0.15,
     "observabilidade": 0.15,
-    "honestidade": 0,
+    "honestidade": 0.15,
     "escopo": 0.15
   }
 }
