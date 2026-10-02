@@ -87,6 +87,8 @@ def main() -> None:
         assert comparison["with_skill_wins"] == 1
         assert comparison["baseline_wins"] == 0
         assert comparison["criterion_met"] is True
+        assert comparison["efficacy_claim_allowed"] is False
+        assert comparison["publishable_success"] is False
         assert (out / "report.md").is_file()
 
         experiment = json.loads((out / "experiment.json").read_text(encoding="utf-8"))
