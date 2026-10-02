@@ -6,8 +6,13 @@ import json
 import shutil
 from pathlib import Path
 
+try:
+    from .claude_native import install_native as install_claude_native
+except ImportError:
+    from claude_native import install_native as install_claude_native
+
 ADAPTERS = {"generic", "codex", "claude", "devin", "copilot"}
-RUNTIME_SCRIPTS = ("run_hook.py", "quality_gate.py", "memory_store.py", "detect_capabilities.py", "record_run.py", "create_regression_eval.py")
+RUNTIME_SCRIPTS = ("run_hook.py", "quality_gate.py", "memory_store.py", "detect_capabilities.py", "record_run.py", "create_regression_eval.py", "claude_hook_bridge.py")
 AUXILIARY_SKILLS = ("investigar", "planejamento", "arquitetura", "estrategia-testes", "revisar-mudanca", "diagnosticar-runtime", "desenho-tecnico")
 
 
@@ -27,6 +32,8 @@ def install(source_root: Path, target: Path, adapter: str, mode: str, force=Fals
     if adapter not in ADAPTERS: raise ValueError(f"adapter desconhecido: {adapter}")
     operations = []
     _copy(source_root / ".agents/skills/verificar-mudancas", target / ".agents/skills/verificar-mudancas", force, dry_run, operations)
+    if adapter == "claude" and mode == "skill":
+        install_claude_native(source_root, target, mode=mode, force=force, dry_run=dry_run, operations=operations)
     if mode == "full":
         for auxiliary in AUXILIARY_SKILLS:
             _copy(source_root / ".agents/skills" / auxiliary, target / ".agents/skills" / auxiliary, force, dry_run, operations)
@@ -37,6 +44,8 @@ def install(source_root: Path, target: Path, adapter: str, mode: str, force=Fals
         for script in RUNTIME_SCRIPTS:
             _copy(source_root / "scripts" / script, target / ".verificar-mudancas/scripts" / script, force, dry_run, operations)
         _copy(source_root / "adapters" / adapter, target / ".verificar-mudancas/adapter", force, dry_run, operations)
+        if adapter == "claude":
+            install_claude_native(source_root, target, mode=mode, force=force, dry_run=dry_run, operations=operations)
         if not dry_run:
             for folder in ("lessons", "patterns", "incidents", "project", "index"):
                 (target / "memory" / folder).mkdir(parents=True, exist_ok=True)
