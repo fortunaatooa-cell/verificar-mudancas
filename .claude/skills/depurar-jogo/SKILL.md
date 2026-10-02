@@ -1,6 +1,7 @@
 ---
 name: depurar-jogo
 description: "Reproduz, investiga, corrige e valida bugs de jogo/runtime quando autorizado."
+disable-model-invocation: true
 ---
 
 Este é o wrapper nativo do Claude Code para o comando portátil. Aplique também o núcleo em `.agents/skills/verificar-mudancas/SKILL.md`.
